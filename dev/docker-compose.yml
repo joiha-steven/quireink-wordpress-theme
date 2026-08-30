@@ -1,0 +1,79 @@
+# Local WordPress for looking at the theme.
+#
+# The theme is BIND-MOUNTED from ../theme, so an edit on the Mac is live in the container on
+# the next request: this stack is a viewer, never a copy to keep in sync. Nothing in here is
+# a deployment target and nothing in here is committed as state - `docker compose down -v`
+# and the next `up` gives a clean install.
+#
+# The version pins are deliberate. WordPress moves, and a screenshot compared against
+# "whatever :latest was that day" cannot be re-taken a month later; when the pin moves, the
+# comparison is re-run rather than assumed.
+
+name: quireink-wp
+
+services:
+  db:
+    image: mariadb:11.4
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: wordpress
+      MARIADB_ROOT_PASSWORD: rootpw
+    volumes:
+      - db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  wordpress:
+    image: wordpress:6.8-php8.3-apache
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      # 8099 rather than the obvious 8080/8088: the jellykey-local PHP server binds [::1]:8088,
+      # and because Docker publishes on 0.0.0.0 the two do not collide at bind time - the
+      # browser just resolves `localhost` to ::1 and quietly shows the other site instead.
+      # An hour of "why is my WordPress serving a keycap shop" lives in this comment.
+      - "8099:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      # A theme is judged on what it renders, so the noise WordPress adds by default is
+      # turned off here rather than filtered in the theme: a rule in functions.php that
+      # removes the emoji script would be the theme deciding something for every site that
+      # installs it. Off in the viewer, untouched in the product.
+      WORDPRESS_DEBUG: 1
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'WP_ENVIRONMENT_TYPE', 'local' );
+        define( 'AUTOMATIC_UPDATER_DISABLED', true );
+        define( 'WP_HOME', 'http://localhost:8099' );
+        define( 'WP_SITEURL', 'http://localhost:8099' );
+    volumes:
+      - wp:/var/www/html
+      - ../theme:/var/www/html/wp-content/themes/quireink
+      - ./php-dev.ini:/usr/local/etc/php/conf.d/zz-quireink-dev.ini:ro
+
+  cli:
+    image: wordpress:cli-php8.3
+    depends_on:
+      - wordpress
+    user: "33:33"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wp:/var/www/html
+      - ../theme:/var/www/html/wp-content/themes/quireink
+      - ./seed:/seed
+    entrypoint: ["tail", "-f", "/dev/null"]
+
+volumes:
+  db:
+  wp:

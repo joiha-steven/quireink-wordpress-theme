@@ -1,0 +1,6 @@
+# One URL per line: the articles pulled from the live blog for the comparison.
+# Chosen for coverage rather than affection - the first is long and has code blocks, a table
+# of contents worth showing and pen marks; the rest give the listing page more than one row.
+https://manhhung.me/dung-synology-de-host-mot-cai-blog-khong-phai-wordpress
+https://manhhung.me/chuyen-cai-ssl-lang-le-chet-tren-nas
+https://manhhung.me/quireblog-tu-cat-nha-sau-20-nam-o-tro

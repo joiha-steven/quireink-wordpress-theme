@@ -1,0 +1,113 @@
+/*
+ * The only stylesheet in this theme written for WordPress.
+ *
+ * Quire Ink's sheet styles the ELEMENTS inside `.prose` - p, h2, ul, blockquote, pre, table -
+ * so most of what Gutenberg emits is already styled the moment it lands in the right wrapper.
+ * What is left is the handful of places where the block editor invents a class name or an
+ * extra element that Quire Ink's markdown pipeline never produced. Those are below, and
+ * nothing else belongs here: a rule that is really about how the site LOOKS belongs upstream
+ * in the blog engine, where tools/extract.ts will bring it across on the next run.
+ *
+ * Every rule is a translation, never a new opinion. If a value appears here that is not
+ * already a Quire Ink variable, that is a bug in this file.
+ */
+
+/* ---------- alignment -------------------------------------------------------------
+ * Quire Ink names a picture's placement `.img-left` / `.img-right` / `.img-wide`; Gutenberg
+ * names the same four things `align*`. Same declarations, so they are aliased rather than
+ * redeclared - figure.css.ts stays the one place the geometry is decided. */
+.prose .alignleft { float: left; margin: calc(var(--sp) * .35) var(--sp) calc(var(--sp) * .5) 0; max-width: 50%; }
+.prose .alignright { float: right; margin: calc(var(--sp) * .35) 0 calc(var(--sp) * .5) var(--sp); max-width: 50%; }
+.prose .aligncenter { margin-left: auto; margin-right: auto; }
+.prose .alignwide,
+.prose .alignfull {
+	/* The article column is the reading measure and is deliberately narrow. `alignfull` is
+	   given the WIDE width rather than the viewport: a full-bleed band inside a 38rem column
+	   is a design Quire Ink measured and declined, and honouring it here would put a rule on
+	   the page that the blog engine has no answer for. */
+	width: auto;
+	max-width: min(52rem, 100vw - var(--sp) * 2);
+	margin-left: 50%;
+	transform: translateX(-50%);
+}
+
+/* ---------- images ----------------------------------------------------------------
+ * `figure` and `figcaption` are already styled. The block editor adds a wrapper class and,
+ * for a linked image, an <a> that would otherwise take the link underline into the picture. */
+.prose .wp-block-image { margin: calc(var(--sp) * 1.75) 0; }
+.prose .wp-block-image a { text-decoration: none; border: 0; }
+.prose .wp-block-image img { max-width: 100%; height: auto; }
+.prose .wp-block-image.is-style-rounded img { border-radius: var(--radius); }
+
+/* ---------- gallery ----------------------------------------------------------------
+ * Quire Ink's gallery is `.gallery` with a column count; Gutenberg's is a flex container with
+ * the count in `.columns-N`. The mapping is one line each because the sheet upstream already
+ * describes what a gallery IS. */
+.prose .wp-block-gallery { display: grid; gap: var(--sp); margin: calc(var(--sp) * 1.75) 0; }
+.prose .wp-block-gallery.columns-2 { grid-template-columns: repeat(2, 1fr); }
+.prose .wp-block-gallery.columns-3 { grid-template-columns: repeat(3, 1fr); }
+.prose .wp-block-gallery.columns-4 { grid-template-columns: repeat(4, 1fr); }
+.prose .wp-block-gallery figure { margin: 0; }
+
+/* ---------- quotes ------------------------------------------------------------------
+ * `blockquote` is styled upstream. Gutenberg adds a <cite>, which markdown had no way to
+ * express, so this is the one place the theme decides something the blog engine never had to. */
+.prose .wp-block-quote cite,
+.prose .wp-block-pullquote cite {
+	display: block;
+	margin-top: calc(var(--sp) * .5);
+	font-size: var(--fs-small);
+	line-height: var(--lh-small);
+	letter-spacing: var(--ls-small);
+	font-style: normal;
+	color: var(--c-meta);
+}
+.prose .wp-block-pullquote {
+	border-left: 2px solid var(--c-accent);
+	padding: calc(var(--sp) * .75) 0 calc(var(--sp) * .75) var(--sp);
+	margin: calc(var(--sp) * 1.75) 0;
+}
+.prose .wp-block-pullquote p { font-size: var(--fs-h4); line-height: var(--lh-h4); }
+
+/* ---------- code --------------------------------------------------------------------
+ * `pre code` is styled upstream. The window frame Quire Ink draws around a code block keys
+ * off `pre.shiki`, which only its own highlighter emits - a WordPress code block is plain,
+ * so it gets the plain panel and not the chrome. */
+.prose .wp-block-code { margin: calc(var(--sp) * 1.5) 0; }
+.prose .wp-block-preformatted pre { white-space: pre-wrap; }
+
+/* ---------- embeds ------------------------------------------------------------------- */
+.prose .wp-block-embed { margin: calc(var(--sp) * 2) 0; }
+.prose .wp-block-embed__wrapper { position: relative; }
+.prose .wp-block-embed.wp-has-aspect-ratio .wp-block-embed__wrapper { padding-top: 56.25%; }
+.prose .wp-block-embed.wp-has-aspect-ratio iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.prose .wp-block-embed figcaption { text-align: center; }
+
+/* ---------- separators, buttons, lists ------------------------------------------------ */
+.prose .wp-block-separator { border: 0; border-top: 1px solid var(--c-rule); }
+.prose .wp-block-separator.is-style-wide { max-width: none; }
+.prose .wp-block-button__link {
+	display: inline-block;
+	padding: calc(var(--sp) * .5) var(--sp);
+	border-radius: var(--radius);
+	background: var(--c-accent);
+	color: var(--c-bg);
+	text-decoration: none;
+	font-size: var(--fs-small);
+}
+.prose .wp-block-list { /* the ul/ol rules upstream already cover it; this exists so a future
+	   Gutenberg change that moves padding onto the class has a place to be undone */ }
+
+/* ---------- table ---------------------------------------------------------------------
+ * `.prose table` is styled upstream, including the striping mixed from --c-rule. Gutenberg
+ * wraps it in a figure, which would otherwise inherit the picture margins. */
+.prose .wp-block-table { margin: calc(var(--sp) * 1.75) 0; overflow-x: auto; }
+.prose .wp-block-table table { margin: 0; }
+.prose .wp-block-table figcaption { text-align: center; }
+
+/* ---------- things WordPress prints that the sheet has no opinion about ---------------- */
+.prose .wp-caption-text,
+.prose .screen-reader-text:focus { color: var(--c-meta); }
+.sticky .reveal h2::after { content: " *"; color: var(--c-accent); }
+.comment-list { list-style: none; padding-left: 0; }
+.comment-list .children { list-style: none; padding-left: var(--sp); }

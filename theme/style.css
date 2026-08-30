@@ -1,0 +1,22 @@
+/*
+Theme Name: Quire Ink
+Theme URI: https://quireink.com
+Author: Trần Mạnh Hùng
+Author URI: https://quireink.com
+Description: The reading surface of Quire Ink, as a WordPress theme. Six palettes, a self-hosted type system, a table-of-contents rail and a book mode — the same stylesheet the Quire Ink blog engine renders with, driven from WordPress content.
+Requires at least: 6.5
+Tested up to: 6.8
+Requires PHP: 7.4
+Version: 0.1.0
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: quireink
+Tags: blog, one-column, custom-colors, custom-menu, featured-images, threaded-comments, translation-ready, block-styles, wide-blocks
+*/
+
+/*
+ * This file exists for the header above — WordPress reads a theme's identity out of it and
+ * nothing else. The stylesheet proper is three files under assets/css/, enqueued in
+ * functions.php in a fixed order, two of them generated from Quire Ink by tools/extract.ts.
+ * Editing CSS here would put a fourth cascade layer in a place nobody looks.
+ */

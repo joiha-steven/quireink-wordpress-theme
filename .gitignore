@@ -1,0 +1,10 @@
+# Scratch: screenshots, fetched pages, anything a run can rebuild.
+.tmp/
+
+# The seeded articles are DOWNLOADED from the live blog by dev/seed.sh. They are somebody's
+# writing, they are large, and they are one command away - so the tool is committed and its
+# output is not.
+dev/seed/json/
+
+.DS_Store
+node_modules/
