@@ -76,11 +76,25 @@ image alt text each shift the total slightly.
 The reading estimate is what the number exists for and it agrees, so this is recorded rather
 than chased.
 
-## Not measured yet
+## Measured: what an article costs
 
-**Speed.** Quire Ink serves about 114 KB for an article from a single process, with hashed
-immutable assets and half the sheet inlined. This theme sits on WordPress: the base sheet is
-135 KB uncompressed, plus 17 KB of tokens, plus whatever plugins the site has. Dropping the
-pen took 273 KB off that, which was the largest single item.
+One article on the local stack, gzip as served, theme assets only - the post's own pictures
+are content and are not counted, and no plugin is installed.
 
-A fair measurement needs a clean install and is worth doing before anyone claims a number.
+| | Over the wire |
+|---|---|
+| HTML | 18.3 KB (63.9 KB before gzip) |
+| `quireink-base.css` | 44.7 KB |
+| `quireink-tokens.css` · `bridge.css` · `style.css` | 3.2 + 3.7 + 0.9 KB |
+| `post.js` · `core.js` · WordPress's `comment-reply.js` | 6.5 + 4.1 + 1.4 KB |
+| Fonts | 68.2 KB - **4 faces of the 21 declared.** Literata and JetBrains Mono, latin and vietnamese; the browser fetches a face only if a `unicode-range` it needs is in it |
+| **First visit** | **≈ 151 KB** |
+| **Every visit after** | **≈ 18 KB** - everything else is cached |
+
+Quire Ink itself serves about 114 KB for the same shape of article, so the theme costs about
+a third more, and the difference is WordPress's markup rather than the sheet.
+
+The single largest item is the base sheet, and the largest thing inside it is the IDE chrome:
+**31 KB of 135 KB raw, a quarter of the sheet, for a treatment that is a taste and is on by
+default.** Splitting it into a second sheet loaded only when the switch is on is the one
+obvious cut, and it has not been made.
