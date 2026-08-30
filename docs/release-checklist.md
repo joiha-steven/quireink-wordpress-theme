@@ -4,23 +4,17 @@ Measured, not remembered. `dev/check-theme.sh` runs the gate WordPress.org actua
 of the last run it reports **0 REQUIRED, 0 WARNING, 3 RECOMMENDED**, and the three are answered
 in [`decisions/0007-four-recommendations-declined.md`](decisions/0007-four-recommendations-declined.md).
 
-## Blocking
+## Settled
 
-**The licence.** [ADR 0005](decisions/0005-licence-not-decided.md) is open and it cannot be
-undone once a version ships. Nothing below matters until it is settled.
+**The licence: GPLv2 or later** ([ADR 0005](decisions/0005-gpl-v2-or-later.md)), which is what
+the review handbook asks of a free theme. Both verbatim texts are fetched and in the tree:
 
-## Two files that have to be fetched, not written
-
-Both are verbatim legal texts. Reproducing either from memory would be worse than not shipping
-it, so they are listed here rather than approximated.
-
-* **`LICENSE`** — the full GNU GPL v2 text, from `https://www.gnu.org/licenses/gpl-2.0.txt`.
-  `style.css` and `readme.txt` both declare the licence and link the canonical URL, which is
-  what Theme Check checks; a repository carrying the text as well is the convention.
-* **`quire-ink/assets/fonts/OFL.txt`** — the SIL Open Font License 1.1, from
-  `https://openfontlicense.org/`. All six bundled families are OFL 1.1 and every one of them
-  is credited by name, copyright holder and source in `readme.txt`. The OFL asks that the
-  licence travel with the fonts, so the file belongs beside them.
+* **`LICENSE`** — the GNU GPL v2, from `https://www.gnu.org/licenses/gpl-2.0.txt`. Not
+  required by the handbook; shipped because it is the convention everywhere else.
+* **`quire-ink/assets/fonts/OFL.txt`** — SIL Open Font License 1.1, from
+  `https://openfontlicense.org/documents/OFL.txt`, its copyright block naming all six holders
+  and the rest untouched. This one IS required — by the font licence rather than by
+  WordPress, which is why it would still be needed if the theme never went to the directory.
   *(The Quire Ink blog engine ships the same six faces and carries neither file. Same
   obligation, different repository — worth raising there.)*
 

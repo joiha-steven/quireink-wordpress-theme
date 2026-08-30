@@ -9,7 +9,7 @@ supersedes it; read this index before going against any of them.
 | [0002](0002-classic-templates-not-a-block-theme.md) | Classic PHP templates with `theme.json`, not a block theme | in force, revisit |
 | [0003](0003-skip-what-gutenberg-cannot-express.md) | What the block editor cannot author is not shipped | in force |
 | [0004](0004-english-only.md) | English strings only; translation-ready, no translations | in force |
-| [0005](0005-licence-not-decided.md) | The licence is **not decided** — settle before going public | **open** |
+| [0005](0005-gpl-v2-or-later.md) | **GPLv2 or later**, which is what WordPress requires of a free theme | in force |
 | [0006](0006-one-footer-credit.md) | One footer credit, switchable off | in force |
 | [0007](0007-four-recommendations-declined.md) | Four Theme Check recommendations, declined | in force, **widget clause superseded by 0008** |
 | [0008](0008-the-rail-is-a-widget-area.md) | The rail is a widget area | in force |

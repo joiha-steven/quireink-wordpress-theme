@@ -3,8 +3,9 @@
 The reading surface of [Quire Ink](https://quireink.com) as a WordPress theme. `quire-ink/` is the
 theme; everything else exists to generate it, run it, or explain it.
 
-**Not licensed for release.** [ADR 0005](./docs/decisions/0005-licence-not-decided.md) is open
-and the answer cannot be undone. Do not make this repository public without settling it.
+**GNU GPL v2 or later** ([ADR 0005](./docs/decisions/0005-gpl-v2-or-later.md)) — the licence
+WordPress requires of a free theme, and the reason `bridge.css` may not invent a value: this
+copy of the look is GPL, the blog engine is not.
 
 ## Verify
 

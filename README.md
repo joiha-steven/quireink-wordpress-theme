@@ -4,9 +4,9 @@ The reading surface of [Quire Ink](https://quireink.com) as a WordPress theme: t
 palettes, the same self-hosted type system, the same table-of-contents rail, book typography
 and book mode — driven from WordPress content instead of Quire Ink's own.
 
-> **Private, and not licensed for release.**
-> [ADR 0005](docs/decisions/0005-licence-not-decided.md) is open, and publishing under GPL
-> cannot be undone. Read it before making this repository public.
+> **GNU GPL v2 or later** ([ADR 0005](docs/decisions/0005-gpl-v2-or-later.md)), which is what
+> WordPress requires of a free theme. Still private: three fields in
+> [`docs/release-checklist.md`](docs/release-checklist.md) are facts only the owner knows.
 
 ## The idea
 
