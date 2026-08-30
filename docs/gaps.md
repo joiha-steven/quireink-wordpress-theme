@@ -116,11 +116,11 @@ are content and are not counted, and no plugin is installed.
 | | Over the wire |
 |---|---|
 | HTML | 18.3 KB (63.9 KB before gzip) |
-| `quireink-base.css` | 44.7 KB |
-| `quireink-tokens.css` · `bridge.css` · `style.css` | 3.2 + 3.7 + 0.9 KB |
+| `quireink-base.css` · `quireink-ide.css` | 39.0 + 6.5 KB (the second only when the switch is on) |
+| `quireink-tokens.css` · `bridge.css` · `style.css` | 3.2 + 3.7 + 1.0 KB |
 | `post.js` · `core.js` · WordPress's `comment-reply.js` | 6.5 + 4.1 + 1.4 KB |
 | Fonts | 68.2 KB - **4 faces of the 21 declared.** Literata and JetBrains Mono, latin and vietnamese; the browser fetches a face only if a `unicode-range` it needs is in it |
-| **First visit** | **≈ 151 KB** |
+| **First visit** | **≈ 152 KB**, or 146 KB with the IDE chrome off |
 | **Every visit after** | **≈ 18 KB** - everything else is cached |
 
 Quire Ink itself serves about 114 KB for the same shape of article, so the theme costs about
