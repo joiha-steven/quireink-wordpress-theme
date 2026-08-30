@@ -37,7 +37,7 @@ else
 fi
 
 echo "==> theme"
-wp theme activate quireink
+wp theme activate quire-ink
 
 echo "==> settings"
 # Pretty permalinks, because the theme prints term links and a plain ?cat= URL is not what

@@ -27,89 +27,119 @@ function quireink_customize_register( $wp_customize ) {
 	$wp_customize->add_section(
 		'quireink_shape',
 		array(
-			'title'       => __( 'Quire Ink - shape', 'quireink' ),
+			'title'       => __( 'Quire Ink - shape', 'quire-ink' ),
 			'priority'    => 30,
-			'description' => __( 'Spacing, corners and heading weight. These are what make two Quire Ink sites look different from each other.', 'quireink' ),
+			'description' => __( 'Spacing, corners and heading weight. These are what make two Quire Ink sites look different from each other.', 'quire-ink' ),
 		)
 	);
 
 	$controls = array(
 		'quireink_density'        => array(
-			'label'   => __( 'Density', 'quireink' ),
+			'label'   => __( 'Density', 'quire-ink' ),
 			'section' => 'quireink_shape',
 			'default' => 'normal',
 			'choices' => array(
-				'compact' => __( 'Compact', 'quireink' ),
-				'normal'  => __( 'Normal', 'quireink' ),
-				'relaxed' => __( 'Relaxed', 'quireink' ),
+				'compact' => __( 'Compact', 'quire-ink' ),
+				'normal'  => __( 'Normal', 'quire-ink' ),
+				'relaxed' => __( 'Relaxed', 'quire-ink' ),
 			),
 		),
 		'quireink_radius'         => array(
-			'label'   => __( 'Corners', 'quireink' ),
+			'label'   => __( 'Corners', 'quire-ink' ),
 			'section' => 'quireink_shape',
 			'default' => 'soft',
 			'choices' => array(
-				'square' => __( 'Square', 'quireink' ),
-				'soft'   => __( 'Soft', 'quireink' ),
-				'round'  => __( 'Round', 'quireink' ),
+				'square' => __( 'Square', 'quire-ink' ),
+				'soft'   => __( 'Soft', 'quire-ink' ),
+				'round'  => __( 'Round', 'quire-ink' ),
 			),
 		),
 		'quireink_heading_weight' => array(
-			'label'   => __( 'Heading weight', 'quireink' ),
+			'label'   => __( 'Heading weight', 'quire-ink' ),
 			'section' => 'quireink_shape',
 			'default' => 'normal',
 			'choices' => array(
-				'light'  => __( 'Light', 'quireink' ),
-				'normal' => __( 'Normal', 'quireink' ),
-				'bold'   => __( 'Bold', 'quireink' ),
+				'light'  => __( 'Light', 'quire-ink' ),
+				'normal' => __( 'Normal', 'quire-ink' ),
+				'bold'   => __( 'Bold', 'quire-ink' ),
 			),
 		),
 		'quireink_default_scheme' => array(
-			'label'       => __( 'A first-time visitor opens in', 'quireink' ),
-			'description' => __( 'A reader who picks for themselves always wins over this; it decides the first paint only.', 'quireink' ),
+			'label'       => __( 'A first-time visitor opens in', 'quire-ink' ),
+			'description' => __( 'A reader who picks for themselves always wins over this; it decides the first paint only.', 'quire-ink' ),
 			'section'     => 'quireink_reading',
 			'default'     => 'system',
 			'choices'     => array(
-				'system' => __( 'Whatever their device is set to', 'quireink' ),
-				'light'  => __( 'Light', 'quireink' ),
-				'dark'   => __( 'Dark', 'quireink' ),
+				'system' => __( 'Whatever their device is set to', 'quire-ink' ),
+				'light'  => __( 'Light', 'quire-ink' ),
+				'dark'   => __( 'Dark', 'quire-ink' ),
 			),
 		),
 		'quireink_motion'         => array(
-			'label'       => __( 'Motion', 'quireink' ),
-			'description' => __( 'Off removes every transition. A reader whose system asks for reduced motion gets that regardless of this setting.', 'quireink' ),
+			'label'       => __( 'Motion', 'quire-ink' ),
+			'description' => __( 'Off removes every transition. A reader whose system asks for reduced motion gets that regardless of this setting.', 'quire-ink' ),
 			'section'     => 'quireink_reading',
 			'default'     => 'on',
 			'choices'     => array(
-				'on'  => __( 'On', 'quireink' ),
-				'off' => __( 'Off', 'quireink' ),
+				'on'  => __( 'On', 'quire-ink' ),
+				'off' => __( 'Off', 'quire-ink' ),
+			),
+		),
+		'quireink_hero'           => array(
+			'label'       => __( 'Featured image on an article', 'quire-ink' ),
+			'description' => __( 'Above the title, always 3:2. Off by default: switching it on would redesign every article already published.', 'quire-ink' ),
+			'section'     => 'quireink_images',
+			'default'     => 'none',
+			'choices'     => array(
+				'none'   => __( 'None', 'quire-ink' ),
+				'inline' => __( 'Above the title', 'quire-ink' ),
+			),
+		),
+		'quireink_thumb'          => array(
+			'label'       => __( 'Featured image in a list', 'quire-ink' ),
+			'description' => __( 'A small square beside the words, or a wide 3:2 above them. The shape is not a further choice: a list of pictures has to look like a list.', 'quire-ink' ),
+			'section'     => 'quireink_images',
+			'default'     => 'none',
+			'choices'     => array(
+				'none' => __( 'None', 'quire-ink' ),
+				'side' => __( 'Small square beside', 'quire-ink' ),
+				'top'  => __( 'Wide, above', 'quire-ink' ),
 			),
 		),
 		'quireink_book_text'      => array(
-			'label'       => __( 'Book typography', 'quireink' ),
-			'description' => __( 'Indented paragraphs, justified lines and hyphenation, the way a printed page sets them. Off is the web default: ragged right, a blank line between paragraphs.', 'quireink' ),
+			'label'       => __( 'Book typography', 'quire-ink' ),
+			'description' => __( 'Indented paragraphs, justified lines and hyphenation, the way a printed page sets them. Off is the web default: ragged right, a blank line between paragraphs.', 'quire-ink' ),
 			'section'     => 'quireink_reading',
 			'default'     => 'off',
 			'choices'     => array(
-				'off' => __( 'Off', 'quireink' ),
-				'on'  => __( 'On', 'quireink' ),
+				'off' => __( 'Off', 'quire-ink' ),
+				'on'  => __( 'On', 'quire-ink' ),
 			),
 		),
 		'quireink_ide_chrome'     => array(
-			'label'   => __( 'Window frame on code blocks', 'quireink' ),
+			'label'   => __( 'Window frame on code blocks', 'quire-ink' ),
 			'section' => 'quireink_reading',
 			'default' => 'on',
 			'choices' => array(
-				'on'  => __( 'On', 'quireink' ),
-				'off' => __( 'Off', 'quireink' ),
+				'on'  => __( 'On', 'quire-ink' ),
+				'off' => __( 'Off', 'quire-ink' ),
 			),
 		),
 	);
 
 	$wp_customize->add_section(
+		'quireink_images',
+		array(
+			'title'       => __( 'Quire Ink - pictures', 'quire-ink' ),
+			'priority'    => 31,
+			'description' => __( 'Both are off to begin with. A blog that upgrades into a theme must not move a pixel until its owner moves one.', 'quire-ink' ),
+		)
+	);
+
+	$wp_customize->add_section(
 		'quireink_reading',
 		array(
-			'title'    => __( 'Quire Ink - reading', 'quireink' ),
+			'title'    => __( 'Quire Ink - reading', 'quire-ink' ),
 			'priority' => 31,
 		)
 	);
@@ -117,7 +147,7 @@ function quireink_customize_register( $wp_customize ) {
 	$wp_customize->add_section(
 		'quireink_footer',
 		array(
-			'title'    => __( 'Quire Ink - footer', 'quireink' ),
+			'title'    => __( 'Quire Ink - footer', 'quire-ink' ),
 			'priority' => 32,
 		)
 	);
@@ -132,8 +162,8 @@ function quireink_customize_register( $wp_customize ) {
 	$wp_customize->add_control(
 		'quireink_credit',
 		array(
-			'label'       => __( 'Credit the theme in the footer', 'quireink' ),
-			'description' => __( 'A single "powered by Quire Ink" link beside the copyright line.', 'quireink' ),
+			'label'       => __( 'Credit the theme in the footer', 'quire-ink' ),
+			'description' => __( 'A single "powered by Quire Ink" link beside the copyright line.', 'quire-ink' ),
 			'section'     => 'quireink_footer',
 			'type'        => 'checkbox',
 		)

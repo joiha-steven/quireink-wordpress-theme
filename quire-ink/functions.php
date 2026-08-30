@@ -31,10 +31,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'QUIREINK_VERSION', '0.1.0' );
 
 /**
+ * The reading measure, for anything that asks WordPress rather than the stylesheet.
+ *
+ * The same number `--shell-w` carries, and the blog engine's default. Oembeds and a few
+ * plugins size themselves off this global and have no way to read a CSS variable.
+ */
+if ( ! isset( $content_width ) ) {
+	$content_width = 672;
+}
+
+/**
  * Theme supports.
  */
 function quireink_setup() {
-	load_theme_textdomain( 'quireink', get_template_directory() . '/languages' );
+	load_theme_textdomain( 'quire-ink', get_template_directory() . '/languages' );
 
 	add_theme_support( 'automatic-feed-links' );
 	add_theme_support( 'title-tag' );
@@ -42,12 +52,35 @@ function quireink_setup() {
 	add_theme_support( 'html5', array( 'search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script' ) );
 	add_theme_support( 'responsive-embeds' );
 	add_theme_support( 'wp-block-styles' );
+
+	// Not decoration: `has_custom_logo()` in header.php returns false for every site until
+	// this is declared, so the wordmark an owner uploads simply never appears and the header
+	// keeps showing the site name as text. It read as "the logo is a Quire Ink setting we
+	// have not ported" and it was one missing line.
+	add_theme_support(
+		'custom-logo',
+		array(
+			// The blog engine's own header logo box. Flexible, because a wordmark is whatever
+			// shape the wordmark is; cropping one to a square is how a signature becomes a
+			// sticker.
+			'height'      => 61,
+			'width'       => 180,
+			'flex-height' => true,
+			'flex-width'  => true,
+		)
+	);
+
+	// theme.json already declares the layout widths that make these work; the explicit calls
+	// are what the block editor and Theme Check both look for.
+	add_theme_support( 'align-wide' );
+	add_theme_support( 'custom-spacing' );
+	add_theme_support( 'appearance-tools' );
 	add_theme_support( 'editor-styles' );
 	add_editor_style( array( 'assets/css/quireink-tokens.css', 'assets/css/quireink-base.css', 'assets/css/bridge.css' ) );
 
 	register_nav_menus(
 		array(
-			'primary' => __( 'Rail menu', 'quireink' ),
+			'primary' => __( 'Rail menu', 'quire-ink' ),
 		)
 	);
 }
@@ -235,9 +268,9 @@ function quireink_toc() {
 	$levels   = array_unique( wp_list_pluck( $items, 'level' ) );
 	$outlined = count( $levels ) > 1;
 	?>
-	<nav class="toc rail" aria-label="<?php esc_attr_e( 'Table of contents', 'quireink' ); ?>">
+	<nav class="toc rail" aria-label="<?php esc_attr_e( 'Table of contents', 'quire-ink' ); ?>">
 	<div class="rail-inner">
-	<h2><?php esc_html_e( 'Table of contents', 'quireink' ); ?></h2>
+	<h2><?php esc_html_e( 'Table of contents', 'quire-ink' ); ?></h2>
 	<ul>
 		<li><a class="rail-row link-accent t-small is-active" href="#top"><?php echo esc_html( get_the_title() ); ?></a></li>
 		<?php
@@ -258,10 +291,10 @@ function quireink_toc() {
 		// (`li:has(.toc-end)`), so it reads as a destination rather than another section.
 		$foot = array();
 		if ( has_tag() || has_category() ) {
-			$foot[] = __( 'Tags', 'quireink' );
+			$foot[] = __( 'Tags', 'quire-ink' );
 		}
 		if ( comments_open() || get_comments_number() ) {
-			$foot[] = __( 'Comments', 'quireink' );
+			$foot[] = __( 'Comments', 'quire-ink' );
 		}
 		if ( $foot ) {
 			printf(
@@ -279,5 +312,6 @@ function quireink_toc() {
 
 require get_template_directory() . '/inc/template-tags.php';
 require get_template_directory() . '/inc/comment-walker.php';
+require get_template_directory() . '/inc/blocks.php';
 require get_template_directory() . '/inc/customizer.php';
 require get_template_directory() . '/inc/i18n-data.php';

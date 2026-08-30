@@ -25,7 +25,7 @@ while ( have_posts() ) :
 	 */
 	$rendered = apply_filters( 'the_content', get_the_content() );
 	?>
-<article>
+<article <?php post_class(); ?>>
 <header>
 <h1 class="reading-font mt-2 fs-h1 font-semibold"><?php the_title(); ?></h1>
 </header>

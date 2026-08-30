@@ -12,8 +12,8 @@
 get_header();
 ?>
 <header class="list-head">
-	<h1 class="t-h2 reading-font"><?php esc_html_e( 'That page is not here', 'quireink' ); ?></h1>
-	<p class="t-small text-meta"><?php esc_html_e( 'The link may be old, or the address may have a typo in it.', 'quireink' ); ?></p>
+	<h1 class="t-h2 reading-font"><?php esc_html_e( 'That page is not here', 'quire-ink' ); ?></h1>
+	<p class="t-small text-meta"><?php esc_html_e( 'The link may be old, or the address may have a typo in it.', 'quire-ink' ); ?></p>
 	<?php get_search_form(); ?>
 </header>
 <div class="post-list">

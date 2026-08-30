@@ -21,12 +21,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function quireink_palettes() {
 	return array(
-		'mono'   => __( 'Mono', 'quireink' ),
-		'sepia'  => __( 'Sepia', 'quireink' ),
-		'forest' => __( 'Forest', 'quireink' ),
-		'ocean'  => __( 'Ocean', 'quireink' ),
-		'scifi'  => __( 'Sci-fi', 'quireink' ),
-		'amber'  => __( 'Amber', 'quireink' ),
+		'mono'   => __( 'Mono', 'quire-ink' ),
+		'sepia'  => __( 'Sepia', 'quire-ink' ),
+		'forest' => __( 'Forest', 'quire-ink' ),
+		'ocean'  => __( 'Ocean', 'quire-ink' ),
+		'scifi'  => __( 'Sci-fi', 'quire-ink' ),
+		'amber'  => __( 'Amber', 'quire-ink' ),
 	);
 }
 
@@ -61,26 +61,26 @@ function quireink_body_data() {
 	$palettes = quireink_enabled_palettes();
 
 	$data = array(
-		'search'         => __( 'Search', 'quireink' ),
-		'search-hint'    => __( 'Type to search posts.', 'quireink' ),
-		'search-empty'   => __( 'No posts matched.', 'quireink' ),
-		'lightbox-close' => __( 'Close', 'quireink' ),
-		'grid-view'      => __( 'Grid view', 'quireink' ),
-		'list-view'      => __( 'List view', 'quireink' ),
-		'theme'          => __( 'Appearance', 'quireink' ),
-		'theme-light'    => __( 'Light', 'quireink' ),
-		'theme-dark'     => __( 'Dark', 'quireink' ),
-		'theme-system'   => __( 'Follow system', 'quireink' ),
-		'theme-time'     => __( 'Follow the clock', 'quireink' ),
-		'palette'        => __( 'Palette', 'quireink' ),
+		'search'         => __( 'Search', 'quire-ink' ),
+		'search-hint'    => __( 'Type to search posts.', 'quire-ink' ),
+		'search-empty'   => __( 'No posts matched.', 'quire-ink' ),
+		'lightbox-close' => __( 'Close', 'quire-ink' ),
+		'grid-view'      => __( 'Grid view', 'quire-ink' ),
+		'list-view'      => __( 'List view', 'quire-ink' ),
+		'theme'          => __( 'Appearance', 'quire-ink' ),
+		'theme-light'    => __( 'Light', 'quire-ink' ),
+		'theme-dark'     => __( 'Dark', 'quire-ink' ),
+		'theme-system'   => __( 'Follow system', 'quire-ink' ),
+		'theme-time'     => __( 'Follow the clock', 'quire-ink' ),
+		'palette'        => __( 'Palette', 'quire-ink' ),
 		'default-scheme' => get_theme_mod( 'quireink_default_scheme', 'system' ),
-		'nl-heading'     => __( 'Subscribe to the newsletter', 'quireink' ),
-		'nl-placeholder' => __( 'you@example.com', 'quireink' ),
-		'nl-button'      => __( 'Subscribe', 'quireink' ),
-		'nl-success'     => __( 'Almost there - check your inbox to confirm.', 'quireink' ),
-		'nl-no-mail'     => __( 'Subscribed. Email is not configured, so no confirmation was sent.', 'quireink' ),
-		'nl-invalid'     => __( 'That email address is not valid.', 'quireink' ),
-		'nl-error'       => __( 'Something went wrong. Please try again.', 'quireink' ),
+		'nl-heading'     => __( 'Subscribe to the newsletter', 'quire-ink' ),
+		'nl-placeholder' => __( 'you@example.com', 'quire-ink' ),
+		'nl-button'      => __( 'Subscribe', 'quire-ink' ),
+		'nl-success'     => __( 'Almost there - check your inbox to confirm.', 'quire-ink' ),
+		'nl-no-mail'     => __( 'Subscribed. Email is not configured, so no confirmation was sent.', 'quire-ink' ),
+		'nl-invalid'     => __( 'That email address is not valid.', 'quire-ink' ),
+		'nl-error'       => __( 'Something went wrong. Please try again.', 'quire-ink' ),
 	);
 
 	if ( count( $palettes ) > 1 ) {

@@ -4,7 +4,7 @@
 
 ## The state of things
 
-`theme/style.css` declares **GPLv2-or-later**, because a WordPress theme header cannot say
+`quire-ink/style.css` declares **GPLv2-or-later**, because a WordPress theme header cannot say
 anything else — a theme without a GPL-compatible licence is not a WordPress theme, and the
 file could not be written without putting something on that line.
 
@@ -35,6 +35,13 @@ measured in weeks. The queue is the real cost, not the code.
 
 **No.** The GPL line comes out of `style.css`, the theme stays private, and it is an artefact
 for one person's own sites. Everything else in this repository works exactly the same.
+
+## What "yes" costs after the decision
+
+Not much, and it is listed in [`../release-checklist.md`](../release-checklist.md). Theme
+Check is already clean of REQUIRED and WARNING findings; what remains is two verbatim legal
+texts to fetch (the GPL and the OFL), three fields only the owner can fill, and a review queue
+measured in weeks.
 
 ## Until then
 

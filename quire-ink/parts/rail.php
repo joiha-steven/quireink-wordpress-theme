@@ -29,7 +29,7 @@ if ( '' === trim( $blocks ) ) {
 	return;
 }
 ?>
-<aside class="rail" aria-label="<?php esc_attr_e( 'Site', 'quireink' ); ?>">
+<aside class="rail" aria-label="<?php esc_attr_e( 'Site', 'quire-ink' ); ?>">
 <div class="rail-inner">
 <?php echo $blocks; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- assembled from escaped parts in parts/rail-blocks.php. ?>
 </div>

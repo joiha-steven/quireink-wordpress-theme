@@ -10,12 +10,22 @@
 // will bring it across on the next run.
 import { readFileSync } from 'node:fs'
 
-const SRC = 'theme/assets/css/bridge.css'
+const SRC = 'quire-ink/assets/css/bridge.css'
 
-// Lengths that are allowed to be literal: 0, hairlines, and percentages/viewport units, which
-// are relationships rather than sizes. `1px` is the width of a rule, and the blog engine's
-// own sheets write it that way.
+// Lengths that are allowed to be literal: 0, hairlines, and keywords. `1px` is the width of a
+// rule and the blog engine's own sheets write it that way.
 const ALLOWED_LENGTH = /^(0|0px|1px|2px|100%|auto|none)$/
+
+// `em` is NOT checked at all, and that is a correction rather than a hole. This guard exists
+// so a size cannot drift away from the type scale — and an `em` cannot: it is a multiple of
+// whatever font size the element already has, so it follows the scale by construction rather
+// than restating it. The blog engine's own sheets are full of them (`.16em` of side bearing
+// on a highlight, `1.4em` of lead between blocks) for exactly that reason.
+//
+// The rule as first written banned them, and the first thing it caught was a `.35em` gap
+// beside a bullet — copied from `.rail-sub::before` upstream. Rewriting that as `var(--sp)`
+// would have been strictly worse: `--sp` is the ARTICLE's spacing unit and does not follow
+// the small type the marker is set in. The check was wrong, so the check changed.
 
 const css = readFileSync(SRC, 'utf8')
 // Comments carry examples of exactly what is banned, which is the point of them.
@@ -35,7 +45,7 @@ for (const name of ['white', 'black', 'silver', 'gray', 'grey']) {
   }
 }
 for (const m of code.matchAll(/:\s*([^;{}]*?)(?=[;}])/g)) {
-  for (const len of m[1]!.matchAll(/(?<![\w-])(\d*\.?\d+(?:px|rem|em))/g)) {
+  for (const len of m[1]!.matchAll(/(?<![\w-])(\d*\.?\d+(?:px|rem))/g)) {
     if (!ALLOWED_LENGTH.test(len[1]!)) {
       problems.push(`hardcoded length ${len[1]} — use var(--sp), var(--fs-*) or var(--radius)`)
     }

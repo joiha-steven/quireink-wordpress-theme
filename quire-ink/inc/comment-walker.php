@@ -92,7 +92,7 @@ class Quireink_Comment_Walker extends Walker_Comment {
 				<span class="comment-name"><?php echo esc_html( get_comment_author( $comment ) ); ?></span>
 				&middot; <time datetime="<?php echo esc_attr( get_comment_date( 'c', $comment ) ); ?>"><?php echo esc_html( get_comment_date( '', $comment ) ); ?></time>
 				<?php if ( '1' !== $comment->comment_approved ) : ?>
-					&middot; <?php esc_html_e( 'awaiting moderation', 'quireink' ); ?>
+					&middot; <?php esc_html_e( 'awaiting moderation', 'quire-ink' ); ?>
 				<?php endif; ?>
 			</p>
 
@@ -107,7 +107,7 @@ class Quireink_Comment_Walker extends Walker_Comment {
 					array(
 						'depth'     => $depth,
 						'max_depth' => isset( $args['max_depth'] ) ? $args['max_depth'] : 0,
-						'reply_text' => __( 'Reply', 'quireink' ),
+						'reply_text' => __( 'Reply', 'quire-ink' ),
 						'add_below' => 'comment',
 					),
 					array( 'before' => '', 'after' => '' )

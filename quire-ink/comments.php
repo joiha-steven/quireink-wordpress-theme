@@ -25,7 +25,7 @@ if ( post_password_required() ) {
 	$quireink_count = (int) get_comments_number();
 	printf(
 		/* translators: %s: comment count */
-		esc_html( _n( '%s comment', '%s comments', $quireink_count, 'quireink' ) ),
+		esc_html( _n( '%s comment', '%s comments', $quireink_count, 'quire-ink' ) ),
 		esc_html( number_format_i18n( $quireink_count ) )
 	);
 	?>
@@ -50,8 +50,8 @@ if ( post_password_required() ) {
 	<?php
 	the_comments_pagination(
 		array(
-			'prev_text' => __( 'Newer comments', 'quireink' ),
-			'next_text' => __( 'Older comments', 'quireink' ),
+			'prev_text' => __( 'Newer comments', 'quire-ink' ),
+			'next_text' => __( 'Older comments', 'quire-ink' ),
 			'class'     => 'pagination t-small',
 		)
 	);
@@ -59,7 +59,7 @@ if ( post_password_required() ) {
 <?php endif; ?>
 
 <?php if ( ! comments_open() && get_comments_number() ) : ?>
-	<p class="comment-status t-small"><?php esc_html_e( 'Comments are closed.', 'quireink' ); ?></p>
+	<p class="comment-status t-small"><?php esc_html_e( 'Comments are closed.', 'quire-ink' ); ?></p>
 <?php endif; ?>
 
 <?php
@@ -113,38 +113,39 @@ add_filter( 'comment_form_fields', 'quireink_comment_field_order' );
 comment_form(
 	array(
 		'class_form'          => 'comment-form',
-		'title_reply'         => __( 'Leave a comment', 'quireink' ),
-		'title_reply_to'      => __( 'Reply to %s', 'quireink' ),
+		'title_reply'         => __( 'Leave a comment', 'quire-ink' ),
+		/* translators: %s: name of the person being replied to */
+		'title_reply_to'      => __( 'Reply to %s', 'quire-ink' ),
 		'title_reply_before'  => '<h2 class="t-h3 reading-font" id="reply-title">',
 		'title_reply_after'   => '</h2>',
 		'cancel_reply_before' => ' <small>',
 		'cancel_reply_after'  => '</small>',
 		'fields'              => array(
 			'author' => '<div class="comment-fields"><p class="comment-field">'
-				. '<label for="author">' . esc_html__( 'Name', 'quireink' ) . $quireink_mark . '</label>'
+				. '<label for="author">' . esc_html__( 'Name', 'quire-ink' ) . $quireink_mark . '</label>'
 				. '<input id="author" name="author" type="text" value="' . esc_attr( $quireink_who['comment_author'] ) . '" maxlength="245" autocomplete="name"' . $quireink_need . '></p>',
 			'email'  => '<p class="comment-field">'
-				. '<label for="email">' . esc_html__( 'Email', 'quireink' )
-				. ' <span class="comment-note">(' . esc_html__( 'not published', 'quireink' ) . ')</span>' . $quireink_mark . '</label>'
+				. '<label for="email">' . esc_html__( 'Email', 'quire-ink' )
+				. ' <span class="comment-note">(' . esc_html__( 'not published', 'quire-ink' ) . ')</span>' . $quireink_mark . '</label>'
 				. '<input id="email" name="email" type="email" value="' . esc_attr( $quireink_who['comment_author_email'] ) . '" maxlength="100" autocomplete="email"' . $quireink_need . '></p>',
 			'url'    => '<p class="comment-field">'
-				. '<label for="url">' . esc_html__( 'Website', 'quireink' ) . '</label>'
+				. '<label for="url">' . esc_html__( 'Website', 'quire-ink' ) . '</label>'
 				. '<input id="url" name="url" type="url" value="' . esc_attr( $quireink_who['comment_author_url'] ) . '" maxlength="200" autocomplete="url"></p></div>',
 			// The cookie consent goes in the action row beside the button, which is what
 			// `.comment-actions` is: a flex row that pushes the button to the right.
 			'cookies' => '<div class="comment-actions"><label for="wp-comment-cookies-consent" class="t-small">'
 				. '<input id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes"'
 				. ( empty( $quireink_who['comment_author_email'] ) ? '' : ' checked' ) . '> '
-				. esc_html__( 'Remember me on this browser', 'quireink' ) . '</label>',
+				. esc_html__( 'Remember me on this browser', 'quire-ink' ) . '</label>',
 		),
 		'comment_field'       => '<p class="comment-field comment-body-field">'
-			. '<label for="comment">' . esc_html__( 'Comment', 'quireink' ) . ' <span class="required">*</span></label>'
+			. '<label for="comment">' . esc_html__( 'Comment', 'quire-ink' ) . ' <span class="required">*</span></label>'
 			. '<textarea id="comment" name="comment" rows="5" maxlength="65525" required></textarea></p>',
 		// %1$s is the button, %2$s the hidden fields. The div opened by the cookies field
 		// above closes here, with the button inside it.
 		'submit_field'        => '%1$s</div>%2$s<p class="comment-status" role="status"></p>',
 		'submit_button'       => '<button type="submit" name="%1$s" id="%2$s" class="%3$s">%4$s</button>',
-		'label_submit'        => __( 'Post comment', 'quireink' ),
+		'label_submit'        => __( 'Post comment', 'quire-ink' ),
 		'comment_notes_before' => '',
 		'comment_notes_after'  => '',
 	)

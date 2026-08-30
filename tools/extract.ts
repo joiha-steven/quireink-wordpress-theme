@@ -33,7 +33,7 @@ const QUIRE = join(HERE, '..', 'quireink')
 // `tools/checks/generated-in-sync.ts` can produce a fresh copy and compare bytes without
 // touching what is committed — a check that has to modify the tree to run is a check people
 // turn off.
-const THEME = process.env.EXTRACT_OUT ?? join(HERE, 'theme')
+const THEME = process.env.EXTRACT_OUT ?? join(HERE, 'quire-ink')
 
 const s = DEFAULT_SETTINGS
 
@@ -205,7 +205,7 @@ const themeJson = {
     { name: 'footer', title: 'Footer', area: 'footer' },
   ],
 }
-if (!process.env.EXTRACT_OUT) await writeFile(join(HERE, 'theme', 'theme.json'), JSON.stringify(themeJson, null, 2) + '\n')
+if (!process.env.EXTRACT_OUT) await writeFile(join(HERE, 'quire-ink', 'theme.json'), JSON.stringify(themeJson, null, 2) + '\n')
 
 // ---------------------------------------------------------------- the receipt
 
@@ -214,10 +214,10 @@ const dirty = (await $`git -C ${QUIRE} status --porcelain`.text()).trim() !== ''
 if (!process.env.EXTRACT_OUT) await writeFile(join(HERE, 'tools', 'extract-manifest.json'), JSON.stringify({
   takenFrom: { repo: 'quireink', commit: sha, workingTreeDirty: dirty },
   emitted: {
-    'theme/assets/css/quireink-base.css': PUBLIC_CSS.length,
-    'theme/assets/css/quireink-tokens.css': tokens.length,
-    'theme/assets/fonts': faces.length,
-    'theme/assets/js': bundles,
+    'quire-ink/assets/css/quireink-base.css': PUBLIC_CSS.length,
+    'quire-ink/assets/css/quireink-tokens.css': tokens.length,
+    'quire-ink/assets/fonts': faces.length,
+    'quire-ink/assets/js': bundles,
   },
   palettes: THEME_PRESETS.map((p) => p.id),
   typeRoles: TYPE_ROLES,

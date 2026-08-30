@@ -55,8 +55,8 @@ function quireink_post_terms() {
 	<hr class="taxo-rule">
 	<footer class="post-taxo t-small text-meta">
 		<?php
-		quireink_term_line( 'post_tag', __( 'Tags', 'quireink' ), 'lower' );
-		quireink_term_line( 'category', __( 'Categories', 'quireink' ), '' );
+		quireink_term_line( 'post_tag', __( 'Tags', 'quire-ink' ), 'lower' );
+		quireink_term_line( 'category', __( 'Categories', 'quire-ink' ), '' );
 		?>
 	</footer>
 	<?php
@@ -77,7 +77,7 @@ function quireink_read_next() {
 	?>
 	<hr>
 	<section class="read-next">
-		<p class="read-next-label"><?php esc_html_e( 'Read next', 'quireink' ); ?></p>
+		<p class="read-next-label"><?php esc_html_e( 'Read next', 'quire-ink' ); ?></p>
 		<p class="read-next-title reading-font"><a class="link-accent" href="<?php echo esc_url( get_permalink( $next ) ); ?>"><?php echo esc_html( get_the_title( $next ) ); ?></a></p>
 	</section>
 	<?php
@@ -107,7 +107,7 @@ function quireink_related() {
 	?>
 	<hr>
 	<section class="related">
-		<h2><?php esc_html_e( 'Related posts', 'quireink' ); ?></h2>
+		<h2><?php esc_html_e( 'Related posts', 'quire-ink' ); ?></h2>
 		<ul>
 		<?php
 		while ( $q->have_posts() ) :
@@ -141,9 +141,19 @@ function quireink_list_row() {
 	// Opens a year group when this post starts one, and returns the month marker, which
 	// belongs INSIDE the article: the sheet positions it against the card, not the page.
 	$mark = quireink_timeline_step();
+
+	// `data-thumb` is what the sheet keys the two shapes off: `side` floats a 96px square and
+	// lets the words close up underneath it, `top` puts a 3:2 above them. The attribute is
+	// only set when there is a picture to put there, so a row with no featured image keeps
+	// exactly the layout it has today.
+	$thumb = get_theme_mod( 'quireink_thumb', 'none' );
+	$thumb = ( 'none' !== $thumb && has_post_thumbnail() ) ? $thumb : '';
 	?>
-	<article class="reveal"><?php echo $mark; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built escaped in quireink_timeline_step(). ?>
-		<p class="t-small text-meta"><time class="meta-part" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time> &middot; <span class="meta-part"><span class="num"><?php echo esc_html( number_format_i18n( $reading['minutes'] ) ); ?></span> <?php esc_html_e( 'min read', 'quireink' ); ?></span></p>
+	<article <?php post_class( 'reveal' ); ?><?php echo $thumb ? ' data-thumb="' . esc_attr( $thumb ) . '"' : ''; ?>><?php echo $mark; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built escaped in quireink_timeline_step(). ?>
+		<?php if ( $thumb ) : ?>
+			<a class="card-thumb" href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1"><?php the_post_thumbnail( 'side' === $thumb ? 'thumbnail' : 'medium_large' ); ?></a>
+		<?php endif; ?>
+		<p class="t-small text-meta"><time class="meta-part" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time> &middot; <span class="meta-part"><span class="num"><?php echo esc_html( number_format_i18n( $reading['minutes'] ) ); ?></span> <?php esc_html_e( 'min read', 'quire-ink' ); ?></span></p>
 		<h2 class="reading-font mt-2 fs-h2 font-semibold"><a class="link-accent" href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
 		<p class="reading-font mt-3 t-body text-text"><?php echo esc_html( get_the_excerpt() ); ?></p>
 	</article>
@@ -157,9 +167,9 @@ function quireink_pagination() {
 	the_posts_pagination(
 		array(
 			'mid_size'           => 1,
-			'prev_text'          => __( 'Newer', 'quireink' ),
-			'next_text'          => __( 'Older', 'quireink' ),
-			'screen_reader_text' => __( 'Posts', 'quireink' ),
+			'prev_text'          => __( 'Newer', 'quire-ink' ),
+			'next_text'          => __( 'Older', 'quire-ink' ),
+			'screen_reader_text' => __( 'Posts', 'quire-ink' ),
 			'class'              => 'pagination t-small',
 		)
 	);
@@ -202,6 +212,12 @@ function quireink_align_classes( $html, $block ) {
 	}
 
 	$alias = array(
+		// The frame block styles. `img-frame` carries the mat and the line; the other three
+		// are MODIFIERS that only move the padding, so each of them brings the base along.
+		'is-style-frame'       => 'img-frame',
+		'is-style-frame-thin'  => 'img-frame img-frame-thin',
+		'is-style-frame-thick' => 'img-frame img-frame-thick',
+		'is-style-frame-ink'   => 'img-frame img-frame-ink',
 		'alignwide'   => 'img-wide',
 		// Full bleed maps onto WIDE, not onto the viewport: a band running edge to edge
 		// inside a reading column is a shape Quire Ink measured and declined, and honouring
@@ -213,8 +229,11 @@ function quireink_align_classes( $html, $block ) {
 	);
 
 	foreach ( $alias as $wp => $quire ) {
-		if ( preg_match( '/\bclass="[^"]*\b' . $wp . '\b/', $html )
-			&& ! preg_match( '/\bclass="[^"]*\b' . $quire . '\b/', $html ) ) {
+		// A value can be TWO class names (`img-frame img-frame-thin`), so the "already there"
+		// test looks at the first of them; matching the pair verbatim would never fire.
+		$first = strtok( $quire, ' ' );
+		if ( preg_match( '/\bclass="[^"]*\b' . preg_quote( $wp, '/' ) . '\b/', $html )
+			&& ! preg_match( '/\bclass="[^"]*\b' . preg_quote( $first, '/' ) . '\b/', $html ) ) {
 			$html = preg_replace( '/(\bclass=")/', '$1' . $quire . ' ', $html, 1 );
 		}
 	}

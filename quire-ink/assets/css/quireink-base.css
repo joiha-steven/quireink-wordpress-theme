@@ -114,7 +114,7 @@ main{flex:1;padding:3rem 0 1rem}
   text-decoration:none}
 
 header.site{padding:1.75rem 0}
-header.site .title{font-family:var(--font-sans);font-weight:600;color:var(--c-heading);
+header.site .title{font-family:var(--font-sans);font-weight:var(--fw-heading,600);color:var(--c-heading);
   text-decoration:none;font-size:var(--fs-h4);line-height:var(--lh-h4);
   letter-spacing:var(--ls-h4)}
 /* width+height on the tag reserve the space, so the header does not jump when the logo
@@ -185,7 +185,7 @@ article > header .t-small{margin:0}
 /* One pointer forward at the article's end. The label whispers like .related's heading;
    the title is the only thing at reading size, because the title is the offer. */
 .read-next-label{font-size:var(--fs-small);line-height:var(--lh-small);
-  letter-spacing:var(--ls-small);font-weight:600;color:var(--c-meta);margin:0 0 .5rem}
+  letter-spacing:var(--ls-small);font-weight:var(--fw-heading,600);color:var(--c-meta);margin:0 0 .5rem}
 .read-next-title{margin:0;font-size:var(--fs-h3);line-height:var(--lh-h3);letter-spacing:var(--ls-h3)}
 .read-next-title a{font-weight:var(--fw-heading,600);color:var(--c-heading)}
 .related{font-size:var(--fs-small);line-height:var(--lh-small);
@@ -193,7 +193,7 @@ article > header .t-small{margin:0}
 /* The size is stated even though the block already sets it: an h2 carries a UA default of
    1.5em, so leaving it to inherit made the quiet label the largest thing in the block. */
 .related h2{font-size:var(--fs-small);line-height:var(--lh-small);
-  letter-spacing:var(--ls-small);font-weight:600;color:var(--c-meta);margin:0 0 1.25rem}
+  letter-spacing:var(--ls-small);font-weight:var(--fw-heading,600);color:var(--c-meta);margin:0 0 1.25rem}
 .related ul{list-style:none;padding:0;margin:0}
 .related li + li{margin-top:1rem}
 .related a{font-weight:var(--fw-heading,600);color:var(--c-heading)}
@@ -218,7 +218,7 @@ article + .subscribe-card,article + #comments{margin-top:2.5rem}
    be wrong — a line starting with a quoted string would slip its indent — so pre opts out. */
 .prose pre{hanging-punctuation:none}
 .prose > * + *{margin-top:1.4em}
-.prose h1,.prose h2,.prose h3,.prose h4,.prose h5{color:var(--c-heading);font-weight:600;
+.prose h1,.prose h2,.prose h3,.prose h4,.prose h5{color:var(--c-heading);font-weight:var(--fw-heading,600);
   scroll-margin-top:2rem}
 .prose h1{font-size:var(--fs-h1);line-height:var(--lh-h1);
   letter-spacing:var(--ls-h1);margin-top:1.9em}
@@ -499,7 +499,7 @@ article + .subscribe-card,article + #comments{margin-top:2.5rem}
    disappear instead of overlapping; the right padding widens the mask to cover the
    longest month label. */
 .tl-year-tag{align-items:center;gap:.5rem;white-space:nowrap;color:var(--c-heading);
-  font-weight:600;background:var(--c-bg);padding:.1rem 3rem .1rem 0;
+  font-weight:var(--fw-heading,600);background:var(--c-bg);padding:.1rem 3rem .1rem 0;
   font-size:var(--fs-h3);line-height:var(--lh-h3);
   letter-spacing:var(--ls-h3)}
 .tl-year-tag .tl-dot{background:var(--c-accent)}
@@ -557,12 +557,12 @@ form.search button{padding:.5rem 1rem;border:1px solid var(--c-rule);border-radi
 aside.series{border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);padding:1.25rem 1.5rem;
   margin:2rem 0 0;font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small)}
 aside.series .series-head{margin:0 0 .875rem;color:var(--c-meta)}
-aside.series .series-head a{font-weight:600}
+aside.series .series-head a{font-weight:var(--fw-heading,600)}
 aside.series ol{margin:0;border-top:1px solid var(--c-rule);padding:1rem 0 0 1.25rem}
 aside.series li + li{margin-top:.65rem}
 aside.series li a{color:var(--c-meta);text-decoration:none}
 aside.series li a:hover{color:var(--c-heading)}
-aside.series li[aria-current]{position:relative;color:var(--c-heading);font-weight:600}
+aside.series li[aria-current]{position:relative;color:var(--c-heading);font-weight:var(--fw-heading,600)}
 aside.series li[aria-current]::after{content:"";position:absolute;left:-2.75rem;top:3px;bottom:3px;
   width:2px;background:var(--c-accent)}
 p.tags{margin-top:1.5rem;font-size:var(--fs-small);line-height:var(--lh-small);
@@ -578,7 +578,7 @@ p.tags{margin-top:1.5rem;font-size:var(--fs-small);line-height:var(--lh-small);
 .callout{border-left:2px solid var(--c-accent);
   padding:calc(var(--sp) * .75) 0 calc(var(--sp) * .75) var(--sp);
   margin:calc(var(--sp) * 1.75) 0}
-.callout-label{font-weight:600;color:var(--c-heading);margin:0 0 calc(var(--sp) * .35)}
+.callout-label{font-weight:var(--fw-heading,600);color:var(--c-heading);margin:0 0 calc(var(--sp) * .35)}
 .callout p:last-child{margin-bottom:0}
 
 /* applyFootnotes already emits an <hr class="fn-rule">; a border-top here as well
@@ -728,7 +728,7 @@ html[data-rail=open] .rail{transform:none}
 .rail-scrim{position:fixed;inset:0;z-index:39}
 .rail-inner{position:sticky;top:2.5rem}
 .rail-inner > * + *,.drawer-only > * + *{margin-top:1.75rem}
-.rail h2{margin:0 0 .75rem;padding-left:var(--rail-pad);font-weight:600;color:var(--c-heading);
+.rail h2{margin:0 0 .75rem;padding-left:var(--rail-pad);font-weight:var(--fw-heading,600);color:var(--c-heading);
   font-size:var(--fs-small);line-height:var(--lh-small);
   letter-spacing:var(--ls-small)}
 .rail ul{list-style:none;margin:0;padding:0}
@@ -1152,7 +1152,7 @@ body:has(.book-overlay[open]){overflow:hidden}
 #comments{border-top:1px solid var(--c-rule);margin-top:3rem;padding-top:1.5rem;
   font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small)}
 #comments h2{font-size:var(--fs-h3);line-height:var(--lh-h3);letter-spacing:var(--ls-h3);
-  color:var(--c-heading);font-weight:600;margin:0 0 1.5rem}
+  color:var(--c-heading);font-weight:var(--fw-heading,600);margin:0 0 1.5rem}
 .comment-list,.comment-replies{list-style:none;padding:0;margin:0}
 /* Structure from a rule between top-level comments, not from margins alone. A thread with
    only whitespace between entries reads as one long block, and the reply indent was too
@@ -1162,7 +1162,7 @@ body:has(.book-overlay[open]){overflow:hidden}
 .comment-replies{margin:1.25rem 0 0;padding-left:1.25rem;border-left:1px solid var(--c-rule)}
 .comment-replies .comment+.comment{margin-top:1.25rem}
 .comment-meta{color:var(--c-meta);margin:0 0 .5rem}
-.comment-name{color:var(--c-heading);font-weight:600}
+.comment-name{color:var(--c-heading);font-weight:var(--fw-heading,600)}
 /* A comment is somebody's WORDS, so it is set in the reading face like the article is —
    the frozen tree did this and the port dropped it, which left every comment in the chrome
    font. On this site that is JetBrains Mono, so the thread was rendering as monospace.
@@ -1220,7 +1220,7 @@ body:has(.book-overlay[open]){overflow:hidden}
    button that happens to sit above a form. */
 .comment-identity{margin:0 0 1rem;padding-bottom:1rem;border-bottom:1px solid var(--c-rule);
   color:var(--c-meta)}
-.comment-identity strong{color:var(--c-heading);font-weight:600}
+.comment-identity strong{color:var(--c-heading);font-weight:var(--fw-heading,600)}
 .comment-google{display:inline-block;padding:.5rem 1rem;border:1px solid var(--c-rule);
   border-radius:var(--radius,.5rem);color:var(--c-heading);font:inherit;text-decoration:none}
 .comment-google:hover{border-color:var(--c-heading)}
@@ -1250,14 +1250,14 @@ body:has(.book-overlay[open]){overflow:hidden}
   font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small);
   color:var(--c-meta)}
 .theme-menu button:hover{background:var(--c-rule)}
-.theme-menu button.is-current{font-weight:600;color:var(--c-heading)}
+.theme-menu button.is-current{font-weight:var(--fw-heading,600);color:var(--c-heading)}
 /* The tick marks the active mode, as in the frozen tree. It is decoration on a row whose
    state is already carried by the class, so it belongs in CSS, not in the bundle. */
 .theme-menu button.is-current::after{content:"✓"}
 
 .subscribe-card{border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);padding:1.25rem;
   font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small)}
-.subscribe-card h2{font-size:inherit;font-weight:600;color:var(--c-heading);margin:0 0 .75rem}
+.subscribe-card h2{font-size:inherit;font-weight:var(--fw-heading,600);color:var(--c-heading);margin:0 0 .75rem}
 form.subscribe{display:flex;gap:.5rem;margin:0}
 /* The honeypot: parked, not display:none — some form fillers skip boxless fields. */
 form.subscribe .hp{position:absolute;left:-9999px;width:1px;height:1px;flex:none;border:0;padding:0;opacity:0;pointer-events:none}

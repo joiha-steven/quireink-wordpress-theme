@@ -14,7 +14,7 @@ import { join } from 'node:path'
 
 const MAX = 400
 const WARN_AT = Math.floor(MAX * 0.95)
-const ROOTS = ['theme', 'tools', 'dev']
+const ROOTS = ['quire-ink', 'tools', 'dev']
 const EXT = /\.(ts|php|py|sh)$/
 
 const walk = (dir: string): string[] =>

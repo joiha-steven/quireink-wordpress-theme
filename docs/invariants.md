@@ -9,10 +9,10 @@ visible in review.
 
 | # | Rule | Enforced at | Pinned by |
 |---|---|---|---|
-| 1 | **The sheets load base → tokens → bridge, by DEPENDENCY.** The generated half is generated so that it can win: `.rail` is a slide-out drawer in the static sheet and only the computed media query promotes it into the desktop gutter | [`theme/functions.php`](../theme/functions.php) `quireink_assets()` | `check:order` |
-| 2 | **`bridge.css` translates, it never decides.** No hex, no colour function, no length that is not `0`/`1px`/`2px`/`100%`. A value that is not already a Quire Ink variable means the two surfaces have started to drift | [`theme/assets/css/bridge.css`](../theme/assets/css/bridge.css) | `check:bridge` |
+| 1 | **The sheets load base → tokens → bridge, by DEPENDENCY.** The generated half is generated so that it can win: `.rail` is a slide-out drawer in the static sheet and only the computed media query promotes it into the desktop gutter | [`quire-ink/functions.php`](../quire-ink/functions.php) `quireink_assets()` | `check:order` |
+| 2 | **`bridge.css` translates, it never decides.** No hex, no colour function, no length that is not `0`/`1px`/`2px`/`100%`. A value that is not already a Quire Ink variable means the two surfaces have started to drift | [`quire-ink/assets/css/bridge.css`](../quire-ink/assets/css/bridge.css) | `check:bridge` |
 | 3 | **Nothing is hand-copied out of the blog engine.** Colours, sizes, breakpoints and font stacks come through the extractor or they do not come. One exception, marked as such: the three shape tables in the Customizer, which cannot read TypeScript | [`tools/extract.ts`](../tools/extract.ts) | `check:generated` |
-| 4 | **Every value printed into a page is escaped** at the point of printing | every template under [`theme/`](../theme) | `check:escape` |
+| 4 | **Every value printed into a page is escaped** at the point of printing | every template under [`quire-ink/`](../quire-ink) | `check:escape` |
 | 5 | **Quire Ink is read only.** This repository imports its modules and writes nothing to it | [`tools/tsconfig.json`](../tools/tsconfig.json) | nothing yet — see below |
 
 ## Why 1 is the first one

@@ -16,7 +16,7 @@ get_header();
 	<?php
 	printf(
 		/* translators: %s: search query */
-		esc_html__( 'Search: %s', 'quireink' ),
+		esc_html__( 'Search: %s', 'quire-ink' ),
 		'<span class="term-list">' . esc_html( get_search_query() ) . '</span>'
 	);
 	?>

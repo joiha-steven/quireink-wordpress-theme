@@ -33,15 +33,28 @@ while ( have_posts() ) :
 	$rendered = apply_filters( 'the_content', get_the_content() );
 	$reading = quireink_reading( get_the_ID() );
 	?>
-<article>
+<article <?php post_class(); ?>>
 
+<?php
+/*
+ * The picture goes ABOVE the headline, not under it, and it is off unless the owner asks.
+ * Both are the blog engine's calls: a hero under the title pushes the first sentence off a
+ * phone screen, and a default that switched pictures ON would redesign every article a site
+ * had already published, at upgrade time, without anyone choosing it.
+ */
+if ( 'inline' === get_theme_mod( 'quireink_hero', 'none' ) && has_post_thumbnail() ) :
+	?>
+	<div class="post-hero"><?php the_post_thumbnail( 'large', array( 'fetchpriority' => 'high' ) ); ?></div>
+	<?php
+endif;
+?>
 <header>
 <p class="t-small text-meta post-meta">
 	<time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time>
-	&middot; <span class="num"><?php echo esc_html( number_format_i18n( $reading['words'] ) ); ?></span> <?php esc_html_e( 'words', 'quireink' ); ?>
-	&middot; <span class="num"><?php echo esc_html( number_format_i18n( $reading['minutes'] ) ); ?></span> <?php esc_html_e( 'min read', 'quireink' ); ?>
+	&middot; <span class="num"><?php echo esc_html( number_format_i18n( $reading['words'] ) ); ?></span> <?php esc_html_e( 'words', 'quire-ink' ); ?>
+	&middot; <span class="num"><?php echo esc_html( number_format_i18n( $reading['minutes'] ) ); ?></span> <?php esc_html_e( 'min read', 'quire-ink' ); ?>
 	&middot; <span class="byline"><?php echo esc_html( get_the_author() ); ?></span>
-	<span class="meta-book"> &middot; <button type="button" class="book-mode-toggle" data-book-open><?php esc_html_e( 'Book mode', 'quireink' ); ?></button></span>
+	<span class="meta-book"> &middot; <button type="button" class="book-mode-toggle" data-book-open><?php esc_html_e( 'Book mode', 'quire-ink' ); ?></button></span>
 </p>
 <h1 class="reading-font mt-2 fs-h1 font-semibold"><?php the_title(); ?></h1>
 </header>
@@ -49,13 +62,13 @@ while ( have_posts() ) :
 <aside class="post-info t-small text-meta">
 	<p><time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time></p>
 	<p class="byline"><?php echo esc_html( get_the_author() ); ?></p>
-	<p><span class="num"><?php echo esc_html( number_format_i18n( $reading['words'] ) ); ?></span> <?php esc_html_e( 'words', 'quireink' ); ?></p>
-	<p><span class="num"><?php echo esc_html( number_format_i18n( $reading['minutes'] ) ); ?></span> <?php esc_html_e( 'min read', 'quireink' ); ?></p>
+	<p><span class="num"><?php echo esc_html( number_format_i18n( $reading['words'] ) ); ?></span> <?php esc_html_e( 'words', 'quire-ink' ); ?></p>
+	<p><span class="num"><?php echo esc_html( number_format_i18n( $reading['minutes'] ) ); ?></span> <?php esc_html_e( 'min read', 'quire-ink' ); ?></p>
 	<?php
-	quireink_term_line( 'post_tag', __( 'Tags', 'quireink' ), 'lower' );
-	quireink_term_line( 'category', __( 'Categories', 'quireink' ), '' );
+	quireink_term_line( 'post_tag', __( 'Tags', 'quire-ink' ), 'lower' );
+	quireink_term_line( 'category', __( 'Categories', 'quire-ink' ), '' );
 	?>
-	<p class="info-action"><button type="button" class="book-mode-toggle" data-book-open><?php esc_html_e( 'Book mode', 'quireink' ); ?></button></p>
+	<p class="info-action"><button type="button" class="book-mode-toggle" data-book-open><?php esc_html_e( 'Book mode', 'quire-ink' ); ?></button></p>
 </aside>
 
 <?php quireink_toc(); ?>

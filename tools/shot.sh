@@ -19,6 +19,10 @@ OUT="$2"
 W="${3:-1440}"
 H="${4:-2400}"
 WAIT="${SHOT_WAIT:-60}"
+# 2 by default, because a screenshot for reading is a screenshot at retina density. The theme
+# screenshot is the exception: WordPress.org wants a file that is EXACTLY 1200x900, so that
+# one is taken at 1.
+SCALE="${SHOT_SCALE:-2}"
 
 CHROME="${CHROME:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
 PROFILE="$(mktemp -d)"
@@ -31,7 +35,7 @@ rm -f "$OUT"
   --disable-gpu \
   --no-sandbox \
   --hide-scrollbars \
-  --force-device-scale-factor=2 \
+  --force-device-scale-factor="$SCALE" \
   --user-data-dir="$PROFILE" \
   --window-size="${W},${H}" \
   --virtual-time-budget=20000 \

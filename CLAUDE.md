@@ -1,6 +1,6 @@
 # Quire Ink for WordPress
 
-The reading surface of [Quire Ink](https://quireink.com) as a WordPress theme. `theme/` is the
+The reading surface of [Quire Ink](https://quireink.com) as a WordPress theme. `quire-ink/` is the
 theme; everything else exists to generate it, run it, or explain it.
 
 **Not licensed for release.** [ADR 0005](./docs/decisions/0005-licence-not-decided.md) is open
@@ -44,12 +44,12 @@ tools/shot.sh <url> .tmp/shots/<name>.png
 | Symptom / area | Read these first |
 |---|---|
 | A colour, size or breakpoint is wrong | `tools/extract.ts`, then the blog engine's `src/web/*.css.ts` — never edit the generated CSS |
-| A Gutenberg block looks wrong | `theme/assets/css/bridge.css`, `theme/inc/template-tags.php` (`quireink_align_classes`) |
-| The rail, the table of contents, the desktop three-column layout | `theme/functions.php` (`quireink_anchor_headings`, `quireink_toc`), `theme/single.php` |
-| An article's furniture — byline, word count, terms | `theme/single.php`, `theme/inc/template-tags.php` |
-| The listing page | `theme/index.php`, `quireink_list_row()` |
-| A knob in the Customizer | `theme/inc/customizer.php` |
-| Strings the reader JS puts on screen | `theme/inc/i18n-data.php` — they are `data-` attributes on `<body>`, read at run time |
+| A Gutenberg block looks wrong | `quire-ink/assets/css/bridge.css`, `quire-ink/inc/template-tags.php` (`quireink_align_classes`) |
+| The rail, the table of contents, the desktop three-column layout | `quire-ink/functions.php` (`quireink_anchor_headings`, `quireink_toc`), `quire-ink/single.php` |
+| An article's furniture — byline, word count, terms | `quire-ink/single.php`, `quire-ink/inc/template-tags.php` |
+| The listing page | `quire-ink/index.php`, `quireink_list_row()` |
+| A knob in the Customizer | `quire-ink/inc/customizer.php` |
+| Strings the reader JS puts on screen | `quire-ink/inc/i18n-data.php` — they are `data-` attributes on `<body>`, read at run time |
 | The local WordPress | `dev/docker-compose.yml`, `dev/up.sh` |
 | An imported article looks wrong | `dev/seed/fetch.py` |
 
@@ -77,7 +77,7 @@ tools/shot.sh <url> .tmp/shots/<name>.png
 
 ## Danger zones
 
-- **`theme/assets/css/quireink-{base,tokens}.css`, `assets/fonts/`, `assets/js/` are
+- **`quire-ink/assets/css/quireink-{base,tokens}.css`, `assets/fonts/`, `assets/js/` are
   GENERATED.** Editing them is not wrong so much as pointless: the next extract overwrites
   them and `check:generated` is red until it does.
 - **The blog engine moves.** A red `check:generated` is the seam reporting, not a failure.

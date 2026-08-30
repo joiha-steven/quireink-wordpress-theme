@@ -16,11 +16,11 @@ between the two repositories. It is read-only: nothing here writes to Quire Ink,
 
 | Output | From |
 |---|---|
-| `theme/assets/css/quireink-base.css` | `PUBLIC_CSS` — the hand-written public sheet, verbatim |
-| `theme/assets/css/quireink-tokens.css` | `pageStyles()`'s list, run on `DEFAULT_SETTINGS`, in the same order |
-| `theme/assets/fonts/*.woff2` | the self-hosted faces |
-| `theme/assets/js/{core,post}.js` | the reader bundles, as built |
-| `theme/theme.json` | the palette and type scale, in the block editor's dialect, pointing AT the variables rather than repeating their values |
+| `quire-ink/assets/css/quireink-base.css` | `PUBLIC_CSS` — the hand-written public sheet, verbatim |
+| `quire-ink/assets/css/quireink-tokens.css` | `pageStyles()`'s list, run on `DEFAULT_SETTINGS`, in the same order |
+| `quire-ink/assets/fonts/*.woff2` | the self-hosted faces |
+| `quire-ink/assets/js/{core,post}.js` | the reader bundles, as built |
+| `quire-ink/theme.json` | the palette and type scale, in the block editor's dialect, pointing AT the variables rather than repeating their values |
 | `tools/extract-manifest.json` | what came from where, and at which commit |
 
 ## The order in quireink-tokens.css is `pageStyles()`'s order

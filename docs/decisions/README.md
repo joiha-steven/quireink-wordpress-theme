@@ -11,3 +11,4 @@ supersedes it; read this index before going against any of them.
 | [0004](0004-english-only.md) | English strings only; translation-ready, no translations | in force |
 | [0005](0005-licence-not-decided.md) | The licence is **not decided** — settle before going public | **open** |
 | [0006](0006-one-footer-credit.md) | One footer credit, switchable off | in force |
+| [0007](0007-four-recommendations-declined.md) | Four Theme Check recommendations, declined | in force |

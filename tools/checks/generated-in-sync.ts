@@ -1,6 +1,6 @@
 // The generated sheets match what the blog engine produces TODAY.
 //
-// This is the guard the whole arrangement rests on. `theme/assets/css/quireink-*.css` is a
+// This is the guard the whole arrangement rests on. `quire-ink/assets/css/quireink-*.css` is a
 // copy, and a copy nobody re-derives is a copy that silently stops being true: the blog
 // engine moved three times in the hour this theme was first written, and the base sheet
 // changed size twice while it did.
@@ -18,7 +18,7 @@ import { $ } from 'bun'
 
 const QUIRE = '../quireink'
 const OUT = '.tmp/extract-check'
-const CSS = 'theme/assets/css'
+const CSS = 'quire-ink/assets/css'
 const GENERATED = ['quireink-base.css', 'quireink-tokens.css']
 
 if (!existsSync(QUIRE)) {

@@ -9,6 +9,7 @@
 | Taking something new from the blog engine | [`conventions/extract.md`](conventions/extract.md) — how the generator works and what it refuses to do |
 | Wondering why something is the way it is | [`decisions/`](decisions/README.md) — read the in-force index first |
 | Wondering what does not survive the trip | [`gaps.md`](gaps.md) — measured, not guessed |
+| Getting this ready to publish | [`release-checklist.md`](release-checklist.md) — what is done, and the three things only the owner can do |
 
 ## Verify
 
@@ -19,6 +20,14 @@ bun run check:all
 Six static guards: `filesize` · `order` · `bridge` · `escape` · `generated` · `docs`. Seconds,
 not minutes. `check:generated` skips with a warning when there is no Quire Ink checkout beside
 this one.
+
+```
+dev/check-theme.sh
+```
+
+The gate WordPress.org actually puts a submission through — the Theme Check plugin, driven
+from the command line against the running local install. Needs Docker, so it is not part of
+`check:all`; run it before a release.
 
 What it cannot tell you is that the rail is empty, that a figure is at the wrong width, or
 that every headline on the listing page has picked up a link underline. All three happened

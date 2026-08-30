@@ -15,7 +15,7 @@
 // call order), so the chain is what is checked, not the sequence of the calls.
 import { readFileSync } from 'node:fs'
 
-const SRC = 'theme/functions.php'
+const SRC = 'quire-ink/functions.php'
 const ORDER = ['quireink-base', 'quireink-tokens', 'quireink-bridge', 'quireink-style']
 
 const php = readFileSync(SRC, 'utf8')

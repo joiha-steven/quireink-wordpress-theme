@@ -11,7 +11,7 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 
-const ROOT = 'theme'
+const ROOT = 'quire-ink'
 
 const walk = (dir: string): string[] =>
   readdirSync(dir).flatMap((name) => {

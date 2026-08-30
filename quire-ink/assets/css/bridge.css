@@ -127,3 +127,83 @@
 .comment-note {
 	color: var(--c-meta);
 }
+
+/* ---------- the class names WordPress guarantees ---------------------------------------
+ * Nine class names that core writes into content and that a theme is expected to answer for.
+ * They are here, and not upstream, for the same reason everything else in this file is:
+ * Quire Ink's editor never emits them, so the blog engine has nothing to say about them.
+ *
+ * The four `align*` names ALSO get Quire Ink's own geometry, on figures, through
+ * `quireink_align_classes()` in PHP - that alias is what gives a picture the real gutter
+ * pull. What is below is the fallback for everything that is NOT a figure: an aligned
+ * paragraph, an aligned embed, a `<div>` a plugin wrote. Two different jobs, so the pair is
+ * not a duplicate. */
+.alignleft {
+	float: left;
+	margin-right: var(--sp);
+	margin-bottom: calc(var(--sp) * .5);
+}
+.alignright {
+	float: right;
+	margin-left: var(--sp);
+	margin-bottom: calc(var(--sp) * .5);
+}
+.aligncenter {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+.alignnone {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+/* A caption is the same voice as any other aside on the page. */
+.wp-caption {
+	max-width: 100%;
+}
+.wp-caption-text,
+.gallery-caption {
+	color: var(--c-meta);
+	font-size: var(--fs-caption);
+	line-height: var(--lh-caption);
+	letter-spacing: var(--ls-caption);
+	text-align: center;
+	margin-top: calc(var(--sp) * .5);
+}
+
+/* A comment by the person who wrote the post. Their name in the accent ink, and nothing
+   else - a badge would be a second thing to read on every reply they have ever left. */
+.bypostauthor > .comment-meta .comment-name {
+	color: var(--c-accent);
+}
+
+/* A pinned post in a list. A marker in the gutter, in the same language the timeline
+   already speaks, rather than a background wash: the list has one ground and it stays. */
+.post-list article.sticky .t-h3 a::before,
+.post-list article.sticky h2 a::before {
+	content: "\2022";
+	color: var(--c-accent);
+	margin-inline-end: .35em;
+}
+
+/* Off-screen but focusable, exactly as `.skip-link` upstream is - and for the same reason:
+   a zero-size element is skipped by some screen readers and `display:none` takes it out of
+   the tab order entirely. */
+.screen-reader-text {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+.screen-reader-text:focus {
+	position: static;
+	width: auto;
+	height: auto;
+	overflow: visible;
+	clip-path: none;
+	white-space: normal;
+	color: var(--c-heading);
+}

@@ -24,7 +24,7 @@
 	<?php
 	printf(
 		/* translators: 1: current year, 2: site name */
-		esc_html__( '© %1$s %2$s', 'quireink' ),
+		esc_html__( '© %1$s %2$s', 'quire-ink' ),
 		esc_html( wp_date( 'Y' ) ),
 		esc_html( get_bloginfo( 'name' ) )
 	);
@@ -35,7 +35,7 @@
 			esc_url( 'https://quireink.com' ),
 			/* translators: the theme credit in the footer. The site runs WordPress; this
 			   names the THEME, so avoid "powered by", which claims the blog engine. */
-			esc_html__( 'Quire Ink theme', 'quireink' )
+			esc_html__( 'Quire Ink theme', 'quire-ink' )
 		);
 	}
 	?>

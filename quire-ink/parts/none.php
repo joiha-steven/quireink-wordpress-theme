@@ -7,5 +7,5 @@
 
 ?>
 <article class="reveal">
-	<p class="t-small text-meta"><?php esc_html_e( 'No posts here yet.', 'quireink' ); ?></p>
+	<p class="t-small text-meta"><?php esc_html_e( 'No posts here yet.', 'quire-ink' ); ?></p>
 </article>

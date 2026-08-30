@@ -26,6 +26,6 @@ still gets the other five checks.
 
 ## The one exception
 
-`quireink_shape_css()` in `theme/inc/customizer.php` holds three tables copied from
+`quireink_shape_css()` in `quire-ink/inc/customizer.php` holds three tables copied from
 `content/settings-shape.ts`, because a Customizer control cannot read TypeScript. Three lines
 each, marked in place.

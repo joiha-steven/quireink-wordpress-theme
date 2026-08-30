@@ -17,7 +17,7 @@
 
 if ( has_nav_menu( 'primary' ) ) {
 	?>
-	<nav aria-label="<?php esc_attr_e( 'Menu', 'quireink' ); ?>">
+	<nav aria-label="<?php esc_attr_e( 'Menu', 'quire-ink' ); ?>">
 	<?php
 	wp_nav_menu(
 		array(
@@ -53,7 +53,7 @@ $featured = get_posts(
 if ( $featured ) {
 	?>
 	<div>
-		<h2><?php esc_html_e( 'Featured', 'quireink' ); ?></h2>
+		<h2><?php esc_html_e( 'Featured', 'quire-ink' ); ?></h2>
 		<ul style="--count-w:1ch">
 		<?php foreach ( $featured as $post ) : ?>
 			<li><a class="rail-row link-accent t-small" href="<?php echo esc_url( get_permalink( $post ) ); ?>"><span><?php echo esc_html( get_the_title( $post ) ); ?></span></a></li>
@@ -65,7 +65,7 @@ if ( $featured ) {
 
 // ----- categories ---------------------------------------------------------------------
 
-quireink_rail_terms( 'category', __( 'Categories', 'quireink' ), true, '' );
+quireink_rail_terms( 'category', __( 'Categories', 'quire-ink' ), true, '' );
 
 // ----- archive --------------------------------------------------------------------------
 //
@@ -83,7 +83,7 @@ $years = $wpdb->get_results(
 if ( $years ) {
 	?>
 	<div>
-		<h2><?php esc_html_e( 'Archive', 'quireink' ); ?></h2>
+		<h2><?php esc_html_e( 'Archive', 'quire-ink' ); ?></h2>
 		<div class="rail-tags">
 		<?php foreach ( $years as $year ) : ?>
 			<a class="link-accent t-small" href="<?php echo esc_url( get_year_link( (int) $year->y ) ); ?>"><?php echo esc_html( $year->y ); ?><span class="term-count"><?php echo esc_html( number_format_i18n( $year->n ) ); ?></span></a>
@@ -98,4 +98,4 @@ if ( $years ) {
 // No counts, and lowercased by the sheet: a tag is a word, and thirty words each carrying a
 // number is a table rather than a cloud. The blog engine makes the same distinction.
 
-quireink_rail_terms( 'post_tag', __( 'Tags', 'quireink' ), false, 'lower' );
+quireink_rail_terms( 'post_tag', __( 'Tags', 'quire-ink' ), false, 'lower' );

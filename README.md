@@ -10,7 +10,7 @@ and book mode — driven from WordPress content instead of Quire Ink's own.
 
 ## The idea
 
-Nothing in `theme/assets/css` is written by hand. [`tools/extract.ts`](tools/extract.ts)
+Nothing in `quire-ink/assets/css` is written by hand. [`tools/extract.ts`](tools/extract.ts)
 imports Quire Ink's own stylesheet emitters from a sibling checkout and runs them, so every
 colour, size and rule is the value the live blog renders with — and when the blog's front end
 moves, the theme is re-generated rather than re-read. `check:generated` compares bytes so
@@ -19,7 +19,7 @@ drift is a red check instead of a slow surprise.
 Quire Ink itself is **read only** from here.
 
 ```
-theme/          the theme (slug: quireink)
+quire-ink/      the theme (slug and text domain: quire-ink)
   assets/css/   2 generated + bridge.css, the one written by hand
   assets/js/    Quire Ink's own reader bundles, copied
   assets/fonts/ 21 self-hosted woff2, all OFL
