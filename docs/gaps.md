@@ -94,7 +94,23 @@ are content and are not counted, and no plugin is installed.
 Quire Ink itself serves about 114 KB for the same shape of article, so the theme costs about
 a third more, and the difference is WordPress's markup rather than the sheet.
 
-The single largest item is the base sheet, and the largest thing inside it is the IDE chrome:
-**31 KB of 135 KB raw, a quarter of the sheet, for a treatment that is a taste and is on by
-default.** Splitting it into a second sheet loaded only when the switch is on is the one
-obvious cut, and it has not been made.
+The single largest item is the base sheet, and the biggest thing that could come out of it is
+the IDE chrome — a treatment that is a taste, and one an owner can switch off. It is now its
+own sheet, enqueued only when the switch is on. Measured both ways on the local stack:
+
+| | CSS over the wire |
+|---|---|
+| Switch on (the default) | 53.4 KB |
+| Switch off | 46.9 KB |
+
+So **5.6 KB for a reader whose site has decided against it**, and **839 B against everyone
+else**, because the same bytes compress a little worse in two files. It is a small win bought
+with a small loss, taken because the loss falls on a request that is already open and the win
+falls on bytes that could never be used.
+
+The larger win is quieter: the block editor loads the sheets too, and not one rule in the IDE
+chrome touches `.prose`, a post title or a comment body. It was 6.5 KB the editor could never
+match, on every page load of the editor, and it is gone.
+
+*(An earlier note here said 31 KB and a quarter of the sheet. That was a bad regular
+expression reading section banners, not the sheet: it is 17,705 B raw, 13%.)*

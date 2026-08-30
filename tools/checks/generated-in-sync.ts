@@ -19,7 +19,7 @@ import { $ } from 'bun'
 const QUIRE = '../quireink'
 const OUT = '.tmp/extract-check'
 const CSS = 'quire-ink/assets/css'
-const GENERATED = ['quireink-base.css', 'quireink-tokens.css']
+const GENERATED = ['quireink-base.css', 'quireink-ide.css', 'quireink-tokens.css']
 
 if (!existsSync(QUIRE)) {
   console.log(`  ${QUIRE} not present`)

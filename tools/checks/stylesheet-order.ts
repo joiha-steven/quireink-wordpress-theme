@@ -18,6 +18,18 @@ import { readFileSync } from 'node:fs'
 const SRC = 'quire-ink/functions.php'
 const ORDER = ['quireink-base', 'quireink-tokens', 'quireink-bridge', 'quireink-style']
 
+// Outside the chain, because it is enqueued only when the switch is on and a conditional
+// link cannot be a link in a chain. It still has to hang off the base sheet, or WordPress is
+// free to emit it first.
+const OFF_CHAIN: Record<string, string> = { 'quireink-ide': 'quireink-base' }
+
+// THE SAME ORDER HAS TO HOLD IN THE EDITOR. This guard used to read `wp_enqueue_style` only,
+// and on the other side of that blind spot `add_editor_style()` was listing tokens BEFORE
+// base - the exact inversion the whole check exists to prevent, sitting three lines above the
+// calls it was checking. The editor has no rail, so the bug it would cause there is not the
+// one that shipped; the rule is the rule on both sides.
+const EDITOR_ORDER = ['quireink-base.css', 'quireink-tokens.css', 'bridge.css']
+
 const php = readFileSync(SRC, 'utf8')
 
 // handle => the dependency array as written
@@ -29,6 +41,26 @@ for (const m of php.matchAll(re)) {
 }
 
 const problems: string[] = []
+
+for (const [handle, needs] of Object.entries(OFF_CHAIN)) {
+  const deps = enqueued.get(handle)
+  if (deps === undefined) problems.push(`${handle} is not enqueued at all`)
+  else if (!deps.includes(needs)) {
+    problems.push(`${handle} does not depend on ${needs} (declared: ${deps.join(', ') || 'none'})`)
+  }
+}
+
+const editor = php.match(/add_editor_style\(\s*array\(([^)]*)\)/)
+if (!editor) {
+  problems.push('add_editor_style() was not found — the block editor is showing plain WordPress')
+} else {
+  const listed = [...editor[1]!.matchAll(/'([^']+)'/g)].map((m) => m[1]!.split('/').pop()!)
+  const wanted = EDITOR_ORDER.join(' -> ')
+  const got = listed.join(' -> ')
+  if (got !== wanted) {
+    problems.push(`add_editor_style() lists ${got} — the editor must load ${wanted}, same as the page`)
+  }
+}
 
 for (const handle of ORDER) {
   if (!enqueued.has(handle)) problems.push(`${handle} is not enqueued at all`)
@@ -49,7 +81,8 @@ for (let i = 1; i < ORDER.length; i++) {
 
 console.log(`  ${enqueued.size} stylesheet(s) enqueued in ${SRC}`)
 if (problems.length === 0) {
-  console.log(`✓ check:order: ok (${ORDER.join(' -> ')})`)
+  console.log(`✓ check:order: ok (${ORDER.join(' -> ')}; editor the same; `
+    + `${Object.keys(OFF_CHAIN).join(', ')} off-chain)`)
 } else {
   console.log(`✗ check:order: ${problems.length} problem(s)`)
   for (const p of problems) console.log(`  · ${p}`)

@@ -7,7 +7,8 @@
  * taken from is written into the manifest, so a stale copy is a diff and not a guess.
  *
  * Emits, into theme/:
- *   assets/css/quireink-base.css   the hand-written public sheet (PUBLIC_CSS)
+ *   assets/css/quireink-base.css   the hand-written public sheet (PUBLIC_CSS), less the IDE chrome
+ *   assets/css/quireink-ide.css    the IDE chrome, so it can be left unloaded when it is off
  *   assets/css/quireink-tokens.css palette + type scale + shape, for DEFAULT_SETTINGS
  *   assets/fonts/*.woff2           the self-hosted faces the default preset can reach
  *   theme.json                     the same palette and scale, in the block editor's dialect
@@ -18,6 +19,7 @@ import { join, dirname } from 'node:path'
 import { $ } from 'bun'
 
 import { PUBLIC_CSS } from '@/web/public.css'
+import { IDE_CSS } from '@/web/ide.css'
 import { DEFAULT_SETTINGS } from '@/content/settings'
 import {
   themesToCss, fontPresetCss, chromeFontCss, THEME_PRESETS, TYPE_ROLES,
@@ -98,9 +100,41 @@ const tokens = [
   // resolves against THAT stylesheet, and both directories are siblings under assets/.
   .replaceAll("url('/fonts/", "url('../fonts/")
 
+// The IDE chrome comes out into its own sheet, because it is the one part of the base sheet
+// an owner can switch off - and switching it off should stop it being downloaded, not just
+// stop it applying. Measured on the sheet as it stands: 17,705 B raw, 5,652 B of gzip that a
+// reader with the switch off no longer pays. Whoever leaves it on pays 839 B of gzip for the
+// second file, because the same bytes compress slightly worse split in two, and one more
+// request on a connection that is already open. The block editor never loads it at all: not
+// one rule in it touches `.prose`, so in the editor it was 6.5 KB that could not match.
+//
+// It is LIFTED, never re-typed. `IDE_CSS` is a contiguous slice of `PUBLIC_CSS` and this
+// removes exactly that slice; if the blog engine ever composes the sheet differently the
+// slice stops matching and this throws, which is the seam reporting rather than a theme
+// quietly shipping the chrome twice.
+//
+// Order does not matter for where it is loaded, and that is a property rather than a hope:
+// every selector in it carries `html[data-ide-chrome=on]`, so it cannot tie with anything
+// else in the theme and cannot lose a tie it never has. Checked, along with the fact that it
+// shares no selector at all with the mobile or print sheets it used to sit in front of.
+const IDE_SLICE = '\n' + IDE_CSS + '\n'
+if (!PUBLIC_CSS.includes(IDE_SLICE)) {
+  throw new Error(
+    'IDE_CSS is no longer a contiguous slice of PUBLIC_CSS.\n'
+    + '  Quire Ink has changed how src/web/public.css.ts composes the sheet.\n'
+    + '  Read that file, then decide whether the IDE chrome can still be lifted out;\n'
+    + '  do NOT paste the rules in here.',
+  )
+}
+
 await mkdir(join(THEME, 'assets', 'css'), { recursive: true })
 await writeFile(join(THEME, 'assets', 'css', 'quireink-base.css'),
-  '/* Copied verbatim from Quire Ink src/web/*.css.ts by tools/extract.ts. */\n' + PUBLIC_CSS + '\n')
+  '/* Copied from Quire Ink src/web/*.css.ts by tools/extract.ts, less the IDE chrome,\n'
+  + '   which is lifted whole into quireink-ide.css. */\n'
+  + PUBLIC_CSS.replace(IDE_SLICE, '\n') + '\n')
+await writeFile(join(THEME, 'assets', 'css', 'quireink-ide.css'),
+  '/* Quire Ink src/web/ide.css.ts, lifted whole by tools/extract.ts. Loaded only when\n'
+  + '   the Customizer switch is on. */\n' + IDE_CSS + '\n')
 await writeFile(join(THEME, 'assets', 'css', 'quireink-tokens.css'), tokens + '\n')
 
 // ---------------------------------------------------------------- the pen, deliberately absent
@@ -302,7 +336,8 @@ const dirty = (await $`git -C ${QUIRE} status --porcelain`.text()).trim() !== ''
 if (!process.env.EXTRACT_OUT) await writeFile(join(HERE, 'tools', 'extract-manifest.json'), JSON.stringify({
   takenFrom: { repo: 'quireink', commit: sha, workingTreeDirty: dirty },
   emitted: {
-    'quire-ink/assets/css/quireink-base.css': PUBLIC_CSS.length,
+    'quire-ink/assets/css/quireink-base.css': PUBLIC_CSS.length - IDE_CSS.length - 1,
+    'quire-ink/assets/css/quireink-ide.css': IDE_CSS.length,
     'quire-ink/assets/css/quireink-tokens.css': tokens.length,
     'quire-ink/assets/fonts': faces.length,
     'quire-ink/assets/js': bundles,
@@ -313,7 +348,8 @@ if (!process.env.EXTRACT_OUT) await writeFile(join(HERE, 'tools', 'extract-manif
   chromeFont: s.chromeFont,
 }, null, 2) + '\n')
 
-console.log(`base   ${PUBLIC_CSS.length} B`)
+console.log(`base   ${PUBLIC_CSS.length - IDE_CSS.length - 1} B (IDE chrome lifted out)`)
+console.log(`ide    ${IDE_CSS.length} B`)
 console.log(`tokens ${tokens.length} B`)
 console.log(`fonts  ${faces.length} files`)
 console.log(`js     ${bundles.join(', ')}`)

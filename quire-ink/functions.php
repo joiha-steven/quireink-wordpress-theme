@@ -76,7 +76,13 @@ function quireink_setup() {
 	add_theme_support( 'custom-spacing' );
 	add_theme_support( 'appearance-tools' );
 	add_theme_support( 'editor-styles' );
-	add_editor_style( array( 'assets/css/quireink-tokens.css', 'assets/css/quireink-base.css', 'assets/css/bridge.css' ) );
+	// SAME ORDER AS THE FRONT END: base, then tokens, then bridge. It was tokens first here
+	// while the front end ran base first, which is invariant 1 broken on the side the guard
+	// could not see - `check:order` reads `wp_enqueue_style` calls and this is not one.
+	//
+	// quireink-ide.css is deliberately absent. Not one rule in it touches `.prose`, the post
+	// title or a comment body, so in the editor it could only ever have been bytes.
+	add_editor_style( array( 'assets/css/quireink-base.css', 'assets/css/quireink-tokens.css', 'assets/css/bridge.css' ) );
 
 	register_nav_menus(
 		array(
@@ -87,7 +93,7 @@ function quireink_setup() {
 add_action( 'after_setup_theme', 'quireink_setup' );
 
 /**
- * The three sheets and the two reader bundles.
+ * The sheets and the two reader bundles.
  *
  * The bundles are Quire Ink's own, copied by tools/extract.ts: `core` is the chrome (palette
  * switch, rail, search overlay, back-to-top) and `post` is the article (table-of-contents
@@ -100,6 +106,23 @@ function quireink_assets() {
 	$v   = QUIREINK_VERSION;
 
 	wp_enqueue_style( 'quireink-base', $dir . '/assets/css/quireink-base.css', array(), $v );
+
+	/*
+	 * The IDE chrome is the one part of the look an owner can switch off, so switching it off
+	 * stops it being DOWNLOADED rather than merely stopping it applying: 5,652 B of gzip that
+	 * a reader no longer pays for a treatment the site has decided against. Left on - which is
+	 * the default - it costs 839 B of gzip over the single sheet, because the same bytes
+	 * compress a little worse in two files, plus one request on an open connection.
+	 *
+	 * Where it lands among the sheets does not matter, and that is a property of the sheet
+	 * rather than luck: every selector in it carries `html[data-ide-chrome=on]`, so it cannot
+	 * tie with anything else the theme loads. It is put here because this is where it sat
+	 * inside the base sheet, and a reader of this list should not have to wonder.
+	 */
+	if ( 'on' === get_theme_mod( 'quireink_ide_chrome', 'on' ) ) {
+		wp_enqueue_style( 'quireink-ide', $dir . '/assets/css/quireink-ide.css', array( 'quireink-base' ), $v );
+	}
+
 	wp_enqueue_style( 'quireink-tokens', $dir . '/assets/css/quireink-tokens.css', array( 'quireink-base' ), $v );
 	wp_enqueue_style( 'quireink-bridge', $dir . '/assets/css/bridge.css', array( 'quireink-tokens' ), $v );
 
