@@ -3,6 +3,7 @@
 | Doing | Read |
 |---|---|
 | Anything at all | [`invariants.md`](invariants.md) — the 5 load-bearing rules and what pins each |
+| Adding or changing a setting | [`appearance.md`](appearance.md) — the OWNER's map of every knob, the variables custom CSS may target, and what cannot be changed. It is a promise to users: update it in the same commit |
 | Touching anything a reader sees | [`conventions/`](conventions/README.md) — the three files below, and the rule underneath all of them |
 | Touching CSS | [`conventions/css.md`](conventions/css.md) — which sheet a rule belongs in, and the order they load |
 | Touching a template | [`conventions/php.md`](conventions/php.md) — escaping, prefixes, the file ceiling |

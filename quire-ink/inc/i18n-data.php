@@ -36,15 +36,18 @@ function quireink_palettes() {
  * @return array<string,string>
  */
 function quireink_enabled_palettes() {
+	// One theme mod per palette, set by a checkbox each in the Customizer. This read used to
+	// be a single `quireink_palettes` array that no control ever wrote — a setting with no
+	// user interface, which is a default wearing a costume.
+	//
+	// The owner's DEFAULT palette is always in the list even if its own box is cleared: a
+	// switcher that cannot return to what the site opens in is a one-way door.
 	$all     = quireink_palettes();
-	$enabled = get_theme_mod( 'quireink_palettes', array_keys( $all ) );
-	if ( ! is_array( $enabled ) ) {
-		$enabled = array_keys( $all );
-	}
-	$out = array();
-	foreach ( $enabled as $id ) {
-		if ( isset( $all[ $id ] ) ) {
-			$out[ $id ] = $all[ $id ];
+	$default = get_theme_mod( 'quireink_palette', 'mono' );
+	$out     = array();
+	foreach ( $all as $id => $name ) {
+		if ( $id === $default || get_theme_mod( 'quireink_palette_' . $id, true ) ) {
+			$out[ $id ] = $name;
 		}
 	}
 	return $out;

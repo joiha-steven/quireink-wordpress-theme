@@ -33,6 +33,7 @@ tools/shot.sh <url> .tmp/shots/<name>.png
 |---|---|
 | Anything at all | [`docs/invariants.md`](./docs/invariants.md) — the 5 load-bearing rules |
 | Finding your way | [`docs/README.md`](./docs/README.md) — the index |
+| Adding or changing a setting | [`docs/appearance.md`](./docs/appearance.md) — every knob, and what cannot be changed. Update it in the SAME commit |
 | Touching CSS | [`docs/conventions/css.md`](./docs/conventions/css.md) |
 | Touching a template | [`docs/conventions/php.md`](./docs/conventions/php.md) |
 | Taking something new from the blog engine | [`docs/conventions/extract.md`](./docs/conventions/extract.md) |

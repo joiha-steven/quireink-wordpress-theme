@@ -128,6 +128,110 @@ function quireink_customize_register( $wp_customize ) {
 	);
 
 	$wp_customize->add_section(
+		'quireink_colour',
+		array(
+			'title'       => __( 'Quire Ink - colour', 'quire-ink' ),
+			'priority'    => 28,
+			'description' => __( 'Six palettes, each with a light and a dark half. A reader who picks one is remembered; these decide what everyone else sees, and which ones they are offered.', 'quire-ink' ),
+		)
+	);
+
+	$wp_customize->add_setting(
+		'quireink_palette',
+		array(
+			'default'           => 'mono',
+			'sanitize_callback' => 'quireink_sanitize_choice',
+		)
+	);
+	$wp_customize->add_control(
+		'quireink_palette',
+		array(
+			'label'   => __( 'Palette', 'quire-ink' ),
+			'section' => 'quireink_colour',
+			'type'    => 'select',
+			'choices' => quireink_palettes(),
+		)
+	);
+
+	// One checkbox per palette rather than a multi-select, because the Customizer has no
+	// multi-select and a comma-separated text field is a place to make typing mistakes.
+	// Below two enabled the switcher renders no control at all, which is the blog engine's
+	// rule and the reason a site can ship exactly one palette.
+	foreach ( quireink_palettes() as $quireink_id => $quireink_name ) {
+		$wp_customize->add_setting(
+			'quireink_palette_' . $quireink_id,
+			array(
+				'default'           => true,
+				'sanitize_callback' => 'wp_validate_boolean',
+			)
+		);
+		$wp_customize->add_control(
+			'quireink_palette_' . $quireink_id,
+			array(
+				/* translators: %s: palette name */
+				'label'   => sprintf( __( 'Offer %s to readers', 'quire-ink' ), $quireink_name ),
+				'section' => 'quireink_colour',
+				'type'    => 'checkbox',
+			)
+		);
+	}
+
+	$wp_customize->add_section(
+		'quireink_type',
+		array(
+			'title'       => __( 'Quire Ink - type', 'quire-ink' ),
+			'priority'    => 29,
+			'description' => __( 'All self-hosted. Choosing a face also loads the reading setup measured for it - a serif runs smaller and wants tighter leading than a sans.', 'quire-ink' ),
+		)
+	);
+
+	$wp_customize->add_setting(
+		'quireink_font',
+		array(
+			'default'           => 'literata',
+			'sanitize_callback' => 'quireink_sanitize_choice',
+		)
+	);
+	$wp_customize->add_control(
+		'quireink_font',
+		array(
+			'label'       => __( 'Reading typeface', 'quire-ink' ),
+			'description' => __( 'The words themselves: articles, comments, list headlines.', 'quire-ink' ),
+			'section'     => 'quireink_type',
+			'type'        => 'select',
+			'choices'     => array(
+				'literata'     => __( 'Literata - serif, for reading', 'quire-ink' ),
+				'source-serif' => __( 'Source Serif 4 - serif', 'quire-ink' ),
+				'inter'        => __( 'Inter - sans', 'quire-ink' ),
+				'source-sans'  => __( 'Source Sans 3 - sans', 'quire-ink' ),
+			),
+		)
+	);
+
+	$wp_customize->add_setting(
+		'quireink_chrome_font',
+		array(
+			'default'           => 'jetbrains-mono',
+			'sanitize_callback' => 'quireink_sanitize_choice',
+		)
+	);
+	$wp_customize->add_control(
+		'quireink_chrome_font',
+		array(
+			'label'       => __( 'Furniture typeface', 'quire-ink' ),
+			'description' => __( 'Dates, counts, the rail, the buttons. Not the words.', 'quire-ink' ),
+			'section'     => 'quireink_type',
+			'type'        => 'select',
+			'choices'     => array(
+				'jetbrains-mono' => __( 'JetBrains Mono', 'quire-ink' ),
+				'plex-mono'      => __( 'IBM Plex Mono', 'quire-ink' ),
+				'inter'          => __( 'Inter', 'quire-ink' ),
+				'reading'        => __( 'Same as the reading face', 'quire-ink' ),
+			),
+		)
+	);
+
+	$wp_customize->add_section(
 		'quireink_images',
 		array(
 			'title'       => __( 'Quire Ink - pictures', 'quire-ink' ),
@@ -204,53 +308,3 @@ function quireink_sanitize_choice( $value, $setting ) {
 	$choices = $control ? $control->choices : array();
 	return array_key_exists( $value, $choices ) ? $value : $setting->default;
 }
-
-/**
- * The shape variables, as Quire Ink emits them.
- *
- * The three tables below are copied from the blog engine's `content/settings-shape.ts` and
- * are the one place in this theme where a value is retyped rather than generated. They are
- * three lines each and tools/check-shape.ts fails when they and the blog engine disagree.
- *
- * Nothing is printed when all three are left alone: the generated stylesheet already
- * declares that exact triple, and a second identical declaration is bytes on every page for
- * no change on any of them.
- */
-function quireink_shape_css() {
-	$density = array(
-		'compact' => '0.82',
-		'normal'  => '1',
-		'relaxed' => '1.22',
-	);
-	$radius  = array(
-		'square' => '0px',
-		'soft'   => '.5rem',
-		'round'  => '1rem',
-	);
-	$weight  = array(
-		'light'  => array( '400', '400' ),
-		'normal' => array( '700', '600' ),
-		'bold'   => array( '800', '700' ),
-	);
-
-	$d = get_theme_mod( 'quireink_density', 'normal' );
-	$r = get_theme_mod( 'quireink_radius', 'soft' );
-	$w = get_theme_mod( 'quireink_heading_weight', 'normal' );
-
-	if ( 'normal' === $d && 'soft' === $r && 'normal' === $w ) {
-		return;
-	}
-
-	$d = isset( $density[ $d ] ) ? $d : 'normal';
-	$r = isset( $radius[ $r ] ) ? $r : 'soft';
-	$w = isset( $weight[ $w ] ) ? $w : 'normal';
-
-	printf(
-		'<style id="quireink-shape">:root{--density:%s;--radius:%s;--fw-title:%s;--fw-heading:%s}</style>',
-		esc_html( $density[ $d ] ),
-		esc_html( $radius[ $r ] ),
-		esc_html( $weight[ $w ][0] ),
-		esc_html( $weight[ $w ][1] )
-	);
-}
-add_action( 'wp_head', 'quireink_shape_css', 20 );
