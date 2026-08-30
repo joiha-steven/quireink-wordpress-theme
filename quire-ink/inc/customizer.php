@@ -117,10 +117,11 @@ function quireink_customize_register( $wp_customize ) {
 			),
 		),
 		'quireink_ide_chrome'     => array(
-			'label'   => __( 'Window frame on code blocks', 'quire-ink' ),
-			'section' => 'quireink_reading',
-			'default' => 'on',
-			'choices' => array(
+			'label'       => __( 'Furniture reads as source code', 'quire-ink' ),
+			'description' => __( 'The "//" before every small heading, the square brackets around dates and counts, the line numbers down the sidebar and the numbering in a table of contents. It is the whole treatment, not one detail: off removes every one of them. It never touches the article, the titles or the comments - those stay a book.', 'quire-ink' ),
+			'section'     => 'quireink_reading',
+			'default'     => 'on',
+			'choices'     => array(
 				'on'  => __( 'On', 'quire-ink' ),
 				'off' => __( 'Off', 'quire-ink' ),
 			),
@@ -267,7 +268,7 @@ function quireink_customize_register( $wp_customize ) {
 		'quireink_credit',
 		array(
 			'label'       => __( 'Credit the theme in the footer', 'quire-ink' ),
-			'description' => __( 'A single "powered by Quire Ink" link beside the copyright line.', 'quire-ink' ),
+			'description' => __( 'A single "Quire Ink theme" link beside the copyright line. It names the theme, not the engine: the site is running WordPress.', 'quire-ink' ),
 			'section'     => 'quireink_footer',
 			'type'        => 'checkbox',
 		)

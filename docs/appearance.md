@@ -54,7 +54,7 @@ Both off. A blog that upgrades into this theme must not move a pixel until its o
 | A first-time visitor opens in | Their device's setting | Or force light, or force dark. Decides the FIRST paint only; a reader's own choice always wins. |
 | Book typography | Off | Indented paragraphs, justified lines, hyphenation — a printed page. Off is the web default: ragged right, a blank line between paragraphs. |
 | Motion | On | Off removes every transition. A reader whose system asks for reduced motion gets that regardless. |
-| Window frame on code blocks | On | The editor-window chrome around a code panel. |
+| Furniture reads as source code | On | The `//` before every small heading, the brackets around dates and counts, the line numbers down the sidebar, the numbering in a table of contents. One switch for all of it. It never reaches the article, the titles or the comments. |
 
 ## Quire Ink — footer
 

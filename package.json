@@ -10,6 +10,7 @@
     "check:bridge": "bun tools/checks/bridge-tokens.ts",
     "check:escape": "bun tools/checks/php-escape.ts",
     "check:generated": "bun tools/checks/generated-in-sync.ts",
-    "check:docs": "bun tools/checks/docs.ts"
+    "check:docs": "bun tools/checks/docs.ts",
+    "pot": "docker compose -f dev/docker-compose.yml exec -T cli wp --path=/var/www/html i18n make-pot wp-content/themes/quire-ink wp-content/themes/quire-ink/languages/quire-ink.pot --domain=quire-ink --exclude=node_modules"
   }
 }

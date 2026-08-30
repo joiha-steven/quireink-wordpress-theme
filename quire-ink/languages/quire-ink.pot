@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-30T21:17:00+00:00\n"
+"POT-Creation-Date: 2026-08-30T21:44:47+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quire-ink\n"
@@ -63,41 +63,49 @@ msgstr ""
 msgid "Comments are closed."
 msgstr ""
 
-#: comments.php:116
+#: comments.php:111
+msgid "Remember me on this browser"
+msgstr ""
+
+#: comments.php:130
+msgid "Commenting as"
+msgstr ""
+
+#: comments.php:133
+msgid "Sign out"
+msgstr ""
+
+#: comments.php:175
 msgid "Leave a comment"
 msgstr ""
 
 #. translators: %s: name of the person being replied to
-#: comments.php:118
+#: comments.php:177
 #, php-format
 msgid "Reply to %s"
 msgstr ""
 
-#: comments.php:125
+#: comments.php:184
 msgid "Name"
 msgstr ""
 
-#: comments.php:128
+#: comments.php:187
 msgid "Email"
 msgstr ""
 
-#: comments.php:129
+#: comments.php:188
 msgid "not published"
 msgstr ""
 
-#: comments.php:132
+#: comments.php:191
 msgid "Website"
 msgstr ""
 
-#: comments.php:139
-msgid "Remember me on this browser"
-msgstr ""
-
-#: comments.php:142
+#: comments.php:196
 msgid "Comment"
 msgstr ""
 
-#: comments.php:148
+#: comments.php:202
 msgid "Post comment"
 msgstr ""
 
@@ -289,13 +297,13 @@ msgstr ""
 
 #: inc/customizer.php:84
 #: inc/customizer.php:116
-#: inc/customizer.php:124
+#: inc/customizer.php:125
 msgid "On"
 msgstr ""
 
 #: inc/customizer.php:85
 #: inc/customizer.php:115
-#: inc/customizer.php:125
+#: inc/customizer.php:126
 msgid "Off"
 msgstr ""
 
@@ -341,106 +349,110 @@ msgid "Indented paragraphs, justified lines and hyphenation, the way a printed p
 msgstr ""
 
 #: inc/customizer.php:120
-msgid "Window frame on code blocks"
+msgid "Furniture reads as source code"
 msgstr ""
 
-#: inc/customizer.php:133
+#: inc/customizer.php:121
+msgid "The \"//\" before every small heading, the square brackets around dates and counts, the line numbers down the sidebar and the numbering in a table of contents. It is the whole treatment, not one detail: off removes every one of them. It never touches the article, the titles or the comments - those stay a book."
+msgstr ""
+
+#: inc/customizer.php:134
 msgid "Quire Ink - colour"
 msgstr ""
 
-#: inc/customizer.php:135
+#: inc/customizer.php:136
 msgid "Six palettes, each with a light and a dark half. A reader who picks one is remembered; these decide what everyone else sees, and which ones they are offered."
 msgstr ""
 
-#: inc/customizer.php:149
+#: inc/customizer.php:150
 #: inc/i18n-data.php:78
 msgid "Palette"
 msgstr ""
 
 #. translators: %s: palette name
-#: inc/customizer.php:172
+#: inc/customizer.php:173
 #, php-format
 msgid "Offer %s to readers"
 msgstr ""
 
-#: inc/customizer.php:182
+#: inc/customizer.php:183
 msgid "Quire Ink - type"
 msgstr ""
 
-#: inc/customizer.php:184
+#: inc/customizer.php:185
 msgid "All self-hosted. Choosing a face also loads the reading setup measured for it - a serif runs smaller and wants tighter leading than a sans."
 msgstr ""
 
-#: inc/customizer.php:198
+#: inc/customizer.php:199
 msgid "Reading typeface"
 msgstr ""
 
-#: inc/customizer.php:199
+#: inc/customizer.php:200
 msgid "The words themselves: articles, comments, list headlines."
 msgstr ""
 
-#: inc/customizer.php:203
+#: inc/customizer.php:204
 msgid "Literata - serif, for reading"
 msgstr ""
 
-#: inc/customizer.php:204
+#: inc/customizer.php:205
 msgid "Source Serif 4 - serif"
 msgstr ""
 
-#: inc/customizer.php:205
+#: inc/customizer.php:206
 msgid "Inter - sans"
 msgstr ""
 
-#: inc/customizer.php:206
+#: inc/customizer.php:207
 msgid "Source Sans 3 - sans"
 msgstr ""
 
-#: inc/customizer.php:221
+#: inc/customizer.php:222
 msgid "Furniture typeface"
 msgstr ""
 
-#: inc/customizer.php:222
+#: inc/customizer.php:223
 msgid "Dates, counts, the rail, the buttons. Not the words."
 msgstr ""
 
-#: inc/customizer.php:226
+#: inc/customizer.php:227
 msgid "JetBrains Mono"
 msgstr ""
 
-#: inc/customizer.php:227
+#: inc/customizer.php:228
 msgid "IBM Plex Mono"
 msgstr ""
 
-#: inc/customizer.php:228
+#: inc/customizer.php:229
 msgid "Inter"
 msgstr ""
 
-#: inc/customizer.php:229
+#: inc/customizer.php:230
 msgid "Same as the reading face"
 msgstr ""
 
-#: inc/customizer.php:237
+#: inc/customizer.php:238
 msgid "Quire Ink - pictures"
 msgstr ""
 
-#: inc/customizer.php:239
+#: inc/customizer.php:240
 msgid "Both are off to begin with. A blog that upgrades into a theme must not move a pixel until its owner moves one."
 msgstr ""
 
-#: inc/customizer.php:246
+#: inc/customizer.php:247
 msgid "Quire Ink - reading"
 msgstr ""
 
-#: inc/customizer.php:254
+#: inc/customizer.php:255
 msgid "Quire Ink - footer"
 msgstr ""
 
-#: inc/customizer.php:269
+#: inc/customizer.php:270
 msgid "Credit the theme in the footer"
 msgstr ""
 
-#: inc/customizer.php:270
-msgid "A single \"powered by Quire Ink\" link beside the copyright line."
+#: inc/customizer.php:271
+msgid "A single \"Quire Ink theme\" link beside the copyright line. It names the theme, not the engine: the site is running WordPress."
 msgstr ""
 
 #: inc/i18n-data.php:24

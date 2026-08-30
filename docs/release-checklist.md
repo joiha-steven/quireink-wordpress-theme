@@ -60,6 +60,6 @@ it, so they are listed here rather than approximated.
 | Featured images | two shapes, both off by default |
 | Core CSS classes | `align*`, `wp-caption*`, `gallery-caption`, `bypostauthor`, `sticky`, `screen-reader-text` |
 | Block patterns and styles | a Callout pattern and four image frames, both reusing the blog engine's own rules |
-| Translation | `languages/quire-ink.pot`, 139 strings, no translations shipped ([ADR 0004](decisions/0004-english-only.md)) |
+| Translation | `languages/quire-ink.pot`, 160 strings, no translations shipped ([ADR 0004](decisions/0004-english-only.md)). Rebuild it with `bun run pot` after touching any string |
 | Templates | index, single, page, archive, search, 404, comments, searchform |
 | Accessibility | skip link, focusable off-screen text, no avatars, no third-party requests |
