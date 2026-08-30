@@ -3,11 +3,16 @@
 **In force.**
 
 Theme Check runs clean of REQUIRED and WARNING findings. Four RECOMMENDED items remain and
-all four are answered here, so nobody has to work out whether they were missed.
+all three are answered here, so nobody has to work out whether they were missed. A fourth, the
+missing widget area, was answered and then reversed — see [0008](0008-the-rail-is-a-widget-area.md).
 
-## No widget areas
+## No widget areas — SUPERSEDED by [0008](0008-the-rail-is-a-widget-area.md)
 
-`register_sidebar` is not called.
+Kept as written, because the reasoning below is what was wrong and deleting it would hide
+that. The rail IS a widget area now: WordPress's widget contract and a Quire Ink rail block
+turned out to be the same shape, which this argument did not notice.
+
+~~`register_sidebar` is not called.~~
 
 The rail IS the sidebar, and what goes in it is the site's own structure: its menu, its
 featured posts, its categories, its archive, its tags — rendered from what WordPress already

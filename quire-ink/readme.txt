@@ -30,14 +30,13 @@ rather than copied by hand, so what it renders is what that blog renders.
 * Book typography: indented paragraphs, justified lines, hyphenation. Off by default.
 * A listing timeline: a spine in the gutter with a sticky year and a marker for each month.
 * Shape controls that actually change the shape - density, corner radius, heading weight.
+* A rail you can leave alone or take over: empty, it shows the site's own menu, featured
+  posts, categories, archive and tags; add a widget and the widgets are the rail.
 * Featured images, off by default, in two shapes that are not further choices.
 * Print styles that print the article and not the furniture.
 
 = What it deliberately does not do =
 
-* No widget areas. The rail is the sidebar, and what goes in it is the site's own structure -
-  its menu, its featured posts, its categories, its archive, its tags. A widget area would
-  let anything at all into the gutter, and the gutter is a third of the design.
 * No custom header or custom background image. The palettes are the background, and a header
   image would sit above a wordmark that is already the header.
 * No pen strokes or syntax highlighting. Both exist in the Quire Ink blog engine and neither

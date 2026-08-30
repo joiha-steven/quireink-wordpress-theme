@@ -13,6 +13,17 @@
  * @package QuireInk
  */
 
+// ----- the owner's own rail, if there is one ------------------------------------------
+//
+// One widget takes over the whole column. A rail where three blocks answer to the Customizer
+// and two to the widget screen is two mental models in one gutter, and nobody can predict
+// what order they come out in.
+
+if ( is_active_sidebar( 'rail' ) ) {
+	quireink_rail_widgets();
+	return;
+}
+
 // ----- menu -------------------------------------------------------------------------
 
 if ( has_nav_menu( 'primary' ) ) {

@@ -62,6 +62,22 @@ Both off. A blog that upgrades into this theme must not move a pixel until its o
 |---|---|---|
 | Credit the theme | On | One `Quire Ink theme` link beside the copyright. |
 
+## The rail — Appearance → Widgets
+
+Leave the **Rail** area empty and the theme shows its own five blocks: the menu, featured
+posts (sticky posts), categories with counts, the archive by year, and the tag cloud.
+
+Put **one** widget in it and the widgets are the rail — all of it, not appended to the five.
+A column where some blocks answer to the Customizer and some to the widget screen is two
+mental models in one gutter.
+
+Core widgets come out looking like rail blocks with nothing done to them, because a widget is
+`<div><h2>Title</h2><ul>…</ul></div>` and so is a rail block. Nav Menu, Categories, Archives,
+Recent Posts, Pages and Tag Cloud were all checked: headings, rows, counts in the right-hand
+column and the numbered rings all land. A widget that ships its own stylesheet will look like
+itself — the theme rewrites class names, it does not fight plugin CSS.
+[ADR 0008](decisions/0008-the-rail-is-a-widget-area.md)
+
 ## What WordPress provides
 
 **Site Identity** — the logo (any shape; it is not cropped), the site title, the tagline, the
@@ -92,9 +108,6 @@ wants a wider measure can say so in one line.
 
 Not oversights — each is a decision with a file behind it.
 
-* **Widget areas.** There are none. The rail is the site's own structure, and a gutter that
-  accepts anything is a third of the design gone. A child theme can replace
-  `parts/rail-blocks.php` outright. [ADR 0007](decisions/0007-four-recommendations-declined.md)
 * **Custom header image, custom background.** The palettes are the background.
   [ADR 0007](decisions/0007-four-recommendations-declined.md)
 * **The pen, and syntax highlighting.** Quire Ink has both; the block editor cannot author

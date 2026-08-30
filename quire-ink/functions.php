@@ -313,6 +313,7 @@ function quireink_toc() {
 require get_template_directory() . '/inc/template-tags.php';
 require get_template_directory() . '/inc/comment-walker.php';
 require get_template_directory() . '/inc/blocks.php';
+require get_template_directory() . '/inc/rail-widgets.php';
 require get_template_directory() . '/inc/generated-appearance.php';
 require get_template_directory() . '/inc/customizer.php';
 require get_template_directory() . '/inc/appearance-css.php';

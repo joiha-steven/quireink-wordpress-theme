@@ -1,7 +1,7 @@
 # Before this goes public
 
 Measured, not remembered. `dev/check-theme.sh` runs the gate WordPress.org actually uses; as
-of the last run it reports **0 REQUIRED, 0 WARNING, 4 RECOMMENDED**, and the four are answered
+of the last run it reports **0 REQUIRED, 0 WARNING, 3 RECOMMENDED**, and the three are answered
 in [`decisions/0007-four-recommendations-declined.md`](decisions/0007-four-recommendations-declined.md).
 
 ## Blocking
