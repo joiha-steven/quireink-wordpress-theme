@@ -49,6 +49,22 @@ The two picture patterns ship no picture, and an author has to choose one: core 
 image block with no `src` as **nothing at all** on the front end, though the editor shows its
 placeholder and asks. That is the trade for a theme that bundles no images.
 
+**Right to left** is a generated mirror, `quire-ink/rtl.css`, which WordPress links by itself
+for an RTL locale - `locale_stylesheet()` on `wp_head`, after the sheets, no PHP of ours. It is
+a DIFF: 141 directional declarations out of the four sheets, restated with the resets they
+need, 13 KB raw and 3 KB gzipped, paid only by readers who are in an RTL locale. It mirrors
+`bridge.css` too, so a hand-written rule that forgets RTL is answered without anyone
+remembering to answer it, and `check:generated` goes red if one is added and not re-mirrored.
+
+Two things it taught, both of them about a sheet that OVERRIDES rather than replaces. It lands
+after the whole cascade, so every property it writes, it writes last: restating only the
+declarations that mirror resurrected the phone drawer's `translateX` over the desktop rule's
+`transform:none`, and the rail sat exactly one rail-width out while every rule that positioned
+it measured correct. Whole rules are restated now. And where a selector says a property twice -
+`.to-top` and its safe-area inset - the flipper says the original's last word again at the end,
+inside the same media query. Verified by installing Arabic on the local stack: both gutters
+40px, no horizontal overflow.
+
 **Comments** are WordPress's thread and form wearing Quire Ink's class names. The base sheet
 already carried 35 rules for them, written for Quire Ink's own comment island, and they apply
 to any markup that uses the same names. Four things that markup told us and a screenshot

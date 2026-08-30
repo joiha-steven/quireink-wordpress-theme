@@ -44,11 +44,22 @@ for (const name of GENERATED) {
   }
 }
 
+// rtl.css lives in the theme ROOT, not under assets/css, because that is where WordPress
+// looks for it. It is also the one generated file derived from a HAND-written source as well
+// as from the blog engine: an edit to bridge.css that forgets to mirror shows up here.
+{
+  const committed = readFileSync('quire-ink/rtl.css')
+  const fresh = readFileSync(join(OUT, 'rtl.css'))
+  if (!committed.equals(fresh)) {
+    drift.push(`rtl.css: committed ${committed.length} B, fresh ${fresh.length} B`)
+  }
+}
+
 const fonts = readdirSync(join(CSS, '..', 'fonts')).length
 const freshFonts = readdirSync(join(OUT, 'assets', 'fonts')).length
 if (fonts !== freshFonts) drift.push(`fonts: ${fonts} committed, ${freshFonts} upstream`)
 
-console.log(`  compared ${GENERATED.length} sheet(s) and ${fonts} face(s) against ${QUIRE}`)
+console.log(`  compared ${GENERATED.length + 1} sheet(s) and ${fonts} face(s) against ${QUIRE}`)
 
 if (drift.length === 0) {
   console.log('✓ check:generated: ok')
