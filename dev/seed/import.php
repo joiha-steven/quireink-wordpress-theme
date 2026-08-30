@@ -59,7 +59,7 @@ foreach ( $files as $file ) {
 		wp_set_object_terms( $id, $d['tags'], 'post_tag', false );
 	}
 
-	$note = empty( $d['unmapped'] ) ? '' : '  [no block for: ' . implode( ', ', $d['unmapped'] ) . ']';
+	$note = empty( $d['stripped'] ) ? '' : '  [stripped: ' . implode( ', ', $d['stripped'] ) . ']';
 	WP_CLI::log( sprintf( '%s  /%s%s', $existing ? 'updated' : 'created', $slug, $note ) );
 }
 

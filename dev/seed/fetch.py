@@ -34,18 +34,49 @@ INLINE = {
     "br", "span", "small", "abbr", "time", "kbd", "img", "picture", "source", "cite", "q",
 }
 
-# Quire Ink markup with no Gutenberg equivalent. Kept in the HTML (the stylesheet still
-# styles it) but counted, so the report says what the block editor cannot reproduce.
-UNMAPPED = {
-    "mark[data-pen]": re.compile(r"<mark[^>]*data-pen=", re.I),
-    "u[data-pen]": re.compile(r"<u[^>]*data-pen=", re.I),
+# Quire Ink markup with no Gutenberg equivalent, and what happens to it.
+#
+# STRIPPED, not carried across. The theme no longer ships the sheets that style these, on the
+# rule that a WordPress site cannot author them
+# (docs/decisions/0003-skip-what-gutenberg-cannot-express.md), and markup with no stylesheet
+# is worse than no markup: `<mark>` with the pen sheet gone is the browser's yellow rectangle,
+# which is the one thing the pen exists to avoid.
+#
+# Each entry is (name, pattern, replacement). The replacement keeps the WORDS - only the
+# gesture goes. Every strip is counted and named in the report; a converter that quietly
+# deleted them would make the screenshots agree by deleting the evidence.
+STRIP = [
+    # The pen's own attributes, and the elements that carry nothing else.
+    ("mark[data-pen]", re.compile(r"</?mark\b[^>]*>", re.I), ""),
+    ("u[data-pen]", re.compile(r"</?u\b[^>]*>", re.I), ""),
+    # Shiki's per-token spans. The <pre><code> around them stays and reads as a plain code
+    # panel, which is what WordPress's own code block is.
+    ("pre.shiki", re.compile(r'<span style="[^"]*"(?=[^<]*</span>)', re.I), "<span"),
+    # Anchors the table of contents lands on. The theme prints its own.
+    ("span.anchor", re.compile(r'<span class="anchor"[^>]*></span>', re.I), ""),
+]
+
+# Present in Quire Ink, not produced here, and NOT stripped - they have no attributes to
+# remove and the elements themselves are ordinary HTML. Reported so the count is honest.
+NOTED = {
     "sup.fnref": re.compile(r'<sup[^>]*class="[^"]*fnref', re.I),
-    "span.anchor": re.compile(r'<span[^>]*class="[^"]*anchor', re.I),
-    "pre.shiki": re.compile(r'<pre[^>]*class="[^"]*shiki', re.I),
     ".gallery": re.compile(r'class="[^"]*\bgallery\b', re.I),
     ".callout": re.compile(r'class="[^"]*\bcallout\b', re.I),
     "math": re.compile(r'class="[^"]*\bkatex|<math', re.I),
 }
+
+
+def strip_unauthorable(html: str) -> tuple[str, list[str]]:
+    """Remove the gestures a WordPress author cannot make, and name what was removed."""
+    removed = []
+    for name, pattern, replacement in STRIP:
+        html, n = pattern.subn(replacement, html)
+        if n:
+            removed.append(f"{name}x{n}")
+    for name, pattern in NOTED.items():
+        if pattern.search(html):
+            removed.append(f"{name}(kept)")
+    return html, removed
 
 
 class Grab(HTMLParser):
@@ -290,7 +321,7 @@ def main():
     origin = "://".join(url.split("://")[:1] + [url.split("://", 1)[1].split("/", 1)[0]])
     g.out["prose"] = unwrap_blocks(absolutise(g.out["prose"], origin))
 
-    found = sorted(name for name, pat in UNMAPPED.items() if pat.search(g.out["prose"]))
+    g.out["prose"], found = strip_unauthorable(g.out["prose"])
 
     data = {
         "url": url,
@@ -299,7 +330,7 @@ def main():
         "tags": sorted(set(t for t in g.out["tags"] if t)),
         "cats": sorted(set(c for c in g.out["cats"] if c)),
         "content": blocks(g.out["prose"]),
-        "unmapped": found,
+        "stripped": found,
         "prose_bytes": len(g.out["prose"]),
     }
     with open(out_path, "w", encoding="utf-8") as f:
@@ -309,7 +340,7 @@ def main():
     print(f"prose    {data['prose_bytes']} B -> {len(data['content'])} B of blocks")
     print(f"tags     {', '.join(data['tags']) or '-'}")
     print(f"cats     {', '.join(data['cats']) or '-'}")
-    print(f"unmapped {', '.join(found) if found else 'none'}")
+    print(f"stripped {', '.join(found) if found else 'none'}")
 
 
 if __name__ == "__main__":

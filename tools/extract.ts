@@ -25,12 +25,15 @@ import {
 import { cjkLangCss } from '@/content/fonts'
 import { typographyToCss, shapeToCss, tableToCss } from '@/content/settings'
 import { allFontFaceCss, MONO_TRACKING } from '@/render/font-faces'
-import { INK_HIGHLIGHT_CSS, INK_LINES_CSS } from '@/web/ink.css'
 import { singleRailCss } from '@/render/rail-css'
 
 const HERE = dirname(import.meta.dir)
 const QUIRE = join(HERE, '..', 'quireink')
-const THEME = join(HERE, 'theme')
+// Normally the theme itself. `EXTRACT_OUT` points it elsewhere so
+// `tools/checks/generated-in-sync.ts` can produce a fresh copy and compare bytes without
+// touching what is committed — a check that has to modify the tree to run is a check people
+// turn off.
+const THEME = process.env.EXTRACT_OUT ?? join(HERE, 'theme')
 
 const s = DEFAULT_SETTINGS
 
@@ -84,21 +87,19 @@ await writeFile(join(THEME, 'assets', 'css', 'quireink-base.css'),
   '/* Copied verbatim from Quire Ink src/web/*.css.ts by tools/extract.ts. */\n' + PUBLIC_CSS + '\n')
 await writeFile(join(THEME, 'assets', 'css', 'quireink-tokens.css'), tokens + '\n')
 
-// ---------------------------------------------------------------- the pen
-
-// The pen is NOT part of the public sheet, and finding that out cost a screenshot: every
-// `<mark>` rendered as the browser's yellow rectangle because `public.css.ts` imports only
-// the LINK half of ink.css. The other two halves are hashed into files of their own and
-// linked per page, when the HTML actually contains the element they serve (ADR 0027) - the
-// pen is heavy and most pages never uncap it.
+// ---------------------------------------------------------------- the pen, deliberately absent
 //
-// Both halves go into one file here and functions.php keeps the conditional link, which is
-// the same bargain one round trip cheaper: a WordPress theme cannot hash-and-serve two
-// stylesheets per request without a build step, and a post that uses one gesture almost
-// always uses the other.
-await writeFile(join(THEME, 'assets', 'css', 'quireink-ink.css'),
-  '/* Copied from Quire Ink src/web/ink.css.ts by tools/extract.ts. */\n'
-  + INK_HIGHLIGHT_CSS + '\n' + INK_LINES_CSS + '\n')
+// Quire Ink's pen sheet is NOT emitted here, and that is a decision rather than an omission
+// (docs/decisions/0003-skip-what-gutenberg-cannot-express.md).
+//
+// The strokes are 273 KB of generated SVG keyed on `data-pen="0..N"` and `data-form=o`,
+// attributes only Quire Ink's editor produces. The block editor has no way to write one, so
+// on a WordPress site the sheet is 273 KB that can never match a single element. It was
+// shipped for one afternoon, conditionally linked, before anyone asked who would author the
+// markup it styles.
+//
+// Imported content still carries the attributes; `dev/seed/fetch.py` strips them on the way
+// in for the same reason.
 
 // ---------------------------------------------------------------- the faces
 
@@ -189,18 +190,17 @@ const themeJson = {
     { name: 'footer', title: 'Footer', area: 'footer' },
   ],
 }
-await writeFile(join(THEME, 'theme.json'), JSON.stringify(themeJson, null, 2) + '\n')
+if (!process.env.EXTRACT_OUT) await writeFile(join(HERE, 'theme', 'theme.json'), JSON.stringify(themeJson, null, 2) + '\n')
 
 // ---------------------------------------------------------------- the receipt
 
 const sha = (await $`git -C ${QUIRE} rev-parse HEAD`.text()).trim()
 const dirty = (await $`git -C ${QUIRE} status --porcelain`.text()).trim() !== ''
-await writeFile(join(HERE, 'tools', 'extract-manifest.json'), JSON.stringify({
+if (!process.env.EXTRACT_OUT) await writeFile(join(HERE, 'tools', 'extract-manifest.json'), JSON.stringify({
   takenFrom: { repo: 'quireink', commit: sha, workingTreeDirty: dirty },
   emitted: {
     'theme/assets/css/quireink-base.css': PUBLIC_CSS.length,
     'theme/assets/css/quireink-tokens.css': tokens.length,
-    'theme/assets/css/quireink-ink.css': INK_HIGHLIGHT_CSS.length + INK_LINES_CSS.length,
     'theme/assets/fonts': faces.length,
     'theme/assets/js': bundles,
   },
@@ -212,7 +212,6 @@ await writeFile(join(HERE, 'tools', 'extract-manifest.json'), JSON.stringify({
 
 console.log(`base   ${PUBLIC_CSS.length} B`)
 console.log(`tokens ${tokens.length} B`)
-console.log(`ink    ${INK_HIGHLIGHT_CSS.length + INK_LINES_CSS.length} B`)
 console.log(`fonts  ${faces.length} files`)
 console.log(`js     ${bundles.join(', ')}`)
 console.log(`from   quireink@${sha.slice(0, 7)}${dirty ? ' (dirty)' : ''}`)

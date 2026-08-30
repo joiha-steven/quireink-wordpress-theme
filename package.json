@@ -1,0 +1,15 @@
+{
+  "name": "quireink-wordpress-theme",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "extract": "bun tools/extract.ts",
+    "check:all": "bun run check:filesize && bun run check:order && bun run check:bridge && bun run check:escape && bun run check:generated && bun run check:docs",
+    "check:filesize": "bun tools/checks/file-size.ts",
+    "check:order": "bun tools/checks/stylesheet-order.ts",
+    "check:bridge": "bun tools/checks/bridge-tokens.ts",
+    "check:escape": "bun tools/checks/php-escape.ts",
+    "check:generated": "bun tools/checks/generated-in-sync.ts",
+    "check:docs": "bun tools/checks/docs.ts"
+  }
+}

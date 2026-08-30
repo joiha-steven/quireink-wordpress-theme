@@ -1,44 +1,90 @@
-# House rules for this repository
+# Quire Ink for WordPress
 
-## Quire Ink is READ ONLY
+The reading surface of [Quire Ink](https://quireink.com) as a WordPress theme. `theme/` is the
+theme; everything else exists to generate it, run it, or explain it.
 
-`../quireink` is a released product with production instances. This repository reads its
-source and never writes to it — no files added, none changed, none removed. `tools/extract.ts`
-imports its modules through `tools/tsconfig.json`, which maps `@/*` at that checkout; that is
-the whole interface.
+**Not licensed for release.** [ADR 0005](./docs/decisions/0005-licence-not-decided.md) is open
+and the answer cannot be undone. Do not make this repository public without settling it.
 
-Read it with absolute paths. Do not `cd` into it: the shell keeps its working directory
-between commands, and a later write lands in the wrong repository. That has happened, and the
-symptom lies to you — `php -l` passes on the file it just wrote, and `ls` from here says the
-file does not exist.
+## Verify
 
-## Do not hand-copy values out of Quire Ink
+```
+bun run check:all
+```
 
-Colours, sizes, breakpoints, font stacks: they come out through `tools/extract.ts` or they do
-not come out. A number retyped here is a number that will disagree with the blog engine on
-some later Tuesday and nobody will know which one is right.
+Six static guards — `filesize` · `order` · `bridge` · `escape` · `generated` · `docs`. Seconds.
+`check:generated` skips with a warning when there is no Quire Ink checkout beside this one.
 
-There is exactly one exception, and it is marked as such in `theme/inc/customizer.php`: the
-three shape tables, which have to exist in PHP because a Customizer control cannot read
-TypeScript. They are three lines each.
+`check:all` proves the seams hold. It cannot tell you the rail is empty, a figure is at the
+wrong width, or every headline on the listing page has picked up a link underline. All three
+happened here, all three passed every check, and all three were obvious in a screenshot.
 
-## bridge.css is for translation, never for opinions
+```
+dev/up.sh        # WordPress on http://localhost:8099, admin / admin
+dev/seed.sh      # real articles from the live blog, converted to Gutenberg blocks
+tools/shot.sh <url> .tmp/shots/<name>.png
+```
 
-`theme/assets/css/bridge.css` exists to teach Quire Ink's sheet about `wp-block-*`. If a rule
-there is really about how the site LOOKS, it belongs upstream in the blog engine, where the
-extractor will bring it across on the next run. A value in that file that is not already a
-Quire Ink variable is a bug.
+**Open the page.**
 
-## Stylesheet order is load-bearing
+## Read first
 
-`quireink-base.css` → `quireink-ink.css` → `quireink-tokens.css` → `bridge.css`. That is the
-blog engine's own order: it links the static sheet and inlines the generated half LAST,
-because the generated half has to win. Enqueued the intuitive way round — variables first,
-since everything reads them — the mobile drawer rule beats the generated desktop geometry and
-the table of contents silently never appears on any desktop.
+| Doing | Read |
+|---|---|
+| Anything at all | [`docs/invariants.md`](./docs/invariants.md) — the 5 load-bearing rules |
+| Finding your way | [`docs/README.md`](./docs/README.md) — the index |
+| Touching CSS | [`docs/conventions/css.md`](./docs/conventions/css.md) |
+| Touching a template | [`docs/conventions/php.md`](./docs/conventions/php.md) |
+| Taking something new from the blog engine | [`docs/conventions/extract.md`](./docs/conventions/extract.md) |
+| Going against a past decision | [`docs/decisions/`](./docs/decisions/README.md) — the in-force index first |
+| Wondering what does not survive the trip | [`docs/gaps.md`](./docs/gaps.md) |
 
-## Open the page
+## Debug router — a symptom, and the files to open first
 
-Three of the four defects found so far were invisible to every check that passed and obvious
-in a screenshot: an empty rail, a figure at the wrong width, a paragraph indent that was a
-setting rather than a bug. `tools/shot.sh` takes the picture; `dev/up.sh` runs the site.
+| Symptom / area | Read these first |
+|---|---|
+| A colour, size or breakpoint is wrong | `tools/extract.ts`, then the blog engine's `src/web/*.css.ts` — never edit the generated CSS |
+| A Gutenberg block looks wrong | `theme/assets/css/bridge.css`, `theme/inc/template-tags.php` (`quireink_align_classes`) |
+| The rail, the table of contents, the desktop three-column layout | `theme/functions.php` (`quireink_anchor_headings`, `quireink_toc`), `theme/single.php` |
+| An article's furniture — byline, word count, terms | `theme/single.php`, `theme/inc/template-tags.php` |
+| The listing page | `theme/index.php`, `quireink_list_row()` |
+| A knob in the Customizer | `theme/inc/customizer.php` |
+| Strings the reader JS puts on screen | `theme/inc/i18n-data.php` — they are `data-` attributes on `<body>`, read at run time |
+| The local WordPress | `dev/docker-compose.yml`, `dev/up.sh` |
+| An imported article looks wrong | `dev/seed/fetch.py` |
+
+## Hard rules — each one is a bug that already shipped
+
+- **Quire Ink is READ ONLY.** `../quireink` is a released product with production instances.
+  Read it with ABSOLUTE paths and never `cd` into it: the shell keeps its working directory
+  between commands, so a later write lands in the wrong repository. Six files went in that
+  way, and the symptom lies — `php -l` passes on the file it just wrote, `ls` from here says
+  the file does not exist, and you go looking for a disk problem.
+- **Never hand-copy a value out of the blog engine.** It comes through `tools/extract.ts` or
+  it does not come. One marked exception: the three shape tables in `inc/customizer.php`.
+- **`bridge.css` translates, it never decides.** No hex, no colour function, no length that is
+  not `0`/`1px`/`2px`/`100%`. A value that is not already a Quire Ink variable belongs
+  upstream. Prefer aliasing a class NAME in PHP over copying a RULE in CSS.
+- **The sheets load base → tokens → bridge, wired by dependency.** The generated half exists
+  to win. [Invariant 1](./docs/invariants.md) explains what breaks silently when it does not.
+- **Everything printed is escaped** at the point of printing. `phpcs:ignore` needs a reason.
+- **Everything global is prefixed `quireink_`.** A theme shares a namespace with every plugin
+  on the site.
+- **Never quote the owner** — not in code, comments, docs, ADRs or commit messages. State the
+  fact or the measurement.
+- **No support for markup nobody can author.** [ADR 0003](./docs/decisions/0003-skip-what-gutenberg-cannot-express.md).
+  Build the authoring side first, or ship neither.
+
+## Danger zones
+
+- **`theme/assets/css/quireink-{base,tokens}.css`, `assets/fonts/`, `assets/js/` are
+  GENERATED.** Editing them is not wrong so much as pointless: the next extract overwrites
+  them and `check:generated` is red until it does.
+- **The blog engine moves.** A red `check:generated` is the seam reporting, not a failure.
+  Re-run the extractor and READ the diff before committing it.
+- **`dev/` throws its database away.** `dev/down.sh` is `docker compose down -v`. Nothing in
+  that stack is worth keeping, and a half-migrated database is the one way it could lie.
+- **Port 8099, not 8088.** The jellykey-local PHP server binds `[::1]:8088`; Docker publishes
+  on `0.0.0.0`, so nothing collides at bind time and the browser just resolves `localhost` to
+  `::1` and shows the other site.
+- **All scratch goes under `.tmp/`** — one gitignored root, never a new one.

@@ -27,7 +27,7 @@
  * which is why the side-by-side did not line up until the theme could say it too.
  */
 ?>
-<div class="wrap<?php echo 'on' === get_theme_mod( 'quireink_book_text', 'off' ) ? ' book-text' : ''; ?>">
+<div class="wrap<?php echo esc_attr( 'on' === get_theme_mod( 'quireink_book_text', 'off' ) ? ' book-text' : '' ); ?>">
 <header class="site">
 <a class="skip-link" href="#content"><?php esc_html_e( 'Skip to content', 'quireink' ); ?></a>
 <div class="site-bar">

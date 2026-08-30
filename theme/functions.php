@@ -5,13 +5,12 @@
  * Three stylesheets, in an order that is load-bearing:
  *
  *   1. quireink-base.css    the hand-written public sheet, copied verbatim.
- *   2. quireink-ink.css     the pen, on the pages that use it.
- *   3. quireink-tokens.css  the palette, the type scale, the shape knobs, the @font-face
+ *   2. quireink-tokens.css  the palette, the type scale, the shape knobs, the @font-face
  *                           block, and the generated rail geometry.
- *   4. bridge.css           the only file written for WordPress. It teaches Quire Ink's
+ *   3. bridge.css           the only file written for WordPress. It teaches Quire Ink's
  *                           sheet about `wp-block-*`, and nothing else belongs in it.
  *
- * THE FIRST THREE ARE IN THE BLOG ENGINE'S ORDER AND MUST STAY THERE. Quire Ink links the
+ * THE FIRST TWO ARE IN THE BLOG ENGINE'S ORDER AND MUST STAY THERE. Quire Ink links the
  * static sheet, then the pen, then inlines the generated half LAST - and the generated half
  * is generated precisely because it has to win: `.rail` is a slide-out drawer in the static
  * sheet and only the computed media query promotes it into the desktop gutter. Enqueued the
@@ -68,18 +67,7 @@ function quireink_assets() {
 	$v   = QUIREINK_VERSION;
 
 	wp_enqueue_style( 'quireink-base', $dir . '/assets/css/quireink-base.css', array(), $v );
-
-	// The pen, only on a page that uses it. 273 KB of generated strokes is not a tax to put
-	// on a page with no <mark> and no <u> in it - Quire Ink links it per page for exactly
-	// this reason (ADR 0027), and the theme keeps that bargain rather than inheriting the
-	// sheet into every request.
-	$after_ink = array( 'quireink-base' );
-	if ( quireink_needs_ink() ) {
-		wp_enqueue_style( 'quireink-ink', $dir . '/assets/css/quireink-ink.css', array( 'quireink-base' ), $v );
-		$after_ink = array( 'quireink-ink' );
-	}
-
-	wp_enqueue_style( 'quireink-tokens', $dir . '/assets/css/quireink-tokens.css', $after_ink, $v );
+	wp_enqueue_style( 'quireink-tokens', $dir . '/assets/css/quireink-tokens.css', array( 'quireink-base' ), $v );
 	wp_enqueue_style( 'quireink-bridge', $dir . '/assets/css/bridge.css', array( 'quireink-tokens' ), $v );
 
 	// style.css carries the theme header and no rules; WordPress still expects the handle to
@@ -97,24 +85,6 @@ function quireink_assets() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'quireink_assets' );
-
-/**
- * Does anything on this request carry a pen stroke?
- *
- * Reads the RAW content rather than the rendered content on purpose: this runs at
- * `wp_enqueue_scripts`, before the loop, and rendering every post in an archive to find out
- * whether one of them has a <mark> would run the whole content filter chain twice.
- *
- * @return bool
- */
-function quireink_needs_ink() {
-	if ( is_singular() ) {
-		$raw = get_post_field( 'post_content', get_queried_object_id() );
-		return (bool) preg_match( '/<(mark|u)[\s>]/i', (string) $raw );
-	}
-	// A listing shows excerpts, and an excerpt is stripped of markup before it is printed.
-	return false;
-}
 
 /**
  * Load the reader bundles as ES modules.

@@ -1,0 +1,32 @@
+# Documentation
+
+| Doing | Read |
+|---|---|
+| Anything at all | [`invariants.md`](invariants.md) — the 5 load-bearing rules and what pins each |
+| Touching anything a reader sees | [`conventions/`](conventions/README.md) — the three files below, and the rule underneath all of them |
+| Touching CSS | [`conventions/css.md`](conventions/css.md) — which sheet a rule belongs in, and the order they load |
+| Touching a template | [`conventions/php.md`](conventions/php.md) — escaping, prefixes, the file ceiling |
+| Taking something new from the blog engine | [`conventions/extract.md`](conventions/extract.md) — how the generator works and what it refuses to do |
+| Wondering why something is the way it is | [`decisions/`](decisions/README.md) — read the in-force index first |
+| Wondering what does not survive the trip | [`gaps.md`](gaps.md) — measured, not guessed |
+
+## Verify
+
+```
+bun run check:all
+```
+
+Six static guards: `filesize` · `order` · `bridge` · `escape` · `generated` · `docs`. Seconds,
+not minutes. `check:generated` skips with a warning when there is no Quire Ink checkout beside
+this one.
+
+What it cannot tell you is that the rail is empty, that a figure is at the wrong width, or
+that every headline on the listing page has picked up a link underline. All three happened
+here, all three passed every check, and all three were obvious in a screenshot:
+
+```
+dev/up.sh                                          # WordPress on :8099
+tools/shot.sh http://127.0.0.1:8099/<slug>/ .tmp/shots/wordpress.png
+```
+
+**Open the page.**

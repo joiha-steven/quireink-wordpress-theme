@@ -12,24 +12,16 @@
  * already a Quire Ink variable, that is a bug in this file.
  */
 
-/* ---------- alignment -------------------------------------------------------------
- * Quire Ink names a picture's placement `.img-left` / `.img-right` / `.img-wide`; Gutenberg
- * names the same four things `align*`. Same declarations, so they are aliased rather than
- * redeclared - figure.css.ts stays the one place the geometry is decided. */
-.prose .alignleft { float: left; margin: calc(var(--sp) * .35) var(--sp) calc(var(--sp) * .5) 0; max-width: 50%; }
-.prose .alignright { float: right; margin: calc(var(--sp) * .35) 0 calc(var(--sp) * .5) var(--sp); max-width: 50%; }
-.prose .aligncenter { margin-left: auto; margin-right: auto; }
-.prose .alignwide,
-.prose .alignfull {
-	/* The article column is the reading measure and is deliberately narrow. `alignfull` is
-	   given the WIDE width rather than the viewport: a full-bleed band inside a 38rem column
-	   is a design Quire Ink measured and declined, and honouring it here would put a rule on
-	   the page that the blog engine has no answer for. */
-	width: auto;
-	max-width: min(52rem, 100vw - var(--sp) * 2);
-	margin-left: 50%;
-	transform: translateX(-50%);
-}
+/* ---------- alignment: nothing here, and that is the point ------------------------
+ * Gutenberg names a block's placement `alignwide` / `alignleft` / `aligncenter`; Quire Ink
+ * names the same four things `img-wide` / `img-left` / `img-center`. The first version of
+ * this file copied the declarations across, which put the gutter geometry in two places -
+ * and check:bridge caught the 4rem literal that made it obvious.
+ *
+ * They are ALIASED instead, in PHP: `quireink_align_classes()` adds Quire Ink's class name
+ * next to WordPress's on the way out, so there is exactly one definition of what wide means
+ * and it lives upstream, where the extractor keeps it current.
+ */
 
 /* ---------- images ----------------------------------------------------------------
  * `figure` and `figcaption` are already styled. The block editor adds a wrapper class and,

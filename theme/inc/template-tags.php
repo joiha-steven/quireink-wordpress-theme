@@ -176,3 +176,46 @@ function quireink_nav_link_atts( $atts ) {
 	return $atts;
 }
 add_filter( 'nav_menu_link_attributes', 'quireink_nav_link_atts' );
+
+/**
+ * Give an aligned block Quire Ink's own class beside WordPress's.
+ *
+ * Gutenberg says `alignwide`; the stylesheet says `img-wide`. Aliasing the NAME rather than
+ * copying the RULE keeps one definition of what wide means, and keeps it upstream where
+ * tools/extract.ts brings it across on every run. The first version of bridge.css copied the
+ * declarations instead and immediately had the gutter measurement written down twice.
+ *
+ * Only blocks that render a <figure> are touched. `alignwide` on a paragraph is not a thing
+ * Quire Ink has an opinion about, and inventing one here is how a translation layer turns
+ * into a second design.
+ *
+ * @param string $html  Rendered block markup.
+ * @param array  $block Parsed block.
+ * @return string
+ */
+function quireink_align_classes( $html, $block ) {
+	if ( false === strpos( $html, '<figure' ) ) {
+		return $html;
+	}
+
+	$alias = array(
+		'alignwide'   => 'img-wide',
+		// Full bleed maps onto WIDE, not onto the viewport: a band running edge to edge
+		// inside a reading column is a shape Quire Ink measured and declined, and honouring
+		// it literally would put something on the page the blog engine cannot express.
+		'alignfull'   => 'img-wide',
+		'alignleft'   => 'img-left',
+		'alignright'  => 'img-right',
+		'aligncenter' => 'img-center',
+	);
+
+	foreach ( $alias as $wp => $quire ) {
+		if ( preg_match( '/\bclass="[^"]*\b' . $wp . '\b/', $html )
+			&& ! preg_match( '/\bclass="[^"]*\b' . $quire . '\b/', $html ) ) {
+			$html = preg_replace( '/(\bclass=")/', '$1' . $quire . ' ', $html, 1 );
+		}
+	}
+
+	return $html;
+}
+add_filter( 'render_block', 'quireink_align_classes', 10, 2 );
