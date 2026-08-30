@@ -103,3 +103,27 @@
 .sticky .reveal h2::after { content: " *"; color: var(--c-accent); }
 .comment-list { list-style: none; padding-left: 0; }
 .comment-list .children { list-style: none; padding-left: var(--sp); }
+
+/* ---------- the cookie checkbox -------------------------------------------------------
+ * WordPress's comment form has one control Quire Ink's never had: the "remember me"
+ * checkbox. It lands in `.comment-actions` beside the button, and the sheet's
+ * `.comment-form input{width:100%}` - written for text fields, which is all that form had -
+ * stretches it across the row and pushes its own label onto the next line.
+ *
+ * Two declarations, both undoing a rule that was right for the inputs it was written for. */
+.comment-actions label {
+	display: inline-flex;
+	align-items: center;
+	gap: calc(var(--sp) * .4);
+	margin: 0;
+	color: var(--c-meta);
+}
+.comment-actions input[type="checkbox"] {
+	width: auto;
+	margin: 0;
+}
+
+/* The parenthetical beside a field label: quieter than the label, same line. */
+.comment-note {
+	color: var(--c-meta);
+}

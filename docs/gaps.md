@@ -16,6 +16,29 @@ they are written up where a decision belongs:
 - Vietnamese and every other language —
   [ADR 0004](decisions/0004-english-only.md). Translation-ready, no translations.
 
+## Present, and worth knowing where it came from
+
+The **left rail** on a listing page is the blog engine's discovery furniture, block for block:
+the menu, then Featured, Categories, Archive and Tags. Featured is WordPress's **sticky
+posts** - the platform already has "this one stays at the top", it is set per post in the
+editor, and a Customizer field listing three post ids would be the same idea with worse
+ergonomics.
+
+One block has no counterpart and is not rendered: **Loạt bài / series**. WordPress has no
+series taxonomy, and inventing one in a theme would put content structure in the layer that
+is supposed to be about looks.
+
+The **gutter timeline** - the spine, the sticky year tag, the month markers - is `timelineCss`
+from the blog engine, extracted like everything else. Its breakpoint is deliberately lower
+than the sidebar's: a month label needs about 130px of gutter and a sidebar needs 250px, so
+the timeline still shows on a laptop where the sidebar has folded away.
+
+**Comments** are WordPress's thread and form wearing Quire Ink's class names. The base sheet
+already carried 35 rules for them, written for Quire Ink's own comment island, and they apply
+to any markup that uses the same names. Two things that markup told us and a screenshot
+confirmed: the walker has to override `html5_comment()` rather than `comment()`, and
+`.comment-fields` is a layout for THREE fields, not two.
+
 ## Site configuration, not theme gaps
 
 - **The logo.** manhhung.me has a handwritten wordmark; a fresh install shows the site name as

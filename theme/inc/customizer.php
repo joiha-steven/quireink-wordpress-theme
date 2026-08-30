@@ -114,6 +114,31 @@ function quireink_customize_register( $wp_customize ) {
 		)
 	);
 
+	$wp_customize->add_section(
+		'quireink_footer',
+		array(
+			'title'    => __( 'Quire Ink - footer', 'quireink' ),
+			'priority' => 32,
+		)
+	);
+
+	$wp_customize->add_setting(
+		'quireink_credit',
+		array(
+			'default'           => true,
+			'sanitize_callback' => 'wp_validate_boolean',
+		)
+	);
+	$wp_customize->add_control(
+		'quireink_credit',
+		array(
+			'label'       => __( 'Credit the theme in the footer', 'quireink' ),
+			'description' => __( 'A single "powered by Quire Ink" link beside the copyright line.', 'quireink' ),
+			'section'     => 'quireink_footer',
+			'type'        => 'checkbox',
+		)
+	);
+
 	foreach ( $controls as $id => $c ) {
 		$wp_customize->add_setting(
 			$id,

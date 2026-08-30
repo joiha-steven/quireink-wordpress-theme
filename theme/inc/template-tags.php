@@ -138,8 +138,11 @@ function quireink_related() {
  */
 function quireink_list_row() {
 	$reading = quireink_reading( get_the_ID() );
+	// Opens a year group when this post starts one, and returns the month marker, which
+	// belongs INSIDE the article: the sheet positions it against the card, not the page.
+	$mark = quireink_timeline_step();
 	?>
-	<article class="reveal">
+	<article class="reveal"><?php echo $mark; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built escaped in quireink_timeline_step(). ?>
 		<p class="t-small text-meta"><time class="meta-part" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time> &middot; <span class="meta-part"><span class="num"><?php echo esc_html( number_format_i18n( $reading['minutes'] ) ); ?></span> <?php esc_html_e( 'min read', 'quireink' ); ?></span></p>
 		<h2 class="reading-font mt-2 fs-h2 font-semibold"><a class="link-accent" href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
 		<p class="reading-font mt-3 t-body text-text"><?php echo esc_html( get_the_excerpt() ); ?></p>
@@ -219,3 +222,113 @@ function quireink_align_classes( $html, $block ) {
 	return $html;
 }
 add_filter( 'render_block', 'quireink_align_classes', 10, 2 );
+
+/**
+ * A rail block of terms: a heading, then a flow of links with an optional count each.
+ *
+ * @param string $taxonomy Taxonomy name.
+ * @param string $label    Block heading.
+ * @param bool   $counts   Print a `.term-count` beside each link.
+ * @param string $extra    Extra class on the `.rail-tags` container (`lower` for tags).
+ */
+function quireink_rail_terms( $taxonomy, $label, $counts, $extra = '' ) {
+	$terms = get_terms(
+		array(
+			'taxonomy'   => $taxonomy,
+			'hide_empty' => true,
+			'orderby'    => 'count',
+			'order'      => 'DESC',
+			'number'     => 40,
+		)
+	);
+	if ( empty( $terms ) || is_wp_error( $terms ) ) {
+		return;
+	}
+	?>
+	<div>
+		<h2><?php echo esc_html( $label ); ?></h2>
+		<div class="rail-tags<?php echo $extra ? ' ' . esc_attr( $extra ) : ''; ?>">
+		<?php foreach ( $terms as $term ) : ?>
+			<a class="link-accent t-small" href="<?php echo esc_url( get_term_link( $term ) ); ?>"><?php echo esc_html( $term->name ); ?><?php
+			if ( $counts ) :
+				?>
+				<span class="term-count"><?php echo esc_html( number_format_i18n( $term->count ) ); ?></span>
+				<?php
+			endif;
+			?></a>
+		<?php endforeach; ?>
+		</div>
+	</div>
+	<?php
+}
+
+/**
+ * The listing's gutter timeline: a year tag beside the first post of each year, a month
+ * marker beside the first post of each month.
+ *
+ * The shape is the blog engine's and it is load-bearing. The YEAR tag is a sticky
+ * zero-size anchor that has to be the first child of a `.tl-yr` wrapper around that year's
+ * posts, because it pins while its own group scrolls and the next group pushes it out. The
+ * MONTH marker is a child of the article itself, absolutely positioned against it, so it
+ * lines up with that card without anything measuring anything.
+ *
+ * A month marker is NOT printed for the first month inside a year group: the year tag is
+ * already standing there, and two labels on one line reads as a mistake.
+ *
+ * Call `quireink_timeline_reset()` before the loop. The state is module-level because the
+ * loop calls this once per post and there is nowhere else to keep it.
+ */
+function quireink_timeline_reset() {
+	$GLOBALS['quireink_tl'] = array(
+		'year'  => null,
+		'month' => null,
+		'open'  => false,
+	);
+}
+
+/**
+ * Open a year group if this post starts one, and return the month marker for it.
+ *
+ * @return string HTML to print inside the article, before anything else.
+ */
+function quireink_timeline_step() {
+	$state = isset( $GLOBALS['quireink_tl'] ) ? $GLOBALS['quireink_tl'] : null;
+	if ( null === $state ) {
+		return '';
+	}
+
+	$year  = (int) get_the_date( 'Y' );
+	$month = (int) get_the_date( 'n' );
+	$mark  = '';
+
+	if ( $year !== $state['year'] ) {
+		if ( $state['open'] ) {
+			echo '</div>';
+		}
+		printf(
+			'<div class="tl-yr"><div class="tl-year" aria-hidden="true"><span class="tl-year-tag"><span class="tl-dot"></span>%s</span></div>',
+			esc_html( (string) $year )
+		);
+		$state['open']  = true;
+		$state['year']  = $year;
+		// The year tag speaks for this month too.
+		$state['month'] = $month;
+	} elseif ( $month !== $state['month'] ) {
+		$mark = sprintf(
+			'<span class="tl-mark t-small" aria-hidden="true"><span class="tl-dot"></span>%s</span>',
+			esc_html( wp_date( 'F', (int) get_post_time( 'U', true ) ) )
+		);
+		$state['month'] = $month;
+	}
+
+	$GLOBALS['quireink_tl'] = $state;
+	return $mark;
+}
+
+/** Close the last year group. */
+function quireink_timeline_end() {
+	if ( ! empty( $GLOBALS['quireink_tl']['open'] ) ) {
+		echo '</div>';
+		$GLOBALS['quireink_tl']['open'] = false;
+	}
+}

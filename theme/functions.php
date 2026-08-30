@@ -215,22 +215,62 @@ function quireink_slug( $text ) {
 
 /**
  * The rail's table of contents, printed from what the pass above collected.
+ *
+ * TWO-LEVEL ONLY WHEN THE ARTICLE IS. `rail-lead` and `rail-sub` are not "h2" and "h3" - they
+ * turn the gutter counter from a flat `1 2 3` into an outline `1, 1.1, 2`, and the blog engine
+ * only puts them on when the article actually has both levels. An article written entirely in
+ * h3 - which is most of them, because the title is the h1 and the writer reaches for the next
+ * heading that looks right - has a FLAT contents, and marking every row `rail-sub` numbers it
+ * `0.1 0.2 0.3`: the outer counter never increments because no row ever claims a level above.
+ * That shipped, and it is what an owner sees first, because the gutter is the only part of the
+ * rail with numbers in it.
  */
 function quireink_toc() {
 	$items = isset( $GLOBALS['quireink_toc'] ) ? $GLOBALS['quireink_toc'] : array();
 	if ( count( $items ) < 2 ) {
-		// One heading is a title, not a table of contents. Quire Ink applies the same floor.
+		// One heading is a title, not a table of contents. The blog engine applies the same floor.
 		return;
 	}
+
+	$levels   = array_unique( wp_list_pluck( $items, 'level' ) );
+	$outlined = count( $levels ) > 1;
 	?>
 	<nav class="toc rail" aria-label="<?php esc_attr_e( 'Table of contents', 'quireink' ); ?>">
 	<div class="rail-inner">
 	<h2><?php esc_html_e( 'Table of contents', 'quireink' ); ?></h2>
 	<ul>
 		<li><a class="rail-row link-accent t-small is-active" href="#top"><?php echo esc_html( get_the_title() ); ?></a></li>
-		<?php foreach ( $items as $item ) : ?>
-			<li><a class="rail-row link-accent t-small<?php echo 3 === $item['level'] ? ' rail-sub' : ''; ?>" href="#<?php echo esc_attr( $item['id'] ); ?>"><?php echo esc_html( $item['text'] ); ?></a></li>
-		<?php endforeach; ?>
+		<?php
+		foreach ( $items as $item ) {
+			$mark = '';
+			if ( $outlined ) {
+				$mark = 3 === $item['level'] ? ' rail-sub' : ' rail-lead';
+			}
+			printf(
+				'<li><a class="rail-row link-accent t-small%1$s" href="#%2$s">%3$s</a></li>',
+				esc_attr( $mark ),
+				esc_attr( $item['id'] ),
+				esc_html( $item['text'] )
+			);
+		}
+
+		// The way out of the article, at the foot of the index. The sheet drops its number
+		// (`li:has(.toc-end)`), so it reads as a destination rather than another section.
+		$foot = array();
+		if ( has_tag() || has_category() ) {
+			$foot[] = __( 'Tags', 'quireink' );
+		}
+		if ( comments_open() || get_comments_number() ) {
+			$foot[] = __( 'Comments', 'quireink' );
+		}
+		if ( $foot ) {
+			printf(
+				'<li><a class="rail-row link-accent t-small toc-end" href="#%1$s">%2$s</a></li>',
+				esc_attr( ( has_tag() || has_category() ) ? 'post-tags' : 'comments' ),
+				esc_html( implode( ' / ', $foot ) )
+			);
+		}
+		?>
 	</ul>
 	</div>
 	</nav>
@@ -238,5 +278,6 @@ function quireink_toc() {
 }
 
 require get_template_directory() . '/inc/template-tags.php';
+require get_template_directory() . '/inc/comment-walker.php';
 require get_template_directory() . '/inc/customizer.php';
 require get_template_directory() . '/inc/i18n-data.php';

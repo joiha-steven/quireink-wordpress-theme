@@ -36,6 +36,11 @@ foreach ( $files as $file ) {
 		'post_name'     => $slug,
 		'post_content'  => $d['content'],
 		'post_status'   => 'publish',
+		// wp_insert_post defaults this to 'closed' when the key is absent - it does NOT read
+		// the `default_comment_status` option on this path. Every seeded article came in with
+		// comments closed, so the comment form never rendered and the template looked broken
+		// when it was the seeder that was wrong.
+		'comment_status' => 'open',
 		'post_type'     => 'post',
 		'post_date_gmt' => $d['date'] ? gmdate( 'Y-m-d H:i:s', strtotime( $d['date'] ) ) : '',
 	);

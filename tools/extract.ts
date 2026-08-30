@@ -25,7 +25,7 @@ import {
 import { cjkLangCss } from '@/content/fonts'
 import { typographyToCss, shapeToCss, tableToCss } from '@/content/settings'
 import { allFontFaceCss, MONO_TRACKING } from '@/render/font-faces'
-import { singleRailCss } from '@/render/rail-css'
+import { singleRailCss, timelineCss } from '@/render/rail-css'
 
 const HERE = dirname(import.meta.dir)
 const QUIRE = join(HERE, '..', 'quireink')
@@ -68,6 +68,21 @@ const tokens = [
   // the column width — the rail moves out only when there is room on BOTH sides, so the
   // column stays centred.
   singleRailCss(s.contentWidth),
+  // The listing's gutter timeline: the spine, the sticky year tag and the month markers.
+  // In the blog engine this arrives through `pageStyles(settings, extra)` because it is
+  // page-specific; a theme has one stylesheet for every page, so it is emitted here and is
+  // inert on a page with no `.tl-*` in it.
+  //
+  // It has to be emitted at all, and that is not obvious: the base sheet styles what a year
+  // tag LOOKS like, and only this function positions it. Without it the markers do not sit
+  // in the gutter — they sit in the text, in reading order, and the feed reads as if
+  // somebody typed the month into the middle of the page. Its first line is
+  // `.tl-mark,.tl-year{display:none}`, so the fallback is invisible rather than wrong.
+  //
+  // Its breakpoint is LOWER than the rail's, deliberately: a month label needs ~130px of
+  // gutter and a sidebar needs 250px, so the timeline shows on a laptop where the sidebar
+  // has already folded away.
+  timelineCss(s.contentWidth),
   fontPresetCss(s.fontPreset),
   cjkLangCss(s.fontPreset),
   chromeFontCss(s.chromeFont),
