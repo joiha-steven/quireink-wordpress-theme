@@ -33,6 +33,22 @@ from the blog engine, extracted like everything else. Its breakpoint is delibera
 than the sidebar's: a month label needs about 130px of gutter and a sidebar needs 250px, so
 the timeline still shows on a laptop where the sidebar has folded away.
 
+**Eight block patterns** live as files under `quire-ink/patterns/`, which WordPress registers
+by reading their header comments - not a block-theme feature, and it works here. Every one of
+them exists for the same reason the Callout did: the sheet draws something the block editor
+has no other way to ask for. `.deck`, `.callout`, the gutter-nosing wide figure, the picture
+frames, and the table styling that ships and that nobody would otherwise find.
+
+Writing them found a bug that a year of reading the sheet would not have. A pull quote is a
+`<figure>` wrapping a `<blockquote>`, and the engine draws a rule down the left of ANY
+blockquote - so the quote came out with two rules, the accent one on the figure and the
+engine's hairline 16px inside it, and centred, because that is core's default and this theme
+ranges quotes left. Both fixed in `bridge.css`. Nobody had inserted a pull quote before.
+
+The two picture patterns ship no picture, and an author has to choose one: core renders an
+image block with no `src` as **nothing at all** on the front end, though the editor shows its
+placeholder and asks. That is the trade for a theme that bundles no images.
+
 **Comments** are WordPress's thread and form wearing Quire Ink's class names. The base sheet
 already carried 35 rules for them, written for Quire Ink's own comment island, and they apply
 to any markup that uses the same names. Four things that markup told us and a screenshot

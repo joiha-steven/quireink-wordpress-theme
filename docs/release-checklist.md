@@ -59,7 +59,7 @@ it, so they are listed here rather than approximated.
 | Theme supports | title-tag, post-thumbnails, custom-logo, align-wide, html5, editor styles, responsive embeds, feed links, menus |
 | Featured images | two shapes, both off by default |
 | Core CSS classes | `align*`, `wp-caption*`, `gallery-caption`, `bypostauthor`, `sticky`, `screen-reader-text` |
-| Block patterns and styles | a Callout pattern and four image frames, both reusing the blog engine's own rules |
+| Block patterns and styles | eight patterns under `quire-ink/patterns/`, in their own inserter category and a core one each, plus four image frames as block styles - all of them reaching rules the blog engine already carries |
 | Translation | `languages/quire-ink.pot`, 160 strings, no translations shipped ([ADR 0004](decisions/0004-english-only.md)). Rebuild it with `bun run pot` after touching any string |
 | Templates | index, single, page, archive, search, 404, comments, searchform |
 | Accessibility | skip link, focusable off-screen text, no avatars, no third-party requests |

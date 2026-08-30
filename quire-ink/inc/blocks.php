@@ -2,10 +2,10 @@
 /**
  * What the block editor can offer that Quire Ink's stylesheet already knows how to draw.
  *
- * Both of the things registered here exist because the base sheet carries rules for markup
- * the block editor has no way to produce. That is the only reason either is here: a block
- * style whose CSS this theme had to invent would be a design decision taken in the wrong
- * layer, and the rule for that is in docs/conventions/css.md.
+ * Everything registered here exists because the base sheet carries rules for markup the block
+ * editor has no way to produce. That is the only reason any of it is here: a block style
+ * whose CSS this theme had to invent would be a design decision taken in the wrong layer, and
+ * the rule for that is in docs/conventions/css.md.
  *
  * @package QuireInk
  */
@@ -42,37 +42,25 @@ function quireink_register_block_styles() {
 add_action( 'init', 'quireink_register_block_styles' );
 
 /**
- * The callout, as a block pattern.
+ * The category the theme's patterns sit in.
  *
- * `.callout` and `.callout-label` are styled upstream - an accent rule down the left and a
- * label in heading ink - and Quire Ink writes them from Markdown. Nothing in WordPress does,
- * so without this the rules sit in the sheet unreachable by any author.
+ * The patterns themselves are FILES, under `quire-ink/patterns/`, which WordPress registers
+ * by itself - it reads the header comment of every file in that directory and translates the
+ * title and the description with the theme's own text domain. That is not a block-theme
+ * feature; it works for any active theme, and it is the reason there is no list of
+ * `register_block_pattern()` calls here any more.
  *
- * A pattern rather than a block: it is a group and two paragraphs, and a custom block would
- * be a build step, a registration and a save function for markup a pattern inserts in one
- * click.
+ * What a file cannot declare is the category it belongs to, so that is here. Each pattern
+ * also names a core category beside this one, so an author browsing `Text` or `Media` finds
+ * them without knowing the theme's name.
  */
-function quireink_register_block_patterns() {
-	if ( ! function_exists( 'register_block_pattern' ) ) {
-		return;
-	}
-
-	register_block_pattern(
-		'quire-ink/callout',
+function quireink_register_pattern_category() {
+	register_block_pattern_category(
+		'quire-ink',
 		array(
-			'title'       => __( 'Callout', 'quire-ink' ),
-			'description' => __( 'A short aside with a label, set off by a rule in the accent colour.', 'quire-ink' ),
-			'categories'  => array( 'text' ),
-			'keywords'    => array( 'note', 'aside', 'warning' ),
-			'content'     => '<!-- wp:group {"className":"callout"} --><div class="wp-block-group callout">'
-				. '<!-- wp:paragraph {"className":"callout-label"} --><p class="callout-label">'
-				. esc_html__( 'Note', 'quire-ink' )
-				. '</p><!-- /wp:paragraph -->'
-				. '<!-- wp:paragraph --><p>'
-				. esc_html__( 'Something worth saying beside the argument rather than inside it.', 'quire-ink' )
-				. '</p><!-- /wp:paragraph -->'
-				. '</div><!-- /wp:group -->',
+			'label'       => __( 'Quire Ink', 'quire-ink' ),
+			'description' => __( 'Shapes the blog engine draws that the block editor has no other way to ask for.', 'quire-ink' ),
 		)
 	);
 }
-add_action( 'init', 'quireink_register_block_patterns' );
+add_action( 'init', 'quireink_register_pattern_category' );

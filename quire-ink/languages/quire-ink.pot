@@ -9,13 +9,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-30T21:44:47+00:00\n"
+"POT-Creation-Date: 2026-08-30T22:14:50+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quire-ink\n"
 
 #. Theme Name of the theme
 #: style.css
+#: inc/blocks.php:61
 msgid "Quire Ink"
 msgstr ""
 
@@ -120,23 +121,23 @@ msgstr ""
 msgid "Quire Ink theme"
 msgstr ""
 
-#: functions.php:83
+#: functions.php:89
 msgid "Rail menu"
 msgstr ""
 
-#: functions.php:271
-#: functions.php:273
+#: functions.php:294
+#: functions.php:296
 msgid "Table of contents"
 msgstr ""
 
-#: functions.php:294
+#: functions.php:317
 #: inc/template-tags.php:58
 #: parts/rail-blocks.php:112
 #: single.php:68
 msgid "Tags"
 msgstr ""
 
-#: functions.php:297
+#: functions.php:320
 msgid "Comments"
 msgstr ""
 
@@ -191,20 +192,8 @@ msgstr ""
 msgid "Ink frame"
 msgstr ""
 
-#: inc/blocks.php:63
-msgid "Callout"
-msgstr ""
-
-#: inc/blocks.php:64
-msgid "A short aside with a label, set off by a rule in the accent colour."
-msgstr ""
-
-#: inc/blocks.php:69
-msgid "Note"
-msgstr ""
-
-#: inc/blocks.php:72
-msgid "Something worth saying beside the argument rather than inside it."
+#: inc/blocks.php:62
+msgid "Shapes the blog engine draws that the block editor has no other way to ask for."
 msgstr ""
 
 #: inc/comment-walker.php:95
@@ -589,6 +578,150 @@ msgstr ""
 
 #: parts/rail.php:32
 msgid "Site"
+msgstr ""
+
+#: patterns/callout.php
+msgctxt "Pattern title"
+msgid "Callout"
+msgstr ""
+
+#: patterns/callout.php
+msgctxt "Pattern description"
+msgid "A short aside with a label, set off by a rule in the accent colour."
+msgstr ""
+
+#: patterns/callout.php:20
+msgid "Note"
+msgstr ""
+
+#: patterns/callout.php:23
+msgid "Something worth saying beside the argument rather than inside it."
+msgstr ""
+
+#: patterns/code-with-note.php
+msgctxt "Pattern title"
+msgid "Code with a note"
+msgstr ""
+
+#: patterns/code-with-note.php
+msgctxt "Pattern description"
+msgid "A code panel with a quiet line under it saying what the command does or where it is run."
+msgstr ""
+
+#: patterns/code-with-note.php:23
+msgid "What it does, and where you run it."
+msgstr ""
+
+#: patterns/further-reading.php
+msgctxt "Pattern title"
+msgid "Further reading"
+msgstr ""
+
+#: patterns/further-reading.php
+msgctxt "Pattern description"
+msgid "A rule, a small heading and a list of links - what to read next, at the end of a piece."
+msgstr ""
+
+#: patterns/further-reading.php:22
+msgid "Further reading"
+msgstr ""
+
+#: patterns/further-reading.php:27
+msgid "The thing this piece argued with"
+msgstr ""
+
+#: patterns/further-reading.php:30
+msgid "The thing to read if you want the long version"
+msgstr ""
+
+#: patterns/pull-quote.php
+msgctxt "Pattern title"
+msgid "Pull quote"
+msgstr ""
+
+#: patterns/pull-quote.php
+msgctxt "Pattern description"
+msgid "A line lifted out of the argument, ruled in the accent colour, with who said it underneath."
+msgstr ""
+
+#: patterns/pull-quote.php:20
+msgid "The sentence the rest of the page is arguing towards."
+msgstr ""
+
+#: patterns/pull-quote.php:21
+msgid "Who said it"
+msgstr ""
+
+#: patterns/reference-table.php
+msgctxt "Pattern title"
+msgid "Reference table"
+msgstr ""
+
+#: patterns/reference-table.php
+msgctxt "Pattern description"
+msgid "A small table with a header row and a caption, drawn the way the blog engine draws tables."
+msgstr ""
+
+#: patterns/reference-table.php:22
+msgid "What"
+msgstr ""
+
+#: patterns/reference-table.php:22
+msgid "Before"
+msgstr ""
+
+#: patterns/reference-table.php:22
+msgid "After"
+msgstr ""
+
+#: patterns/reference-table.php:25
+msgid "First thing"
+msgstr ""
+
+#: patterns/reference-table.php:26
+msgid "Second thing"
+msgstr ""
+
+#: patterns/reference-table.php:29
+msgid "What the numbers are, and where they were measured."
+msgstr ""
+
+#: patterns/standfirst.php
+msgctxt "Pattern title"
+msgid "Standfirst"
+msgstr ""
+
+#: patterns/standfirst.php
+msgctxt "Pattern description"
+msgid "The line under the headline that says what the piece is about, set larger and quieter than the body."
+msgstr ""
+
+#: patterns/standfirst.php:18
+msgid "One sentence saying what this piece is about, and why a reader who is skimming should stop."
+msgstr ""
+
+#: patterns/two-pictures.php
+msgctxt "Pattern title"
+msgid "Two pictures side by side"
+msgstr ""
+
+#: patterns/two-pictures.php
+msgctxt "Pattern description"
+msgid "Two framed pictures in a row across the wide measure - a before and an after, or two of a set."
+msgstr ""
+
+#: patterns/wide-picture.php
+msgctxt "Pattern title"
+msgid "Wide picture"
+msgstr ""
+
+#: patterns/wide-picture.php
+msgctxt "Pattern description"
+msgid "A picture that noses out of the reading column into the right gutter, with a caption under it."
+msgstr ""
+
+#: patterns/wide-picture.php:24
+msgid "What the picture is, for a reader who cannot see it."
 msgstr ""
 
 #. translators: %s: search query

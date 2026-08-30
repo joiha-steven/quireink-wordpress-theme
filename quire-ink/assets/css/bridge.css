@@ -58,6 +58,17 @@
 	border-left: 2px solid var(--c-accent);
 	padding: calc(var(--sp) * .75) 0 calc(var(--sp) * .75) var(--sp);
 	margin: calc(var(--sp) * 1.75) 0;
+	/* Core centres a pull quote. Quire Ink ranges every quote left, and a centred one in a
+	   left-ranged column reads as a different site's furniture. */
+	text-align: left;
+}
+/* A pull quote is a <figure> WRAPPING a <blockquote>, and `.prose blockquote` upstream draws
+   a rule down the left of any blockquote. So the quote came out with TWO rules: the accent
+   one on the figure, and the engine's own hairline 16px inside it. Invisible until there was
+   a pattern that inserted one. The figure keeps the rule; the blockquote gives up its own. */
+.prose .wp-block-pullquote blockquote {
+	border-left: 0;
+	padding-left: 0;
 }
 .prose .wp-block-pullquote p { font-size: var(--fs-h4); line-height: var(--lh-h4); }
 
