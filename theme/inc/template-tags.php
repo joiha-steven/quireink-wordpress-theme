@@ -127,17 +127,22 @@ function quireink_related() {
 /**
  * One row in a list of posts.
  *
- * The title carries the reading font rather than the chrome font: a list of headlines is
- * reading, not furniture.
+ * Class for class what the blog engine's listing emits, read off the live page rather than
+ * guessed at: the date and the reading time are `.meta-part` spans in one `.t-small` line,
+ * the title is an h2 in the READING font at h2 size, and the excerpt is body text rather
+ * than meta - a list of headlines is reading, not furniture.
+ *
+ * The first version of this used `link-plain` on the title, which is not a class the sheet
+ * defines, so every headline on the listing page carried a link underline. Visible in one
+ * screenshot; invisible to everything else.
  */
 function quireink_list_row() {
+	$reading = quireink_reading( get_the_ID() );
 	?>
 	<article class="reveal">
-		<p class="t-small text-meta"><time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time></p>
-		<h2 class="t-h3 reading-font"><a class="link-plain" href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
-		<?php if ( has_excerpt() ) : ?>
-			<p class="t-small text-meta"><?php echo esc_html( get_the_excerpt() ); ?></p>
-		<?php endif; ?>
+		<p class="t-small text-meta"><time class="meta-part" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time> &middot; <span class="meta-part"><span class="num"><?php echo esc_html( number_format_i18n( $reading['minutes'] ) ); ?></span> <?php esc_html_e( 'min read', 'quireink' ); ?></span></p>
+		<h2 class="reading-font mt-2 fs-h2 font-semibold"><a class="link-accent" href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+		<p class="reading-font mt-3 t-body text-text"><?php echo esc_html( get_the_excerpt() ); ?></p>
 	</article>
 	<?php
 }
