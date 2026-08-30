@@ -65,6 +65,27 @@ it measured correct. Whole rules are restated now. And where a selector says a p
 inside the same media query. Verified by installing Arabic on the local stack: both gutters
 40px, no horizontal overflow.
 
+**The block editor shows the article, not a guess at it.** Everything a reader sees inside a
+post is scoped to `.prose`; the editor canvas is a bare `.editor-styles-wrapper` and has no such
+class, so for a long time none of it applied — an author wrote in the mono chrome face at 608px
+and published in a book serif at 672px. Nothing about the PAGE was wrong, so nothing caught it.
+
+`tools/editor-css.ts` re-addresses those same rules at the canvas and `quireink_editor_css()`
+enqueues them into the iframe. Two things it taught:
+
+* **`theme.json`'s widths were hand-typed and drifted.** `contentSize` was `38rem` against a
+  reading column of 672px, and `wideSize` `52rem` against a wide figure of 962px, so the editor
+  drew every block 64px narrower than the page would and "wide" meant two different things on
+  the two sides of Publish. Both come from the engine's own numbers now.
+* **A selector list is not a comma-separated string.** Splitting one naively shredded
+  `.prose > :is(h1,h2,h3)` into fragments with unclosed parens, and a browser silently drops a
+  rule whose selector will not parse: 60 of 69 rules were going on the floor, and the nine that
+  survived left the canvas looking *almost* right. The rule count is what caught it, not the eye.
+
+Measured after: Literata at 672px in both, headings matching, inline code in JetBrains Mono on
+its tinted ground — and a paragraph set to "Large" in the sidebar still measures 36px, because
+the author's own choices have to beat the theme and do.
+
 **Comments** are WordPress's thread and form wearing Quire Ink's class names. The base sheet
 already carried 35 rules for them, written for Quire Ink's own comment island, and they apply
 to any markup that uses the same names. Four things that markup told us and a screenshot

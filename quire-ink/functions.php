@@ -82,6 +82,8 @@ function quireink_setup() {
 	//
 	// quireink-ide.css is deliberately absent. Not one rule in it touches `.prose`, the post
 	// title or a comment body, so in the editor it could only ever have been bytes.
+	//
+	// editor.css is NOT in this list, and that is not an omission - see `quireink_editor_css()`.
 	add_editor_style( array( 'assets/css/quireink-base.css', 'assets/css/quireink-tokens.css', 'assets/css/bridge.css' ) );
 
 	register_nav_menus(
@@ -141,6 +143,47 @@ function quireink_assets() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'quireink_assets' );
+
+/**
+ * The article's typography, inside the editor canvas.
+ *
+ * THE PROBLEM. Everything a reader sees inside a post is scoped to `.prose`: the reading face,
+ * the measure, the heading scale, the list indents, the blockquote rule. The editor canvas is a
+ * bare `.editor-styles-wrapper` and has no such class, so none of it applied - an author wrote
+ * in the mono chrome face at one width and published in a book serif at another. Every static
+ * check passed the whole time, because nothing about the PAGE was wrong.
+ *
+ * `tools/editor-css.ts` generates those same rules addressed at `body`, which inside the
+ * iframed canvas is the wrapper itself.
+ *
+ * WHY NOT `add_editor_style()`. It was tried, it registers cleanly, `get_editor_stylesheets()`
+ * lists it, the editor settings carry its text - and the canvas never receives it, while the
+ * three sheets beside it in the same call all arrive. Rather than keep guessing at what the
+ * editor does to a sheet on its way in, this enqueues the file. Since 6.3 the canvas is an
+ * iframe and `enqueue_block_assets` runs inside it, so the file lands as a plain stylesheet
+ * with nothing rewriting it.
+ *
+ * `is_admin()` because that hook fires on the front end too, where these rules would be a
+ * second copy of the article's typography aimed at an element that is not there.
+ */
+function quireink_editor_css() {
+	if ( ! is_admin() ) {
+		return;
+	}
+	/*
+	 * No dependency, because ordering cannot help: the editor injects its own `<style>` blocks
+	 * after every enqueued link, so a link is never last. The generated sheet wins its ties on
+	 * weight instead - see tools/editor-css.ts for why that is safe against the author's own
+	 * choices and only aimed at WordPress's defaults.
+	 */
+	wp_enqueue_style(
+		'quireink-editor',
+		get_template_directory_uri() . '/assets/css/editor.css',
+		array(),
+		QUIREINK_VERSION
+	);
+}
+add_action( 'enqueue_block_assets', 'quireink_editor_css' );
 
 /**
  * Load the reader bundles as ES modules.

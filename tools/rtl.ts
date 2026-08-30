@@ -16,8 +16,8 @@
  * them. A flipper that silently does its best is a flipper that silently gets it wrong.
  */
 
-type Decl = { prop: string, value: string, important: string }
-type Node =
+export type Decl = { prop: string, value: string, important: string }
+export type Node =
   | { kind: 'rule', selector: string, decls: Decl[], seq: number }
   | { kind: 'at', prelude: string, children: Node[] }
 
@@ -179,9 +179,12 @@ const NESTS = /^@(media|supports|layer|container|scope)\b/
 
 // Document order, shared across the whole sheet including inside media queries, so "which
 // declaration is the last word" can be answered later.
+//
+// `parse` is exported because `tools/editor-css.ts` needs the same walk over the same sheets.
+// Two parsers over one stylesheet is two things to be wrong about a brace.
 let seq = 0
 
-function parse(css: string): Node[] {
+export function parse(css: string): Node[] {
   const nodes: Node[] = []
   let i = 0
   while (i < css.length) {
