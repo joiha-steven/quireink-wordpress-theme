@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-30T22:32:01+00:00\n"
+"POT-Creation-Date: 2026-08-30T22:57:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quire-ink\n"
@@ -285,14 +285,14 @@ msgid "Off removes every transition. A reader whose system asks for reduced moti
 msgstr ""
 
 #: inc/customizer.php:84
-#: inc/customizer.php:116
-#: inc/customizer.php:125
+#: inc/customizer.php:128
+#: inc/customizer.php:137
 msgid "On"
 msgstr ""
 
 #: inc/customizer.php:85
-#: inc/customizer.php:115
-#: inc/customizer.php:126
+#: inc/customizer.php:127
+#: inc/customizer.php:138
 msgid "Off"
 msgstr ""
 
@@ -306,6 +306,7 @@ msgstr ""
 
 #: inc/customizer.php:94
 #: inc/customizer.php:104
+#: inc/customizer.php:116
 msgid "None"
 msgstr ""
 
@@ -314,133 +315,161 @@ msgid "Above the title"
 msgstr ""
 
 #: inc/customizer.php:99
-msgid "Featured image in a list"
+msgid "Frame on every picture"
 msgstr ""
 
 #: inc/customizer.php:100
-msgid "A small square beside the words, or a wide 3:2 above them. The shape is not a further choice: a list of pictures has to look like a list."
+msgid "A mat and a hairline around each picture in an article, the way a print is mounted. This is the site-wide default; a single picture can still be given its own frame, or none, from the block editor's Styles panel."
 msgstr ""
 
 #: inc/customizer.php:105
-msgid "Small square beside"
+msgid "Thin"
 msgstr ""
 
 #: inc/customizer.php:106
-msgid "Wide, above"
+msgid "Medium"
 msgstr ""
 
-#: inc/customizer.php:110
-msgid "Book typography"
+#: inc/customizer.php:107
+msgid "Thick"
 msgstr ""
 
 #: inc/customizer.php:111
+msgid "Featured image in a list"
+msgstr ""
+
+#: inc/customizer.php:112
+msgid "A small square beside the words, or a wide 3:2 above them. The shape is not a further choice: a list of pictures has to look like a list."
+msgstr ""
+
+#: inc/customizer.php:117
+msgid "Small square beside"
+msgstr ""
+
+#: inc/customizer.php:118
+msgid "Wide, above"
+msgstr ""
+
+#: inc/customizer.php:122
+msgid "Book typography"
+msgstr ""
+
+#: inc/customizer.php:123
 msgid "Indented paragraphs, justified lines and hyphenation, the way a printed page sets them. Off is the web default: ragged right, a blank line between paragraphs."
 msgstr ""
 
-#: inc/customizer.php:120
+#: inc/customizer.php:132
 msgid "Furniture reads as source code"
 msgstr ""
 
-#: inc/customizer.php:121
+#: inc/customizer.php:133
 msgid "The \"//\" before every small heading, the square brackets around dates and counts, the line numbers down the sidebar and the numbering in a table of contents. It is the whole treatment, not one detail: off removes every one of them. It never touches the article, the titles or the comments - those stay a book."
 msgstr ""
 
-#: inc/customizer.php:134
+#: inc/customizer.php:146
 msgid "Quire Ink - colour"
 msgstr ""
 
-#: inc/customizer.php:136
+#: inc/customizer.php:148
 msgid "Six palettes, each with a light and a dark half. A reader who picks one is remembered; these decide what everyone else sees, and which ones they are offered."
 msgstr ""
 
-#: inc/customizer.php:150
+#: inc/customizer.php:162
 #: inc/i18n-data.php:80
 msgid "Palette"
 msgstr ""
 
 #. translators: %s: palette name
-#: inc/customizer.php:173
+#: inc/customizer.php:185
 #, php-format
 msgid "Offer %s to readers"
 msgstr ""
 
-#: inc/customizer.php:183
+#: inc/customizer.php:195
 msgid "Quire Ink - type"
 msgstr ""
 
-#: inc/customizer.php:185
+#: inc/customizer.php:197
 msgid "All self-hosted. Choosing a face also loads the reading setup measured for it - a serif runs smaller and wants tighter leading than a sans."
 msgstr ""
 
-#: inc/customizer.php:199
+#: inc/customizer.php:211
 msgid "Reading typeface"
 msgstr ""
 
-#: inc/customizer.php:200
+#: inc/customizer.php:212
 msgid "The words themselves: articles, comments, list headlines."
 msgstr ""
 
-#: inc/customizer.php:204
+#: inc/customizer.php:216
 msgid "Literata - serif, for reading"
 msgstr ""
 
-#: inc/customizer.php:205
+#: inc/customizer.php:217
 msgid "Source Serif 4 - serif"
 msgstr ""
 
-#: inc/customizer.php:206
+#: inc/customizer.php:218
 msgid "Inter - sans"
 msgstr ""
 
-#: inc/customizer.php:207
+#: inc/customizer.php:219
 msgid "Source Sans 3 - sans"
 msgstr ""
 
-#: inc/customizer.php:222
+#: inc/customizer.php:234
 msgid "Furniture typeface"
 msgstr ""
 
-#: inc/customizer.php:223
+#: inc/customizer.php:235
 msgid "Dates, counts, the rail, the buttons. Not the words."
 msgstr ""
 
-#: inc/customizer.php:227
+#: inc/customizer.php:239
 msgid "JetBrains Mono"
 msgstr ""
 
-#: inc/customizer.php:228
+#: inc/customizer.php:240
 msgid "IBM Plex Mono"
 msgstr ""
 
-#: inc/customizer.php:229
+#: inc/customizer.php:241
 msgid "Inter"
 msgstr ""
 
-#: inc/customizer.php:230
+#: inc/customizer.php:242
 msgid "Same as the reading face"
 msgstr ""
 
-#: inc/customizer.php:238
+#: inc/customizer.php:250
 msgid "Quire Ink - pictures"
 msgstr ""
 
-#: inc/customizer.php:240
+#: inc/customizer.php:252
 msgid "Both are off to begin with. A blog that upgrades into a theme must not move a pixel until its owner moves one."
 msgstr ""
 
-#: inc/customizer.php:247
+#: inc/customizer.php:259
 msgid "Quire Ink - reading"
 msgstr ""
 
-#: inc/customizer.php:255
+#: inc/customizer.php:267
 msgid "Quire Ink - footer"
 msgstr ""
 
-#: inc/customizer.php:270
+#: inc/customizer.php:288
+msgid "Draw the frame in ink"
+msgstr ""
+
+#: inc/customizer.php:289
+msgid "The mat and the line in the heading colour instead of the page colour. Nothing to see until a frame is chosen above."
+msgstr ""
+
+#: inc/customizer.php:305
 msgid "Credit the theme in the footer"
 msgstr ""
 
-#: inc/customizer.php:271
+#: inc/customizer.php:306
 msgid "A single \"Quire Ink theme\" link beside the copyright line. It names the theme, not the engine: the site is running WordPress."
 msgstr ""
 

@@ -81,3 +81,20 @@ function quireink_chrome_css() {
 	'jetbrains-mono' => ':root{--font-sans:\'JetBrains Mono\', ui-monospace, \'SFMono-Regular\', Menlo, Consolas, monospace}',
 	);
 }
+
+/**
+ * Frame id => the four `--fig-default-*` variables `figure img` reads when a picture names
+ * no frame of its own. `none` is absent because it emits nothing.
+ *
+ * @return array<string,string>
+ */
+function quireink_figure_css() {
+	return array(
+	'thin' => ':root{--fig-default-pad:var(--fig-step-thin);--fig-default-mat:var(--c-bg);--fig-default-bw:1px;--fig-default-line:var(--c-rule);--fig-default-line:color-mix(in srgb,var(--c-rule),var(--c-meta) 35%)}',
+	'thin-ink' => ':root{--fig-default-pad:var(--fig-step-thin);--fig-default-mat:var(--c-heading);--fig-default-bw:1px;--fig-default-line:var(--c-rule);--fig-default-line:var(--c-heading)}',
+	'medium' => ':root{--fig-default-pad:var(--fig-step-med);--fig-default-mat:var(--c-bg);--fig-default-bw:1px;--fig-default-line:var(--c-rule);--fig-default-line:color-mix(in srgb,var(--c-rule),var(--c-meta) 35%)}',
+	'medium-ink' => ':root{--fig-default-pad:var(--fig-step-med);--fig-default-mat:var(--c-heading);--fig-default-bw:1px;--fig-default-line:var(--c-rule);--fig-default-line:var(--c-heading)}',
+	'thick' => ':root{--fig-default-pad:var(--fig-step-thick);--fig-default-mat:var(--c-bg);--fig-default-bw:1px;--fig-default-line:var(--c-rule);--fig-default-line:color-mix(in srgb,var(--c-rule),var(--c-meta) 35%)}',
+	'thick-ink' => ':root{--fig-default-pad:var(--fig-step-thick);--fig-default-mat:var(--c-heading);--fig-default-bw:1px;--fig-default-line:var(--c-rule);--fig-default-line:var(--c-heading)}',
+	);
+}

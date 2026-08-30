@@ -2,7 +2,7 @@
   "takenFrom": {
     "repo": "quireink",
     "commit": "ff60c2c8504426f7e4bd1ecdbac7024812028757",
-    "workingTreeDirty": false
+    "workingTreeDirty": true
   },
   "emitted": {
     "quire-ink/assets/css/quireink-base.css": 117526,

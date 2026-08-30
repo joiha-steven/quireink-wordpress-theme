@@ -50,6 +50,23 @@ function quireink_appearance_css() {
 		$out .= $chromes[ $chrome ];
 	}
 
+	/*
+	 * The site-wide picture frame. `none` is the default and emits nothing, which is also
+	 * what the blog engine does: a frame is a decision about a site's voice, so a fresh
+	 * install and an upgrade both get a picture with no mat until somebody asks for one.
+	 *
+	 * The ink variant is a MODIFIER, not a fifth frame, so the two controls compose into one
+	 * key here exactly as they compose into one call upstream.
+	 */
+	$frame = get_theme_mod( 'quireink_figure_frame', 'none' );
+	if ( 'none' !== $frame ) {
+		$key    = $frame . ( get_theme_mod( 'quireink_figure_ink', false ) ? '-ink' : '' );
+		$frames = quireink_figure_css();
+		if ( isset( $frames[ $key ] ) ) {
+			$out .= $frames[ $key ];
+		}
+	}
+
 	$out .= quireink_shape_declarations();
 
 	if ( '' === $out ) {

@@ -46,6 +46,8 @@ Both off. A blog that upgrades into this theme must not move a pixel until its o
 |---|---|---|
 | Featured image on an article | None | Above the title, always 3:2. Above, because a picture under the headline pushes the first sentence off a phone. |
 | Featured image in a list | None | A floated 96px square beside the words, or a 3:2 plate above them. **The shape is not a further choice**: a list of pictures has to look like a list, and three real files measured at ratios 0.70, 2.10 and 0.72 read as a tall block, a thin strip and a tall block. |
+| Frame on every picture | None | A mat and a hairline around each picture in an article, the way a print is mounted — thin, medium or thick. This is the site-wide DEFAULT; a single picture overrides it from the block editor's Styles panel, including back to no frame at all. |
+| Draw the frame in ink | Off | A modifier on whichever weight is chosen, not a fourth weight: the mat and the line in the heading colour instead of the page colour. Nothing to see until a frame is chosen. |
 
 ## Quire Ink — reading
 

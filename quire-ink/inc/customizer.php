@@ -95,6 +95,18 @@ function quireink_customize_register( $wp_customize ) {
 				'inline' => __( 'Above the title', 'quire-ink' ),
 			),
 		),
+		'quireink_figure_frame'   => array(
+			'label'       => __( 'Frame on every picture', 'quire-ink' ),
+			'description' => __( 'A mat and a hairline around each picture in an article, the way a print is mounted. This is the site-wide default; a single picture can still be given its own frame, or none, from the block editor\'s Styles panel.', 'quire-ink' ),
+			'section'     => 'quireink_images',
+			'default'     => 'none',
+			'choices'     => array(
+				'none'   => __( 'None', 'quire-ink' ),
+				'thin'   => __( 'Thin', 'quire-ink' ),
+				'medium' => __( 'Medium', 'quire-ink' ),
+				'thick'  => __( 'Thick', 'quire-ink' ),
+			),
+		),
 		'quireink_thumb'          => array(
 			'label'       => __( 'Featured image in a list', 'quire-ink' ),
 			'description' => __( 'A small square beside the words, or a wide 3:2 above them. The shape is not a further choice: a list of pictures has to look like a list.', 'quire-ink' ),
@@ -254,6 +266,29 @@ function quireink_customize_register( $wp_customize ) {
 		array(
 			'title'    => __( 'Quire Ink - footer', 'quire-ink' ),
 			'priority' => 32,
+		)
+	);
+
+	/*
+	 * The ink variant of the frame, as a checkbox rather than two more entries in the list
+	 * above: it is a MODIFIER on whichever weight is chosen, which is how the blog engine
+	 * models it, and folding it into the list would offer seven answers to a question that
+	 * has four and a switch.
+	 */
+	$wp_customize->add_setting(
+		'quireink_figure_ink',
+		array(
+			'default'           => false,
+			'sanitize_callback' => 'wp_validate_boolean',
+		)
+	);
+	$wp_customize->add_control(
+		'quireink_figure_ink',
+		array(
+			'label'       => __( 'Draw the frame in ink', 'quire-ink' ),
+			'description' => __( 'The mat and the line in the heading colour instead of the page colour. Nothing to see until a frame is chosen above.', 'quire-ink' ),
+			'section'     => 'quireink_images',
+			'type'        => 'checkbox',
 		)
 	);
 
