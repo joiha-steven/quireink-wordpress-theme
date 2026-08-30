@@ -128,6 +128,31 @@
 	color: var(--c-meta);
 }
 
+/* ---------- the heading WordPress puts in front of the form ---------------------------
+ * Quire Ink's form has no title. The thread ends, and the box begins one `.comment-form`
+ * top margin later. WordPress prints a heading and prints it OUTSIDE the form - it is also
+ * the "Reply to X" target and it carries the cancel link - so that margin now opens BELOW
+ * the title, and the title itself sits on the last comment's Reply link with nothing
+ * between them.
+ *
+ * The space moves to the wrapper, and the box is drawn back up under its own heading: one
+ * gap before the pair, a smaller one inside it. Nothing here is a new measurement - it is
+ * the blog engine's own 2rem and 0.75rem, re-pointed at the element that now needs them,
+ * in `--sp` so they still answer the density setting.
+ */
+#respond {
+	margin-top: calc(var(--sp) * 2);
+}
+#respond .comment-form {
+	margin-top: calc(var(--sp) * .75);
+}
+/* comment-reply.js MOVES #respond inside the comment being answered. The blog engine's
+ * `.comment .comment-form` already tightens the box there; the wrapper it now sits in has
+ * to be tightened with it, or the reply form opens two lines below the comment. */
+.comment #respond {
+	margin-top: calc(var(--sp) * .75);
+}
+
 /* ---------- the class names WordPress guarantees ---------------------------------------
  * Nine class names that core writes into content and that a theme is expected to answer for.
  * They are here, and not upstream, for the same reason everything else in this file is:

@@ -35,9 +35,26 @@ the timeline still shows on a laptop where the sidebar has folded away.
 
 **Comments** are WordPress's thread and form wearing Quire Ink's class names. The base sheet
 already carried 35 rules for them, written for Quire Ink's own comment island, and they apply
-to any markup that uses the same names. Two things that markup told us and a screenshot
-confirmed: the walker has to override `html5_comment()` rather than `comment()`, and
-`.comment-fields` is a layout for THREE fields, not two.
+to any markup that uses the same names. Four things that markup told us and a screenshot
+confirmed:
+
+* The walker has to override `html5_comment()` rather than `comment()`.
+* `.comment-fields` is a layout for THREE fields, not two.
+* **A container may not be opened in one field and closed in another.** `comment_form()`
+  prints every field except `comment` only for a logged-OUT reader, so half of such a
+  container simply does not print. `.comment-actions` opened in `cookies` and closed in
+  `submit_field`: signed in, the closing tag ran on its own and closed `#respond` instead,
+  the button lost the row and sat on the textarea, and the id fields landed outside the form
+  element in the parsed DOM. The row is built in `submit_field` now, which always prints.
+* **The consent checkbox cannot be removed by omission.** Core puts `cookies` back into any
+  field list a theme passes without it, deliberately, so it has to be unset in
+  `comment_form_fields`. Leaving it out printed the consent twice.
+
+Two additions with no counterpart in the blog engine. WordPress prints a heading in front of
+the form, outside it, because it doubles as the "Reply to X" target and carries the cancel
+link; `.comment-form`'s top margin therefore opened below the title instead of above it, and
+`#respond` takes that spacing now. And a signed-in reader gets a "Logged in as" line, which is
+passed through `logged_in_as` wearing Quire Ink's `.comment-identity`.
 
 ## Site configuration, not theme gaps
 

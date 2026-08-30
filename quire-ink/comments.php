@@ -76,29 +76,88 @@ if ( post_password_required() ) {
  * The body field follows the grid rather than sitting in it, and the submit button lives in
  * `.comment-actions`, which is a flex row with `margin-left:auto` on the button - so the
  * cookie checkbox goes in beside it rather than under the fields, where WordPress puts it.
+ *
+ * ONE CONTAINER, ONE SLOT. `comment_form()` prints every field except `comment` only for a
+ * logged-OUT reader, so a `<div>` opened in one field and closed in another is a div that
+ * goes missing by halves. `.comment-actions` used to open in the `cookies` field and close in
+ * `submit_field`: signed in, the opening tag was never printed and the closing one still was,
+ * so it closed `#respond` instead - the button lost the row's top margin and sat on the
+ * textarea, and the id fields ended up outside the form element in the parsed DOM. The row is
+ * therefore built entirely inside `submit_field`, the one slot that always prints, and the
+ * cookie checkbox with it, because it belongs in that row beside the button.
+ *
+ * `.comment-fields` keeps its two-field pairing: author opens it, url closes it, and the
+ * three of them are printed or skipped together by the same `is_user_logged_in()` test.
  */
 $quireink_req  = (bool) get_option( 'require_name_email' );
 $quireink_mark = $quireink_req ? ' <span class="required">*</span>' : '';
 $quireink_need = $quireink_req ? ' required' : '';
 $quireink_who  = wp_get_current_commenter();
 
+/*
+ * The cookie consent, gated on core's own two conditions, and the action row it sits in.
+ *
+ * The markup is spliced into a `sprintf()` format string, so a literal percent in it would be
+ * read as a conversion and eat the button. Doubling is what sprintf wants; there is none in
+ * the English, and a translation is not ours to police.
+ */
+$quireink_cookies = '';
+if ( ! is_user_logged_in()
+	&& has_action( 'set_comment_cookies', 'wp_set_comment_cookies' )
+	&& get_option( 'show_comments_cookies_opt_in' ) ) {
+	$quireink_cookies = '<label for="wp-comment-cookies-consent" class="t-small">'
+		. '<input id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes"'
+		. ( empty( $quireink_who['comment_author_email'] ) ? '' : ' checked' ) . '> '
+		. esc_html__( 'Remember me on this browser', 'quire-ink' ) . '</label>';
+}
+$quireink_actions = '<div class="comment-actions">'
+	. str_replace( '%', '%%', $quireink_cookies )
+	. '%1$s</div>%2$s<p class="comment-status" role="status"></p>';
+
+/*
+ * WordPress's "Logged in as" line, wearing Quire Ink's identity row: a strip ruled off from
+ * the fields, saying who is about to speak and offering the way out. Quire Ink signs out
+ * through a button because its thread is an island; here it is the logout URL, which is a
+ * navigation, so it is a link. `.comment-signout` styles either.
+ *
+ * Core's own version of this line also carries "Required fields are marked *". A logged-out
+ * reader is not shown that sentence - `comment_notes_before` is empty - and every required
+ * control carries its own mark, so it is left out of both rather than one.
+ */
+$quireink_me       = wp_get_current_user();
+$quireink_identity = sprintf(
+	'<p class="comment-identity">%1$s <strong>%2$s</strong> &middot; <a class="comment-signout" href="%3$s">%4$s</a></p>',
+	esc_html__( 'Commenting as', 'quire-ink' ),
+	esc_html( $quireink_me->display_name ),
+	esc_url( wp_logout_url( get_permalink() ) ),
+	esc_html__( 'Sign out', 'quire-ink' )
+);
+
 /**
- * State the field order outright.
+ * Shape the field list: state the order outright, and drop the cookies field.
  *
  * WordPress has put the comment textarea above the identity fields since 4.4, and Quire Ink
- * asks who you are and then what you want to say. Reordering just `comment` is not enough:
- * `cookies` opens the `.comment-actions` row that the submit button closes, so anything
- * emitted after it lands INSIDE that row. Moving only the textarea to the end put it in the
- * button row, which is a form that looks assembled by accident.
+ * asks who you are and then what you want to say.
  *
- * The order is therefore stated in full rather than nudged. Fields this theme does not
- * define are appended, so a plugin adding one is not silently dropped.
+ * The order is stated in full rather than nudged, so that reading it answers the question.
+ * Fields this theme does not define are appended, so a plugin adding one is not silently
+ * dropped - and it lands after the textarea rather than inside the button row, which is
+ * where it used to go when that row was opened by a field.
+ *
+ * `cookies` is removed here and NOT by leaving it out of the list, because leaving it out
+ * does not work: `comment_form()` puts it back into any field list a theme passes that has
+ * no `cookies` key, on purpose, so that a theme cannot drop the consent by forgetting it.
+ * The control is not being dropped - the same input, under the same name, is printed in the
+ * action row beside the button, on the same two conditions core checks before adding it.
+ * Omitting the key printed the consent twice, once in each place.
  *
  * @param array $fields Comment form fields.
  * @return array
  */
 function quireink_comment_field_order( $fields ) {
-	$order  = array( 'author', 'email', 'url', 'comment', 'cookies' );
+	unset( $fields['cookies'] );
+
+	$order  = array( 'author', 'email', 'url', 'comment' );
 	$sorted = array();
 	foreach ( $order as $key ) {
 		if ( isset( $fields[ $key ] ) ) {
@@ -131,19 +190,14 @@ comment_form(
 			'url'    => '<p class="comment-field">'
 				. '<label for="url">' . esc_html__( 'Website', 'quire-ink' ) . '</label>'
 				. '<input id="url" name="url" type="url" value="' . esc_attr( $quireink_who['comment_author_url'] ) . '" maxlength="200" autocomplete="url"></p></div>',
-			// The cookie consent goes in the action row beside the button, which is what
-			// `.comment-actions` is: a flex row that pushes the button to the right.
-			'cookies' => '<div class="comment-actions"><label for="wp-comment-cookies-consent" class="t-small">'
-				. '<input id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes"'
-				. ( empty( $quireink_who['comment_author_email'] ) ? '' : ' checked' ) . '> '
-				. esc_html__( 'Remember me on this browser', 'quire-ink' ) . '</label>',
 		),
+		'logged_in_as'        => $quireink_identity,
 		'comment_field'       => '<p class="comment-field comment-body-field">'
 			. '<label for="comment">' . esc_html__( 'Comment', 'quire-ink' ) . ' <span class="required">*</span></label>'
 			. '<textarea id="comment" name="comment" rows="5" maxlength="65525" required></textarea></p>',
-		// %1$s is the button, %2$s the hidden fields. The div opened by the cookies field
-		// above closes here, with the button inside it.
-		'submit_field'        => '%1$s</div>%2$s<p class="comment-status" role="status"></p>',
+		// %1$s is the button, %2$s the hidden fields; the row, the checkbox and both ends of
+		// the div are built above, where nothing can print half of them.
+		'submit_field'        => $quireink_actions,
 		'submit_button'       => '<button type="submit" name="%1$s" id="%2$s" class="%3$s">%4$s</button>',
 		'label_submit'        => __( 'Post comment', 'quire-ink' ),
 		'comment_notes_before' => '',
