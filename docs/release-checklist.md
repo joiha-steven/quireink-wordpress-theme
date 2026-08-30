@@ -34,6 +34,18 @@ it, so they are listed here rather than approximated.
 * **`Tested up to:`** has to name a WordPress version the theme was actually opened in. It
   says 6.8 and the local stack runs 6.8, which is true today and stops being true on its own.
 
+## Measured, and one of them says no
+
+**Accessibility.** [`accessibility.md`](accessibility.md) has the numbers. Colour clears WCAG
+AA in all six palettes and both schemes with room to spare, headings and landmarks and labels
+and the skip link all pass, and the audit found two real defects on the way — two buttons with
+no accessible name, and thirteen unsupplied strings behind them, now fixed.
+
+`accessibility-ready` is still NOT declared, for one measured reason: form field borders are
+1.16:1 against the page, where SC 1.4.11 asks 3:1. `--c-rule` is the blog engine's value and
+the engine draws its own comment fields the same way, so this belongs upstream rather than in
+`bridge.css`. Same shape of item as the OFL file above.
+
 ## Worth doing, not required
 
 * **The screenshot** is a render of a real blog, with its posts and its site name. It is

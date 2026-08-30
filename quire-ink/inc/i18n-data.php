@@ -68,6 +68,8 @@ function quireink_body_data() {
 		'search-hint'    => __( 'Type to search posts.', 'quire-ink' ),
 		'search-empty'   => __( 'No posts matched.', 'quire-ink' ),
 		'lightbox-close' => __( 'Close', 'quire-ink' ),
+		'lightbox-prev'  => __( 'Previous image', 'quire-ink' ),
+		'lightbox-next'  => __( 'Next image', 'quire-ink' ),
 		'grid-view'      => __( 'Grid view', 'quire-ink' ),
 		'list-view'      => __( 'List view', 'quire-ink' ),
 		'theme'          => __( 'Appearance', 'quire-ink' ),
@@ -84,6 +86,39 @@ function quireink_body_data() {
 		'nl-no-mail'     => __( 'Subscribed. Email is not configured, so no confirmation was sent.', 'quire-ink' ),
 		'nl-invalid'     => __( 'That email address is not valid.', 'quire-ink' ),
 		'nl-error'       => __( 'Something went wrong. Please try again.', 'quire-ink' ),
+
+		/*
+		 * THE ONES THAT ARE SOMEBODY'S ONLY NAME.
+		 *
+		 * `label()` in the bundles is `document.body.dataset[name] ?? ''`, so a key nobody
+		 * supplies is not a missing translation - it is an empty string, and where that
+		 * string is an `aria-label` on a button whose whole content is an SVG, it is a
+		 * control a screen reader announces as "button". Back-to-top and the book-mode
+		 * button both shipped that way and both looked perfectly fine on screen.
+		 *
+		 * Wording follows the blog engine's own `locales/en.ts`, so the two surfaces say the
+		 * same words. They are ordinary translatable strings here; only the KEYS are the
+		 * bundles' contract.
+		 */
+		'back-to-top'       => __( 'Back to top', 'quire-ink' ),
+		'book-mode'         => __( 'Book mode', 'quire-ink' ),
+		'book-mode-close'   => __( 'Close', 'quire-ink' ),
+		'book-mode-prev'    => __( 'Previous page', 'quire-ink' ),
+		'book-mode-next'    => __( 'Next page', 'quire-ink' ),
+		'book-mode-smaller' => __( 'Smaller text', 'quire-ink' ),
+		'book-mode-larger'  => __( 'Larger text', 'quire-ink' ),
+		'copy-code'         => __( 'Copy', 'quire-ink' ),
+		'copied-code'       => __( 'Copied', 'quire-ink' ),
+		'quote-copy'        => __( 'Copy quote', 'quire-ink' ),
+		'quote-copied'      => __( 'Copied', 'quire-ink' ),
+		'resume-prompt'     => __( 'Continue where you left off?', 'quire-ink' ),
+
+		/*
+		 * Not here, and not an oversight. Every `comment*` key belongs to the blog engine's
+		 * comment island, which never mounts: WordPress has a thread of its own and this
+		 * theme uses it (comments.php). `sw` belongs to offline reading, which is not ported.
+		 * Supplying either would put strings on the page for machinery that is not running.
+		 */
 	);
 
 	if ( count( $palettes ) > 1 ) {

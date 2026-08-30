@@ -12,7 +12,7 @@ and the answer cannot be undone. Do not make this repository public without sett
 bun run check:all
 ```
 
-Six static guards — `filesize` · `order` · `bridge` · `escape` · `generated` · `docs`. Seconds.
+Seven static guards — `filesize` · `order` · `bridge` · `contrast` · `escape` · `generated` · `docs`. Seconds.
 `check:generated` skips with a warning when there is no Quire Ink checkout beside this one.
 
 `check:all` proves the seams hold. It cannot tell you the rail is empty, a figure is at the
@@ -31,7 +31,7 @@ tools/shot.sh <url> .tmp/shots/<name>.png
 
 | Doing | Read |
 |---|---|
-| Anything at all | [`docs/invariants.md`](./docs/invariants.md) — the 5 load-bearing rules |
+| Anything at all | [`docs/invariants.md`](./docs/invariants.md) — the 6 load-bearing rules |
 | Finding your way | [`docs/README.md`](./docs/README.md) — the index |
 | Adding or changing a setting | [`docs/appearance.md`](./docs/appearance.md) — every knob, and what cannot be changed. Update it in the SAME commit |
 | Touching CSS | [`docs/conventions/css.md`](./docs/conventions/css.md) |
@@ -39,6 +39,7 @@ tools/shot.sh <url> .tmp/shots/<name>.png
 | Taking something new from the blog engine | [`docs/conventions/extract.md`](./docs/conventions/extract.md) |
 | Going against a past decision | [`docs/decisions/`](./docs/decisions/README.md) — the in-force index first |
 | Wondering what does not survive the trip | [`docs/gaps.md`](./docs/gaps.md) |
+| Touching a control, a colour or a heading | [`docs/accessibility.md`](./docs/accessibility.md) — the measurements, and the one criterion that fails |
 
 ## Debug router — a symptom, and the files to open first
 

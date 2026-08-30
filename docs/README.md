@@ -2,7 +2,7 @@
 
 | Doing | Read |
 |---|---|
-| Anything at all | [`invariants.md`](invariants.md) — the 5 load-bearing rules and what pins each |
+| Anything at all | [`invariants.md`](invariants.md) — the 6 load-bearing rules and what pins each |
 | Adding or changing a setting | [`appearance.md`](appearance.md) — the OWNER's map of every knob, the variables custom CSS may target, and what cannot be changed. It is a promise to users: update it in the same commit |
 | Touching anything a reader sees | [`conventions/`](conventions/README.md) — the three files below, and the rule underneath all of them |
 | Touching CSS | [`conventions/css.md`](conventions/css.md) — which sheet a rule belongs in, and the order they load |
@@ -10,6 +10,7 @@
 | Taking something new from the blog engine | [`conventions/extract.md`](conventions/extract.md) — how the generator works and what it refuses to do |
 | Wondering why something is the way it is | [`decisions/`](decisions/README.md) — read the in-force index first |
 | Wondering what does not survive the trip | [`gaps.md`](gaps.md) — measured, not guessed |
+| Touching a control, a colour or a heading | [`accessibility.md`](accessibility.md) — what was measured, and the one criterion that fails |
 | Getting this ready to publish | [`release-checklist.md`](release-checklist.md) — what is done, and the three things only the owner can do |
 
 ## Verify
@@ -18,7 +19,7 @@
 bun run check:all
 ```
 
-Six static guards: `filesize` · `order` · `bridge` · `escape` · `generated` · `docs`. Seconds,
+Seven static guards: `filesize` · `order` · `bridge` · `contrast` · `escape` · `generated` · `docs`. Seconds,
 not minutes. `check:generated` skips with a warning when there is no Quire Ink checkout beside
 this one.
 

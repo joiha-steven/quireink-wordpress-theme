@@ -14,6 +14,7 @@ visible in review.
 | 3 | **Nothing is hand-copied out of the blog engine.** Colours, sizes, breakpoints and font stacks come through the extractor or they do not come. One exception, marked as such: the three shape tables in the Customizer, which cannot read TypeScript | [`tools/extract.ts`](../tools/extract.ts) | `check:generated` |
 | 4 | **Every value printed into a page is escaped** at the point of printing | every template under [`quire-ink/`](../quire-ink) | `check:escape` |
 | 5 | **Quire Ink is read only.** This repository imports its modules and writes nothing to it | [`tools/tsconfig.json`](../tools/tsconfig.json) | nothing yet — see below |
+| 6 | **Every palette clears WCAG AA against its own background.** Text at 4.5:1, accent marks at 3:1, in all six palettes and both schemes. The colours are the blog engine's, so this guard is a tripwire on a re-extract rather than a rule about code | [`inc/generated-appearance.php`](../quire-ink/inc/generated-appearance.php), GENERATED | `check:contrast` |
 
 ## Why 1 is the first one
 
