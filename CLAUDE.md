@@ -26,9 +26,13 @@ dev/seed.sh      # real articles from the live blog, converted to Gutenberg bloc
 tools/shot.sh <url> .tmp/shots/<name>.png
 ```
 
-`shot.sh` refuses below 500px and says why: Chrome's headless window has an OS minimum, so a
-390px request came back as a 500px page cropped to 390 — which reads as a theme that
-overflows. Phone widths are checked in the browser pane's device emulation.
+`shot.sh` refuses two things, each because it once produced a picture that lied. It will not
+render below 500px: Chrome's headless window has an OS minimum, so a 390px request came back
+as a 500px page cropped to 390, which reads as a theme that overflows. And it will not render
+a page whose scripts and stylesheets point at another origin: WordPress writes its asset URLs
+against `localhost`, so the same page asked for on `127.0.0.1` loses every module script and
+every font to CORS, and the type falls back to something close enough that nobody looks twice.
+Phone widths are photographed inside iframes, where the viewport is the iframe's own size.
 
 `dev/screenshot.sh` rebuilds `quire-ink/screenshot.png` from a WordPress seeded for the
 picture, and puts your database back afterwards.
@@ -95,6 +99,12 @@ picture, and puts your database back afterwards.
   Re-run the extractor and READ the diff before committing it.
 - **`dev/` throws its database away.** `dev/down.sh` is `docker compose down -v`. Nothing in
   that stack is worth keeping, and a half-migrated database is the one way it could lie.
+- **`localhost:8099`, never `127.0.0.1:8099`.** WordPress's `siteurl` is `localhost`, so the
+  page writes its script and font URLs against that host. Fetch the same page on `127.0.0.1`
+  and CORS refuses every module script and every font: no JavaScript at all, and the type
+  quietly falls back. `getComputedStyle` answers `Literata` either way, because a computed
+  font-family is the request and not the result — `document.fonts` is the measurement, and it
+  said `Literata:loaded` against `Literata:error`. `tools/shot.sh` refuses the wrong host now.
 - **Port 8099, not 8088.** The jellykey-local PHP server binds `[::1]:8088`; Docker publishes
   on `0.0.0.0`, so nothing collides at bind time and the browser just resolves `localhost` to
   `::1` and shows the other site.

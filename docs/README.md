@@ -37,12 +37,16 @@ here, all three passed every check, and all three were obvious in a screenshot:
 
 ```
 dev/up.sh                                          # WordPress on :8099
-tools/shot.sh http://127.0.0.1:8099/<slug>/ .tmp/shots/wordpress.png
+tools/shot.sh http://localhost:8099/<slug>/ .tmp/shots/wordpress.png
 ```
 
-`shot.sh` refuses below 500px and says why: Chrome's headless window has an OS minimum, so a
-390px request came back as a 500px page cropped to 390 — which reads as a theme that
-overflows. Phone widths are checked in the browser pane's device emulation.
+`shot.sh` refuses two things, each because it once produced a picture that lied. It will not
+render below 500px: Chrome's headless window has an OS minimum, so a 390px request came back
+as a 500px page cropped to 390, which reads as a theme that overflows. And it will not render
+a page whose scripts and stylesheets point at another origin: WordPress writes its asset URLs
+against `localhost`, so the same page asked for on `127.0.0.1` loses every module script and
+every font to CORS, and the type falls back to something close enough that nobody looks twice.
+Phone widths are photographed inside iframes, where the viewport is the iframe's own size.
 
 `dev/screenshot.sh` rebuilds `quire-ink/screenshot.png` from a WordPress seeded for the
 picture, and puts your database back afterwards.

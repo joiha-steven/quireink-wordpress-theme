@@ -86,6 +86,29 @@ Measured after: Literata at 672px in both, headings matching, inline code in Jet
 its tinted ground — and a paragraph set to "Large" in the sidebar still measures 36px, because
 the author's own choices have to beat the theme and do.
 
+**Every screenshot this repository had taken was rendered without the theme's JavaScript or
+its fonts.** WordPress writes its asset URLs against `siteurl`, which on the local stack is
+`http://localhost:8099`. Every document here, this one included, said to shoot
+`http://127.0.0.1:8099`. Same server, different ORIGIN: each module script and each font is a
+cross-origin fetch, CORS refuses all of them, and what renders is a page with no behaviour and
+a metric fallback face.
+
+It survived because the fallback is close and because the obvious check agrees with the wrong
+answer. `getComputedStyle(p).fontFamily` returns `Literata` whether or not Literata arrived,
+since a computed font-family is the request rather than the result. `document.fonts` is the
+measurement, and it separated them at once: `Literata:loaded` twice on `localhost` against
+`Literata:error` three times on `127.0.0.1`, with `Literata Fallback:loaded` in its place.
+
+What it hid was worse than blurry type. **Book mode had never once been opened.** It is a
+dialog built by `post.js` from a button click, `post.js` was among the scripts CORS was
+refusing, and a click on the button did nothing, in every render and in the browser pane. It
+works, and the picture in the README is the first time anyone has seen it: two columns, a drop
+cap, a chrome bar with the type-size controls and a page count.
+
+`tools/shot.sh` refuses the wrong origin now, naming the origins the page actually points at,
+with `SHOT_ALLOW_CROSS_ORIGIN=1` for a site that means to serve assets from elsewhere. Every
+picture in the repository was rebuilt.
+
 **A phone was never actually photographed.** `tools/shot.sh` at 390px produced a page whose
 body text ran off the right edge and whose header icons were sliced in half - a theme that
 overflows, in a file exactly 390 pixels wide. It does not overflow. `headless=new` opens a

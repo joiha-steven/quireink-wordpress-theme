@@ -88,7 +88,7 @@ wpc menu item add-term "$MENU" category "$NOTES" >/dev/null
 wpc menu location assign "$MENU" primary >/dev/null
 
 echo "--- the directory's screenshot"
-SHOT_SCALE=2 tools/shot.sh "http://127.0.0.1:8099/" "$WIDE" 1440 1080
+SHOT_SCALE=2 tools/shot.sh "http://localhost:8099/" "$WIDE" 1440 1080
 sips -z 900 1200 "$WIDE" --out "$OUT" >/dev/null
 
 W=$(sips -g pixelWidth "$OUT" | awk '/pixelWidth/{print $2}')
@@ -96,31 +96,122 @@ H=$(sips -g pixelHeight "$OUT" | awk '/pixelHeight/{print $2}')
 [ "$W" = "1200" ] && [ "$H" = "900" ] || { echo "wrong size: ${W}x${H}, wanted 1200x900" >&2; exit 1; }
 printf '%s  %s  %sx%s\n' "$(du -h "$OUT" | cut -f1)" "$OUT" "$W" "$H"
 
-# The pictures on the repository's front page, from the same seed. They are NOT in the theme:
-# the submission zip is `git archive HEAD:quire-ink`, so nothing under docs/ ever ships.
+# The pictures on the repository's front page, from the same seed, in the shape the blog
+# engine's own README uses: composites rather than single frames, because the argument each
+# one makes is a COMPARISON, and a caption under a pair says more than two captions under two
+# pictures.
 #
-# Dark is set through the theme's own Customizer setting rather than by driving the reader's
-# toggle, because a headless render has no way to click and the setting is the same code path
-# a site owner uses to choose what a first-time reader sees.
+# Everything below renders against `localhost`, never `127.0.0.1`. WordPress writes its asset
+# URLs against `siteurl`, so the other host loses every module script and every font to CORS
+# and produces a page that looks almost right. tools/shot.sh refuses it now.
+#
+# Two of these need a CLICK - book mode opens from a button, and there is no URL that opens
+# it. A page served from the WordPress origin can script its own same-origin iframes, so the
+# composite is written into the webroot, rendered, and removed by the trap.
 echo "--- the repository's pictures"
-mkdir -p docs/shots
+mkdir -p docs/shots .tmp/compose
 ART=$(wpc post list --post_type=post --posts_per_page=1 --field=url)
+ART_PATH="/${ART#*8099/}"
 
-shot_scaled() { # url, out, width, height, target-width
-  SHOT_SCALE=2 tools/shot.sh "$1" ".tmp/shots/_raw.png" "$3" "$4" >/dev/null
-  sips -Z "$5" ".tmp/shots/_raw.png" --out "$2" >/dev/null
+PAGE="_quireink-compose.html"
+webroot_clean() { wpc_sh rm -f "/var/www/html/$PAGE"; }
+wpc_sh() { docker compose -f dev/docker-compose.yml exec -T wordpress "$@"; }
+trap 'webroot_clean; restore' EXIT
+
+# Render an HTML file, from the WordPress origin when it needs to script its iframes.
+compose() { # source-html, out, width, height, target-width
+  docker compose -f dev/docker-compose.yml exec -T wordpress sh -c "cat > /var/www/html/$PAGE" < "$1"
+  SHOT_SCALE=2 tools/shot.sh "http://localhost:8099/$PAGE" .tmp/compose/_raw.png "$3" "$4" >/dev/null
+  sips -Z "$5" .tmp/compose/_raw.png --out "$2" >/dev/null
   printf '  %s  %s\n' "$(du -h "$2" | cut -f1)" "$2"
 }
 
-shot_scaled "http://127.0.0.1:8099/" docs/shots/listing.png 1440 1000 1440
-shot_scaled "$ART" docs/shots/article.png 1440 1400 1440
+SHEET='html,body{margin:0}body{background:#ededed;display:flex;gap:20px;padding:20px;font:0/0 a}
+.f{border:1px solid #d9d9d9;background:#fff;overflow:hidden;flex:none}iframe{border:0;display:block}'
 
-wpc theme mod set quireink_default_scheme dark >/dev/null
-shot_scaled "$ART" docs/shots/article-dark.png 1440 1400 1440
-wpc theme mod remove quireink_default_scheme >/dev/null
+# 1. The shape: the listing beside an article.
+cat > .tmp/compose/demo.html <<HTML
+<!doctype html><meta charset=utf-8><style>$SHEET
+.f,iframe{width:1450px;height:1020px}</style>
+<div class=f><iframe src="/"></iframe></div>
+<div class=f><iframe src="$ART_PATH"></iframe></div>
+HTML
+compose .tmp/compose/demo.html docs/shots/demo.png 2960 1060 1200
 
-wpc theme mod set quireink_book_text on >/dev/null 2>&1 || true
-shot_scaled "$ART" docs/shots/book-typography.png 1440 1400 1440
-wpc theme mod remove quireink_book_text >/dev/null 2>&1 || true
+# 2. The two reading treatments. Book mode is a dialog opened from a button; book typography
+#    is a Customizer switch, so the right-hand frame carries a body class the setting also
+#    sets, applied here rather than by re-rendering the whole site for one picture.
+cat > .tmp/compose/reading.html <<HTML
+<!doctype html><meta charset=utf-8><style>$SHEET
+.f,iframe{width:1100px;height:1000px}</style>
+<div class=f><iframe id=book></iframe></div>
+<div class=f><iframe id=type></iframe></div>
+<script>
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const load=(el,u)=>new Promise(r=>{el.onload=()=>r();el.src=u});
+(async()=>{
+  localStorage.setItem('theme','light');
+  const b=document.getElementById('book'), t=document.getElementById('type');
+  await load(t,'$ART_PATH'); await sleep(400);
+  t.contentDocument.body.classList.add('book-text');
+  await load(b,'$ART_PATH'); await sleep(600);
+  const btn=[...b.contentDocument.querySelectorAll('[data-book-open]')]
+    .find(x=>x.getBoundingClientRect().width>0);
+  if(btn) btn.click();
+  await sleep(1200);
+})();
+</script>
+HTML
+compose .tmp/compose/reading.html docs/shots/demo-reading.png 2260 1040 1200
 
-rm -f .tmp/shots/_raw.png
+# 3. Six palettes. The palette is the OWNER's setting rather than the reader's, so each tile
+#    is its own render; the reader's light/dark choice rides in localStorage, which the sheet
+#    sets before the frame loads.
+
+for pal in mono sepia forest ocean scifi amber; do
+  wpc theme mod set quireink_palette "$pal" >/dev/null
+  case "$pal" in ocean|scifi|amber) wpc theme mod set quireink_default_scheme dark >/dev/null ;;
+                 *) wpc theme mod remove quireink_default_scheme >/dev/null 2>&1 || true ;; esac
+  SHOT_SCALE=2 tools/shot.sh "$ART" ".tmp/compose/pal-$pal.png" 780 520 >/dev/null
+done
+wpc theme mod remove quireink_palette >/dev/null 2>&1 || true
+wpc theme mod remove quireink_default_scheme >/dev/null 2>&1 || true
+
+{
+  echo '<!doctype html><meta charset=utf-8><style>html,body{margin:0}'
+  echo 'body{background:#ededed;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding:18px}'
+  echo 'figure{margin:0}img{width:100%;display:block;border:1px solid #d9d9d9}'
+  echo 'figcaption{font:500 15px/2.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:#555;letter-spacing:.04em}</style>'
+  for pal in mono sepia forest ocean scifi amber; do
+    case "$pal" in ocean|scifi|amber) sch=dark ;; *) sch=light ;; esac
+    echo "<figure><img src=\"file://$PWD/.tmp/compose/pal-$pal.png\"><figcaption>$pal &middot; $sch</figcaption></figure>"
+  done
+} > .tmp/compose/colour-sheet.html
+SHOT_SCALE=2 tools/shot.sh "file://$PWD/.tmp/compose/colour-sheet.html" .tmp/compose/_raw.png 1240 648 >/dev/null
+sips -Z 1200 .tmp/compose/_raw.png --out docs/shots/demo-colour.png >/dev/null
+printf '  %s  %s\n' "$(du -h docs/shots/demo-colour.png | cut -f1)" docs/shots/demo-colour.png
+
+# 4. Three phones. An iframe's viewport is its own size, so this is a real 390px layout -
+#    which a headless window cannot be, because Chrome will not open one narrower than 500.
+cat > .tmp/compose/mobile.html <<HTML
+<!doctype html><meta charset=utf-8><style>$SHEET
+body{gap:26px;padding:26px}.f{border-radius:14px}.f,iframe{width:390px;height:800px}</style>
+<div class=f><iframe src="/"></iframe></div>
+<div class=f><iframe src="$ART_PATH"></iframe></div>
+<div class=f><iframe id=menu src="/"></iframe></div>
+<script>
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+(async()=>{
+  const m=document.getElementById('menu');
+  await new Promise(r=>m.contentDocument.readyState==='complete'&&m.contentWindow.location.href!=='about:blank'?r():m.onload=r);
+  await sleep(500);
+  const t=m.contentDocument.querySelector('.rail-toggle,[data-rail-toggle],button[aria-controls]');
+  if(t) t.click();
+  await sleep(600);
+})();
+</script>
+HTML
+compose .tmp/compose/mobile.html docs/shots/demo-mobile.png 1300 860 1200
+
+rm -f .tmp/compose/_raw.png
+webroot_clean

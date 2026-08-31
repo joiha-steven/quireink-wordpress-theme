@@ -10,6 +10,16 @@
 #   * `--screenshot` writes the file and then sometimes does not exit. The watchdog below
 #     waits for the file rather than for the process, which is the thing actually wanted.
 #     macOS has no `timeout(1)`, so this is spelled out rather than delegated.
+#   * A PAGE WHOSE ASSETS LIVE ON ANOTHER ORIGIN renders without them, and says nothing. The
+#     local WordPress has `siteurl` of http://localhost:8099, so it writes its script and font
+#     URLs against `localhost`. Ask for the same page on `127.0.0.1` and every module script
+#     and every font is a cross-origin fetch that CORS refuses: no JavaScript at all, and the
+#     type falls back. `getComputedStyle` still answers "Literata" on both, because a computed
+#     font-family is what was asked for and not what arrived - the honest measurement is
+#     `document.fonts`, which reported `Literata:loaded` on localhost and `Literata:error` on
+#     127.0.0.1. Weeks of screenshots in this repository were taken that way and the fallback
+#     is close enough to the real face that nobody looked twice. Below, the requested origin is
+#     compared against the origins the page's own scripts and stylesheets point at.
 #   * headless=new opens a real window, and the window has an OS MINIMUM WIDTH. Ask for 390
 #     and Chrome lays the page out at 500 and hands back the left 390 pixels of it, with no
 #     warning and a file of exactly the size requested. Measured: 480, 460, 420 and 390 all
@@ -41,6 +51,24 @@ if [ "$W" -lt "$FLOOR" ]; then
   echo "  the left ${W} pixels, which looks exactly like a theme that overflows." >&2
   echo "  For a phone, use the browser pane's mobile emulation instead." >&2
   exit 2
+fi
+
+# The page has to point its own assets at the origin we asked for, or the render is a page
+# with its scripts and fonts missing. SHOT_ALLOW_CROSS_ORIGIN=1 for a site that legitimately
+# serves assets from elsewhere.
+if [ "${SHOT_ALLOW_CROSS_ORIGIN:-0}" != "1" ] && printf '%s' "$URL" | grep -qE '^https?://'; then
+  ORIGIN=$(printf '%s' "$URL" | sed -E 's#^(https?://[^/]+).*#\1#')
+  FOREIGN=$(curl -sL --max-time 20 "$URL" 2>/dev/null \
+    | grep -oE '(src|href)="https?://[^"]+\.(js|css)[^"]*"' \
+    | sed -E 's#^[a-z]+="(https?://[^/]+).*#\1#' | sort -u | grep -vxF "$ORIGIN" || true)
+  if [ -n "$FOREIGN" ]; then
+    echo "shot.sh: $URL serves its scripts and stylesheets from another origin:" >&2
+    printf '  %s\n' $FOREIGN >&2
+    echo "  A headless render drops all of them to CORS and looks almost right: no JavaScript," >&2
+    echo "  and the type falls back to a metric substitute. Ask for the origin the page uses," >&2
+    echo "  or set SHOT_ALLOW_CROSS_ORIGIN=1 if the other origin is meant to be there." >&2
+    exit 3
+  fi
 fi
 
 CHROME="${CHROME:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
