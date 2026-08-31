@@ -44,4 +44,7 @@ tools/shot.sh http://127.0.0.1:8099/<slug>/ .tmp/shots/wordpress.png
 390px request came back as a 500px page cropped to 390 — which reads as a theme that
 overflows. Phone widths are checked in the browser pane's device emulation.
 
+`dev/screenshot.sh` rebuilds `quire-ink/screenshot.png` from a WordPress seeded for the
+picture, and puts your database back afterwards.
+
 **Open the page.**
