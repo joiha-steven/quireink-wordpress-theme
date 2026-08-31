@@ -32,6 +32,7 @@ https://github.com/joiha-steven/quireink-wordpress-theme, where its own document
   by the reader and remembered on their own device.
 * Six self-hosted typefaces, all SIL Open Font License, subset to Latin, Latin Extended and
   Vietnamese.
+* Search as you type, from `[/find]` in the header or the `/` key anywhere on the page.
 * A table of contents in the gutter, built from the post's own headings, tracking the scroll.
 * Book mode: the article reset in two columns, like a page.
 * Book typography - indented paragraphs, justified lines, hyphenation - off by default,
@@ -104,6 +105,9 @@ installing Arabic and measuring both gutters.
   panels above are the whole of it.
 * **No custom header or background image.** The palettes are the background, and a header
   image would sit above a wordmark that is already the header.
+* **Full-width alignment renders as wide.** A band running edge to edge across a reading
+  column is a shape the blog engine measured and declined, so a picture set to Full gets the
+  same treatment as Wide: it noses out into the gutter, and stops there.
 * **No pen strokes and no syntax highlighting.** Both exist in the Quire Ink blog engine and
   neither can be written in the block editor, so neither is shipped. Half a feature is worse
   than none.
@@ -219,6 +223,9 @@ photographs.
 Still a beta: the theme has not been run on a site other than the one it was written
 against.
 
+* Search as you type works. It never had: the overlay fetches a route the blog engine
+  serves and WordPress does not, so it opened, took focus, and answered nothing, on every
+  page. The route is answered now.
 * Book mode works. It never had: it opens from a button, the script that builds it was
   being refused by the browser in every render this theme had ever been looked at, and the
   button did nothing. The theme was advertising it on the fact that the button existed.
@@ -230,6 +237,10 @@ against.
 * The search block's button is the theme's colour rather than core's #32373c.
 * The password form is no longer a browser default box and a grey system button, and a
   protected post no longer reports the word count and reading time of the text it withholds.
+* Replying to a comment opens the form inside the comment rather than beside it, where the
+  markup was also invalid, and the Reply link finally takes the theme's own styling: the
+  filter that gives it that class had looked for the wrong quote mark and had never once
+  matched.
 * A second menu location, Footer menu, for a flat row of links above the credit.
 * A post whose author was deleted no longer prints two separators in a row.
 * `Tested up to` reads 7.1, from the install rather than from a filename.

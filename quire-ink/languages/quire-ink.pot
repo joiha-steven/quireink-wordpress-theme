@@ -2,14 +2,14 @@
 # This file is distributed under the GNU General Public License v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Quire Ink 0.1.0\n"
+"Project-Id-Version: Quire Ink 0.1.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/quire-ink\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-31T12:11:05+00:00\n"
+"POT-Creation-Date: 2026-08-31T12:39:36+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quire-ink\n"
@@ -137,22 +137,6 @@ msgstr ""
 msgid "Footer menu"
 msgstr ""
 
-#: functions.php:348
-#: functions.php:350
-msgid "Table of contents"
-msgstr ""
-
-#: functions.php:371
-#: inc/template-tags.php:58
-#: parts/rail-blocks.php:112
-#: single.php:76
-msgid "Tags"
-msgstr ""
-
-#: functions.php:374
-msgid "Comments"
-msgstr ""
-
 #: header.php:32
 msgid "Skip to content"
 msgstr ""
@@ -217,8 +201,24 @@ msgstr ""
 msgid "awaiting moderation"
 msgstr ""
 
-#: inc/comment-walker.php:129
+#: inc/comment-walker.php:142
 msgid "Reply"
+msgstr ""
+
+#: inc/content.php:133
+#: inc/content.php:135
+msgid "Table of contents"
+msgstr ""
+
+#: inc/content.php:156
+#: inc/template-tags.php:58
+#: parts/rail-blocks.php:112
+#: single.php:76
+msgid "Tags"
+msgstr ""
+
+#: inc/content.php:159
+msgid "Comments"
 msgstr ""
 
 #: inc/customizer.php:30

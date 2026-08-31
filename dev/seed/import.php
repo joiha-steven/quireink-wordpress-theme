@@ -110,7 +110,10 @@ WP_CLI::log( 'rail menu: ' . count( (array) wp_get_nav_menu_items( $menu_id ) ) 
  * It is a normal published post, so it is also in the feed and the listing. Delete it on a
  * real site; on this stack it is the page to open after touching bridge.css.
  */
+$quireink_fixture_slugs = array();
+
 $blocks_file = __DIR__ . '/every-block.html';
+$quireink_fixture_slugs[] = 'every-core-block-on-one-page';
 if ( file_exists( $blocks_file ) ) {
 	$existing_blocks = get_page_by_path( 'every-core-block-on-one-page', OBJECT, 'post' );
 	if ( $existing_blocks ) {
@@ -168,6 +171,7 @@ $fixtures = array(
 	),
 );
 foreach ( $fixtures as $f ) {
+	$quireink_fixture_slugs[] = $f['slug'];
 	$found = get_page_by_path( $f['slug'], OBJECT, 'post' );
 	$args  = array(
 		'post_type'     => 'post',
@@ -188,6 +192,91 @@ foreach ( $fixtures as $f ) {
 WP_CLI::log( 'fixtures: password post and three-page post' );
 
 /*
+ * A post placing a picture every way a block can place one, with pictures the seeder draws.
+ *
+ * The block sampler above deliberately holds no media, because the theme bundles no images
+ * and a fixture that needs an upload is a fixture nobody runs. So the two here are DRAWN with
+ * GD - a wide one and a square one, gradients, nothing anybody has rights in - and the post
+ * exercises the placements a reader actually meets: column width with a caption, wide, full,
+ * a left float with text beside it, a gallery, media-and-text, a cover, and a featured image.
+ *
+ * Worth knowing before reading the render: `alignfull` is aliased to WIDE on purpose (see
+ * quireink_align_classes), and a block after an uncleared left float is squeezed beside it,
+ * which is CSS doing what it says. Both looked like defects the first time and neither is.
+ */
+function quireink_seed_picture( $name, $w, $h, $from, $to ) {
+	$found = get_posts( array( 'post_type' => 'attachment', 'name' => sanitize_title( $name ), 'numberposts' => 1 ) );
+	if ( $found ) {
+		return $found[0]->ID;
+	}
+	$im = imagecreatetruecolor( $w, $h );
+	for ( $y = 0; $y < $h; $y++ ) {
+		for ( $x = 0; $x < $w; $x++ ) {
+			$t = ( $x / $w + $y / $h ) / 2;
+			imagesetpixel(
+				$im, $x, $y,
+				imagecolorallocate(
+					$im,
+					(int) ( $from[0] + ( $to[0] - $from[0] ) * $t ),
+					(int) ( $from[1] + ( $to[1] - $from[1] ) * $t ),
+					(int) ( $from[2] + ( $to[2] - $from[2] ) * $t )
+				)
+			);
+		}
+	}
+	$upload = wp_upload_bits( sanitize_title( $name ) . '.png', null, '' );
+	imagepng( $im, $upload['file'] );
+	imagedestroy( $im );
+	$id = wp_insert_attachment(
+		array( 'post_mime_type' => 'image/png', 'post_title' => $name, 'post_status' => 'inherit' ),
+		$upload['file']
+	);
+	require_once ABSPATH . 'wp-admin/includes/image.php';
+	wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $upload['file'] ) );
+	return $id;
+}
+
+$pic_wide = quireink_seed_picture( 'A wide picture', 1600, 900, array( 60, 140, 120 ), array( 170, 90, 200 ) );
+$pic_sq   = quireink_seed_picture( 'A square picture', 900, 900, array( 150, 120, 110 ), array( 90, 150, 200 ) );
+$u_wide   = wp_get_attachment_url( $pic_wide );
+$u_sq     = wp_get_attachment_url( $pic_sq );
+
+$pictures_slug = 'pictures-every-way-a-block-can-place-one';
+$pictures_body = '<!-- wp:paragraph --><p>A paragraph before the pictures, so each one has a measure to sit against.</p><!-- /wp:paragraph -->'
+	. '<!-- wp:image {"id":' . $pic_wide . ',"sizeSlug":"large"} --><figure class="wp-block-image size-large"><img src="' . esc_url( $u_wide ) . '" alt="A wide picture" class="wp-image-' . $pic_wide . '"/><figcaption class="wp-element-caption">Column width, with a caption.</figcaption></figure><!-- /wp:image -->'
+	. '<!-- wp:paragraph --><p>Between two pictures, a line of text, because the spacing above and below a figure is only visible with something on both sides of it.</p><!-- /wp:paragraph -->'
+	. '<!-- wp:image {"id":' . $pic_wide . ',"align":"wide","sizeSlug":"large"} --><figure class="wp-block-image alignwide size-large"><img src="' . esc_url( $u_wide ) . '" alt="A wide picture" class="wp-image-' . $pic_wide . '"/><figcaption class="wp-element-caption">Wide: it noses out into the gutter by one rail width.</figcaption></figure><!-- /wp:image -->'
+	. '<!-- wp:image {"id":' . $pic_wide . ',"align":"full"} --><figure class="wp-block-image alignfull"><img src="' . esc_url( $u_wide ) . '" alt="A wide picture" class="wp-image-' . $pic_wide . '"/><figcaption class="wp-element-caption">Full, which this theme aliases to wide on purpose.</figcaption></figure><!-- /wp:image -->'
+	. '<!-- wp:image {"id":' . $pic_sq . ',"align":"left","width":"220px"} --><figure class="wp-block-image alignleft is-resized"><img src="' . esc_url( $u_sq ) . '" alt="A square picture" class="wp-image-' . $pic_sq . '" style="width:220px"/></figure><!-- /wp:image -->'
+	. '<!-- wp:paragraph --><p>Text beside a left-aligned picture, which wraps around it rather than starting below it. A reading column of seventy characters does not leave much room for a float, which is exactly why it is worth looking at rather than assuming. A block that establishes its own formatting context, a gallery for instance, will sit BESIDE an uncleared float rather than under it, so there has to be enough text here to clear the picture before the next one begins.</p><!-- /wp:paragraph -->'
+	. '<!-- wp:paragraph --><p>A second paragraph, still wrapping, and long enough that the float above it has ended by the time the gallery starts.</p><!-- /wp:paragraph -->'
+	. '<!-- wp:gallery {"columns":2,"linkTo":"none"} --><figure class="wp-block-gallery has-nested-images columns-2 is-cropped"><!-- wp:image {"id":' . $pic_wide . '} --><figure class="wp-block-image"><img src="' . esc_url( $u_wide ) . '" alt="" class="wp-image-' . $pic_wide . '"/></figure><!-- /wp:image --><!-- wp:image {"id":' . $pic_sq . '} --><figure class="wp-block-image"><img src="' . esc_url( $u_sq ) . '" alt="" class="wp-image-' . $pic_sq . '"/></figure><!-- /wp:image --><figcaption class="blocks-gallery-caption wp-element-caption">A gallery of two.</figcaption></figure><!-- /wp:gallery -->'
+	. '<!-- wp:media-text {"mediaId":' . $pic_sq . ',"mediaType":"image"} --><div class="wp-block-media-text is-stacked-on-mobile"><figure class="wp-block-media-text__media"><img src="' . esc_url( $u_sq ) . '" alt="" class="wp-image-' . $pic_sq . ' size-full"/></figure><div class="wp-block-media-text__content"><!-- wp:paragraph --><p>Media and text, side by side.</p><!-- /wp:paragraph --></div></div><!-- /wp:media-text -->'
+	. '<!-- wp:cover {"url":"' . esc_url( $u_wide ) . '","id":' . $pic_wide . ',"dimRatio":50} --><div class="wp-block-cover"><span aria-hidden="true" class="wp-block-cover__background has-background-dim"></span><img class="wp-block-cover__image-background wp-image-' . $pic_wide . '" alt="" src="' . esc_url( $u_wide ) . '" data-object-fit="cover"/><div class="wp-block-cover__inner-container"><!-- wp:paragraph {"align":"center"} --><p class="has-text-align-center">A cover block, with text over the picture.</p><!-- /wp:paragraph --></div></div><!-- /wp:cover -->'
+	. '<!-- wp:paragraph --><p>The end, so the last block has something under it.</p><!-- /wp:paragraph -->';
+
+$quireink_fixture_slugs[] = $pictures_slug;
+$pictures = get_page_by_path( $pictures_slug, OBJECT, 'post' );
+$pictures_args = array(
+	'post_type'    => 'post',
+	'post_status'  => 'publish',
+	'post_title'   => 'Pictures, every way a block can place one',
+	'post_name'    => $pictures_slug,
+	'post_content' => $pictures_body,
+	'post_author'  => 1,
+);
+if ( $pictures ) {
+	$pictures_args['ID'] = $pictures->ID;
+	$pictures_id = wp_update_post( $pictures_args );
+} else {
+	$pictures_id = wp_insert_post( $pictures_args );
+}
+// Featured image too: `quireink_hero` and `quireink_thumb` are both off by default, so
+// without one on a post there is nothing to switch on and look at.
+update_post_meta( $pictures_id, '_thumbnail_id', $pic_wide );
+WP_CLI::log( 'pictures: ' . $pictures_slug . ' with 2 drawn images' );
+
+/*
  * A comment thread, because the comment surface is otherwise never exercised.
  *
  * Everything under `#comments` is WordPress's markup wearing Quire Ink's class names, and
@@ -200,11 +289,15 @@ WP_CLI::log( 'fixtures: password post and three-page post' );
  * post's own author (which is the only way `bypostauthor` ever fires), and a one-line comment
  * with a URL on the name.
  */
-// Not any of the fixtures above. Each is the newest post the moment it is written, and each
-// is a page for looking at rather than a piece of writing. A thread belongs under something
+// Not any of the fixtures. Each is the newest post the moment it is written, and each is a
+// page for looking at rather than a piece of writing; a thread belongs under something
 // somebody wrote, which here means one of the articles the seeder pulled off the live blog.
+//
+// The list is COLLECTED as the fixtures are written rather than repeated here. Kept by hand,
+// it fell behind three times: each new fixture became the newest post and quietly took the
+// thread with it, and the only way to notice was to look at which post had comments.
 $fixture_ids = array();
-foreach ( array( 'every-core-block-on-one-page', 'a-post-behind-a-password', 'a-post-in-three-pages' ) as $slug ) {
+foreach ( $quireink_fixture_slugs as $slug ) {
 	$found = get_page_by_path( $slug, OBJECT, 'post' );
 	if ( $found ) {
 		$fixture_ids[] = $found->ID;

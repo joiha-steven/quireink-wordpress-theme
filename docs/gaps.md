@@ -160,6 +160,34 @@ it: every class a template prints must reach a rule, or be named in an allowlist
 reason. Sixteen are named there — core's own markup, and the two that
 [`quireink_align_classes`](../quire-ink/inc/template-tags.php) rewrites at render time.
 
+**Pictures, every way a block can place one.** The block sampler holds no media, because the
+theme bundles no images and a fixture that needs an upload is a fixture nobody runs. The
+seeder DRAWS two now, with GD, and places them every way a reader meets: column width with a
+caption, wide, full, a left float with text beside it, a gallery, media-and-text, a cover, and
+a featured image. Nothing was wrong. Two things looked wrong and were not, which is why they
+are written down:
+
+* **`alignfull` renders at the same width as `alignwide`**, on purpose and with the reason in
+  `quireink_align_classes`: a band edge to edge across a reading column is a shape the engine
+  measured and declined. It surprises an author who picked "Full", so `readme.txt` now says it
+  rather than leaving it to be discovered.
+* **A gallery after a left-floated picture is squeezed beside it.** A grid container
+  establishes its own formatting context and a formatting context avoids floats; measured at
+  388px of a 608px column, and 608px the moment the float above is cleared. CSS doing what it
+  says, and a fixture with too little text beside the float.
+
+Both featured-image shapes were switched on and looked at for the first time: the article hero
+above the title at 3:2, and the listing thumbnail as a 96px square the words wrap around,
+which is the rule the engine states.
+
+**Print was printed, not read.** `--print-to-pdf` on an article, converted and looked at: the
+masthead earns its ink once as provenance with a rule under it, then the meta line, the title
+and the article. Every link prints its own address after it in grey. The rail, the header
+controls, the conversation and the footer are gone. Twenty rules, all of them the engine's.
+
+**Every archive shape answers.** Author, month, year, category and tag all return 200 with the
+heading `the_archive_title()` gives them, and the feed with them.
+
 **The search overlay could never have returned anything.** `[/find]` in the header, and the
 `/` key anywhere on the page, open an overlay that searches as you type. It is in the copied
 reader bundle, and it fetches `/api/search?q=`, which is the blog engine's route. WordPress
