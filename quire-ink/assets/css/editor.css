@@ -66,6 +66,7 @@
 .editor-styles-wrapper.editor-styles-wrapper .wp-block-separator{border:0;border-top:1px solid var(--c-rule)}
 .editor-styles-wrapper.editor-styles-wrapper .wp-block-separator.is-style-wide{max-width:none}
 .editor-styles-wrapper.editor-styles-wrapper .wp-block-button__link{display:inline-block;padding:calc(var(--sp) * .5) var(--sp);border-radius:var(--radius);background:var(--c-accent);color:var(--c-bg);text-decoration:none;font-size:var(--fs-small)}
+.editor-styles-wrapper.editor-styles-wrapper .is-style-outline .wp-block-button__link{background:none;color:var(--c-link)}
 .editor-styles-wrapper.editor-styles-wrapper .wp-block-table{margin:calc(var(--sp) * 1.75) 0;overflow-x:auto}
 .editor-styles-wrapper.editor-styles-wrapper .wp-block-table table{margin:0}
 .editor-styles-wrapper.editor-styles-wrapper .wp-block-table figcaption{text-align:center}

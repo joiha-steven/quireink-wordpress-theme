@@ -160,6 +160,34 @@ it: every class a template prints must reach a rule, or be named in an allowlist
 reason. Sixteen are named there — core's own markup, and the two that
 [`quireink_align_classes`](../quire-ink/inc/template-tags.php) rewrites at render time.
 
+**Every core block on one page, which nobody had ever inserted.** The pull quote taught this
+lesson once and it was not learned generally: a block that has never been inserted is a block
+nobody has ever looked at. One post now holds every core block the theme can render without a
+media library, `dev/seed/every-block.html`, and the seeder keeps it. Three defects came out of
+the first render:
+
+* **The outline button arrived filled.** Core's `is-style-outline` puts its transparent
+  background inside a `:where()`, which carries no specificity, so `bridge.css`'s accent fill
+  outranked it and an author who chose "Outline" got the same solid button with a light rule
+  around it. It reads as a mistake rather than a choice. Undoing the fill is enough, because
+  core supplies the border.
+* **The tag cloud's smallest link measured 10.67px**, against a theme whose smallest type is
+  15px. `wp_tag_cloud` writes an inline `font-size` scaled by how many posts carry the tag,
+  and a tag with one post is not less readable than a tag with forty. The sizes come off; what
+  is left is the engine's own answer to a run of tags, described in its sheet as plain words
+  with no chips and no boxes.
+* **The search block's button was `#32373c`**, core's default, a colour in none of the six
+  palettes. `theme.json` now carries `elements.button` in the language the theme's own buttons
+  already speak: the page's ground, the heading's ink, a hairline. It deliberately does NOT
+  reach the Button block, which `bridge.css` fills with the accent because a call to action is
+  meant to be loud.
+
+Two things looked wrong and measured fine, which is worth recording so nobody re-opens them.
+The drop cap is core's rather than the theme's own, and it crowds the block under it, but the
+overlap measures −25px: it does not collide. And `h4` sits at 18.4px against a body of 18px,
+which makes a fourth-level heading nearly invisible — that is the blog engine's scale, and
+this theme does not get to choose type sizes.
+
 **On a virgin WordPress the rail empties itself correctly.** Checked the way the directory
 checks it - a reset database, `wp core install`, the theme activated, nothing but Hello world!
 and Sample Page - because that is the install a reviewer opens and it is not an install this

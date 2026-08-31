@@ -98,6 +98,17 @@
 	text-decoration: none;
 	font-size: var(--fs-small);
 }
+/* The outline variant was arriving FILLED. Core's `is-style-outline` sets a border and a
+ * transparent background, but its background declaration is inside a `:where()` and carries
+ * no specificity, so the accent above simply outranked it: an author who chose "Outline" got
+ * the same solid button with a light rule drawn around it, which reads as a mistake rather
+ * than a choice. Undoing the fill is enough - core supplies the border - and the label takes
+ * the link colour, because on the page's own ground it is a link that looks like a button. */
+.prose .is-style-outline .wp-block-button__link {
+	background: none;
+	color: var(--c-link);
+}
+
 .prose .wp-block-list { /* the ul/ol rules upstream already cover it; this exists so a future
 	   Gutenberg change that moves padding onto the class has a place to be undone */ }
 

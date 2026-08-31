@@ -289,6 +289,28 @@ const themeJson = {
         color: { text: 'var(--c-heading)' },
         typography: { fontWeight: 'var(--fw-heading)' },
       },
+      // Every OTHER button a block can put on the page, in the language the theme's own
+      // buttons already speak: a hairline, the page's ground, the heading's ink.
+      //
+      // Not the Button block, which `bridge.css` fills with the accent on purpose and which
+      // outranks this - a call to action is meant to be loud. This is for the quiet ones,
+      // and the search block is the one that proved it was needed: its button was #32373c,
+      // core's default, a colour that appears in none of the six palettes.
+      //
+      // Every value is a token this theme already publishes, so a palette change moves them
+      // with everything else.
+      button: {
+        color: { background: 'var(--c-bg)', text: 'var(--c-heading)' },
+        border: {
+          color: 'var(--c-rule)',
+          width: '1px',
+          style: 'solid',
+          radius: 'var(--radius, .5rem)',
+        },
+        typography: { fontWeight: '500' },
+        ':hover': { color: { background: 'var(--c-rule)', text: 'var(--c-heading)' } },
+        ':focus': { color: { background: 'var(--c-rule)', text: 'var(--c-heading)' } },
+      },
     },
   },
   templateParts: [

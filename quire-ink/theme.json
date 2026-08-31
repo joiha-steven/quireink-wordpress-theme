@@ -149,6 +149,33 @@
         "typography": {
           "fontWeight": "var(--fw-heading)"
         }
+      },
+      "button": {
+        "color": {
+          "background": "var(--c-bg)",
+          "text": "var(--c-heading)"
+        },
+        "border": {
+          "color": "var(--c-rule)",
+          "width": "1px",
+          "style": "solid",
+          "radius": "var(--radius, .5rem)"
+        },
+        "typography": {
+          "fontWeight": "500"
+        },
+        ":hover": {
+          "color": {
+            "background": "var(--c-rule)",
+            "text": "var(--c-heading)"
+          }
+        },
+        ":focus": {
+          "color": {
+            "background": "var(--c-rule)",
+            "text": "var(--c-heading)"
+          }
+        }
       }
     }
   },

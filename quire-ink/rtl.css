@@ -6,6 +6,11 @@
 .prose ol{list-style:decimal;padding-right:1.4em;padding-left:0}
 .prose blockquote{border-right:2px solid var(--c-rule);border-left:0;margin-right:0;margin-left:0;padding-right:var(--sp);padding-left:0;color:var(--c-meta)}
 .prose th,.prose td{border-width:var(--tbl-rule-y, 1px) var(--tbl-rule-x, 1px);border-style:solid;border-color:var(--c-rule);padding:calc(var(--sp) * .4 * var(--tbl-pad, 1)) calc(var(--sp) * .6 * var(--tbl-pad, 1));min-width:var(--tbl-min-col, 0);text-align:right}
+.resume-pill:active{transform:translateX(50%) translateY(1px);transition-duration:0s;box-shadow:inset 0 1.5px 2.5px color-mix(in srgb,var(--c-heading) 22%,transparent)}
+html[data-motion=off] .resume-pill:active{transform:translateX(50%)}
+@media (prefers-reduced-motion:reduce){
+  .resume-pill:active{transform:translateX(50%)}
+}
 .tl-mark{align-items:center;gap:.5rem;white-space:nowrap;color:var(--c-meta);background:var(--c-bg);padding:.1rem 0 .1rem 3rem;z-index:1}
 .tl-year-tag{align-items:center;gap:.5rem;white-space:nowrap;color:var(--c-heading);font-weight:var(--fw-heading,600);background:var(--c-bg);padding:.1rem 0 .1rem 3rem;font-size:var(--fs-h3);line-height:var(--lh-h3);letter-spacing:var(--ls-h3)}
 aside.series ol{margin:0;border-top:1px solid var(--c-rule);padding:1rem 1.25rem 0 0}

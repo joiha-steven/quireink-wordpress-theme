@@ -64,3 +64,32 @@ function quireink_register_pattern_category() {
 	);
 }
 add_action( 'init', 'quireink_register_pattern_category' );
+
+/**
+ * Take the inline sizes off the tag cloud block.
+ *
+ * `wp_tag_cloud` writes `style="font-size: 8pt"` on every link and scales it by how many
+ * posts carry the tag. Measured on a page holding one: six tags came out between 10.67px and
+ * 29.33px, and the small end is under this theme's smallest type, which is 15px. A tag with
+ * one post is not less readable than a tag with forty.
+ *
+ * The engine's own answer to a run of tags is `.rail-tags`, described in its sheet as a
+ * wrapped run of plain words with no chips and no boxes, and that is what is left once the
+ * sizes come off: the links inherit the column they sit in. Only the `font-size` declaration
+ * goes; anything else an author put in that attribute stays.
+ *
+ * @param string $content Block HTML.
+ * @param array  $block   Block, with its name.
+ * @return string
+ */
+function quireink_tag_cloud_sizes( $content, $block ) {
+	if ( ! isset( $block['blockName'] ) || 'core/tag-cloud' !== $block['blockName'] ) {
+		return $content;
+	}
+	return preg_replace(
+		array( '/\s*font-size:\s*[^;"\']*;?/', '/ style="\s*"/' ),
+		array( '', '' ),
+		$content
+	);
+}
+add_filter( 'render_block', 'quireink_tag_cloud_sizes', 10, 2 );

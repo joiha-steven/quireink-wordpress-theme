@@ -98,6 +98,44 @@ set_theme_mod( 'nav_menu_locations', $locations );
 WP_CLI::log( 'rail menu: ' . count( (array) wp_get_nav_menu_items( $menu_id ) ) . ' items' );
 
 /*
+ * One post holding every core block the theme can render without a media library.
+ *
+ * The comment thread above exists because comment defects only appear when there are
+ * comments. This exists for the same reason and a wider one: a block that nobody has ever
+ * inserted is a block nobody has ever looked at. Inserting all of them at once found an
+ * outline button that came out filled, a tag cloud whose smallest link measured 10.67px
+ * against a theme whose smallest type is 15px, and a search button in #32373c, a colour that
+ * appears in none of the six palettes.
+ *
+ * It is a normal published post, so it is also in the feed and the listing. Delete it on a
+ * real site; on this stack it is the page to open after touching bridge.css.
+ */
+$blocks_file = __DIR__ . '/every-block.html';
+if ( file_exists( $blocks_file ) ) {
+	$existing_blocks = get_page_by_path( 'every-core-block-on-one-page', OBJECT, 'post' );
+	if ( $existing_blocks ) {
+		wp_update_post(
+			array(
+				'ID'           => $existing_blocks->ID,
+				'post_content' => file_get_contents( $blocks_file ),
+			)
+		);
+		WP_CLI::log( 'blocks: updated /every-core-block-on-one-page' );
+	} else {
+		wp_insert_post(
+			array(
+				'post_type'    => 'post',
+				'post_status'  => 'publish',
+				'post_title'   => 'Every core block, on one page',
+				'post_name'    => 'every-core-block-on-one-page',
+				'post_content' => file_get_contents( $blocks_file ),
+			)
+		);
+		WP_CLI::log( 'blocks: created /every-core-block-on-one-page' );
+	}
+}
+
+/*
  * A comment thread, because the comment surface is otherwise never exercised.
  *
  * Everything under `#comments` is WordPress's markup wearing Quire Ink's class names, and
@@ -110,12 +148,16 @@ WP_CLI::log( 'rail menu: ' . count( (array) wp_get_nav_menu_items( $menu_id ) ) 
  * post's own author (which is the only way `bypostauthor` ever fires), and a one-line comment
  * with a URL on the name.
  */
+// Not the block sampler, which is the newest post the moment it is written and is a test
+// page rather than a piece of writing. A thread belongs under something somebody wrote.
+$sampler = get_page_by_path( 'every-core-block-on-one-page', OBJECT, 'post' );
 $thread_post = get_posts(
 	array(
 		'numberposts' => 1,
 		'orderby'     => 'date',
 		'order'       => 'DESC',
 		'fields'      => 'ids',
+		'exclude'     => $sampler ? array( $sampler->ID ) : array(),
 	)
 );
 if ( empty( $thread_post ) ) {
