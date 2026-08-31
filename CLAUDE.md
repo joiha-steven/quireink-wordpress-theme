@@ -13,7 +13,7 @@ copy of the look is GPL, the blog engine is not.
 bun run check:all
 ```
 
-Eight static guards — `filesize` · `order` · `bridge` · `contrast` · `classes` · `escape` · `generated` · `docs`. Seconds.
+Nine static guards — `filesize` · `order` · `bridge` · `contrast` · `classes` · `escape` · `generated` · `headers` · `docs`. Seconds.
 `check:generated` skips with a warning when there is no Quire Ink checkout beside this one.
 
 `check:all` proves the seams hold. It cannot tell you the rail is empty, a figure is at the

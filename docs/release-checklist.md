@@ -18,10 +18,12 @@ the review handbook asks of a free theme. Both verbatim texts are fetched and in
   *(The Quire Ink blog engine ships the same six faces and carries neither file. Same
   obligation, different repository — worth raising there.)*
 
-## Three fields only the owner can fill
+## The three fields only the owner could fill, and what each turned out to be
 
-* **`Contributors:` in readme.txt** is currently `joihasteven` and must be a real
-  WordPress.org username, or the submission is rejected.
+* ~~**`Contributors:`**~~ is `joihasteven`, and that was never a placeholder — it is the
+  owner's account. Verified rather than assumed: `profiles.wordpress.org/joihasteven/`
+  answers 200 and the page is titled for that user. A username in a file proves nothing about
+  a username on a server.
 * ~~**`Theme URI` and `Author URI`**~~ are two different pages now. `Theme URI` is the public
   repository, which is the theme's own page in the sense a reviewer means: the source, the
   history and these documents. `Author URI` stays `quireink.com`. The repository was private
@@ -34,6 +36,16 @@ the review handbook asks of a free theme. Both verbatim texts are fetched and in
   and the container updated itself past it. A version read off a filename is not a version the
   theme was opened in. It goes stale on its own, so re-read it before a release rather than
   trusting this line.
+
+Checking the last of them turned up a fourth thing nobody had listed. `style.css` declared
+17 tags and `readme.txt` 10, missing every tag added after it was first typed —
+`rtl-language-support`, `block-patterns`, `editor-style`, `two-columns`, `left-sidebar`,
+`sticky-post`, `theme-options`. WordPress.org reads both files and reconciles neither: one is
+what the directory files the theme under, the other is what a reader sees on the page, and the
+theme had grown four capabilities while telling half the story about them.
+[`check:headers`](../tools/checks/headers.ts) compares the two now — the shared fields, the
+tags as a set, `Version` against `Stable tag`, and the name over the readme against the theme
+name.
 
 ## Measured, and one of them says no
 

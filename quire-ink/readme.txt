@@ -6,7 +6,7 @@ Requires PHP: 7.4
 Stable tag: 0.1.0
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Tags: blog, one-column, custom-colors, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready, block-styles, wide-blocks
+Tags: blog, one-column, two-columns, left-sidebar, custom-colors, custom-logo, custom-menu, featured-images, sticky-post, threaded-comments, theme-options, translation-ready, rtl-language-support, block-patterns, block-styles, editor-style, wide-blocks
 
 The reading surface of the Quire Ink blog engine, as a WordPress theme.
 
