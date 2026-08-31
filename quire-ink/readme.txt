@@ -3,7 +3,7 @@ Contributors: joihasteven
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Tags: blog, one-column, two-columns, left-sidebar, custom-colors, custom-logo, custom-menu, featured-images, sticky-post, threaded-comments, theme-options, translation-ready, rtl-language-support, block-patterns, block-styles, editor-style, wide-blocks
@@ -214,6 +214,27 @@ words in it were written for the screenshot. It contains no third-party images a
 photographs.
 
 == Changelog ==
+
+= 0.1.1 =
+Still a beta: the theme has not been run on a site other than the one it was written
+against.
+
+* Book mode works. It never had: it opens from a button, the script that builds it was
+  being refused by the browser in every render this theme had ever been looked at, and the
+  button did nothing. The theme was advertising it on the fact that the button existed.
+* The drop cap is the theme's own. Core's is 8.4em at weight 100, which at this theme's
+  paragraph is a 151px letter across nearly four lines, drawn in a weight the bundled
+  typefaces do not carry.
+* The Outline button style no longer arrives filled.
+* The tag cloud block no longer prints links at 10.67px, under the theme's smallest size.
+* The search block's button is the theme's colour rather than core's #32373c.
+* The password form is no longer a browser default box and a grey system button, and a
+  protected post no longer reports the word count and reading time of the text it withholds.
+* A second menu location, Footer menu, for a flat row of links above the credit.
+* A post whose author was deleted no longer prints two separators in a row.
+* `Tested up to` reads 7.1, from the install rather than from a filename.
+* readme rewritten, and the screenshot rebuilt from a WordPress seeded for the picture
+  instead of from one person's blog.
 
 = 0.1.0 =
 * First version.

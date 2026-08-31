@@ -160,6 +160,19 @@ it: every class a template prints must reach a rule, or be named in an allowlist
 reason. Sixteen are named there — core's own markup, and the two that
 [`quireink_align_classes`](../quire-ink/inc/template-tags.php) rewrites at render time.
 
+**The drop cap was core's, three times over.** Recorded here a day earlier as "looked wrong
+and measured fine", on the strength of one measurement that asked the wrong question: whether
+it collided with the block under it. It does not collide. It is `font-size:8.4em` at
+`font-weight:100`, which against this theme's 18.4px paragraph is a **151px letter spanning
+3.85 body lines**, set in a weight none of the bundled faces carry. The engine states its own
+at `3.1em`, weight 600, in the heading's ink - a third the size and a different animal.
+
+The fix is generated rather than written, because the numbers are the engine's and this theme
+may not type them out. `tools/appearance-php.ts` reads the rule out of the engine's own
+`BOOK_CSS`, where it is stated once for book mode, and re-addresses it at the class Gutenberg
+puts on the paragraph. It throws rather than guesses if that rule ever moves, and
+`check:generated` goes red until an extract catches up.
+
 **Three more surfaces nobody opens while writing a theme.** Ticking "password protected" or
 splitting a post into pages is one click in the editor and there is no occasion to make it;
 an attachment page needs an upload. All three are seeded now.

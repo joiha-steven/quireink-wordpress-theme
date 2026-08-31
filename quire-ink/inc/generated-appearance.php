@@ -15,6 +15,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * The blog engine's drop cap, addressed at the class the block editor writes.
+ *
+ * Gutenberg offers a drop cap on any paragraph and styles it 8.4em at weight 100, which is
+ * three times this theme's own and a weight its typefaces do not carry. These are the
+ * engine's declarations, taken from its book-mode sheet at build time.
+ *
+ * @return string
+ */
+function quireink_dropcap_css() {
+	return '.prose .has-drop-cap:not(:focus)::first-letter{float:left;margin:.02em .09em 0 0; font-size:3.1em;line-height:.72;font-weight:600;color:var(--c-heading)}';
+}
+
+/**
  * Palette id => first-paint scheme => the :root and .dark declarations.
  *
  * @return array<string,array<string,string>>

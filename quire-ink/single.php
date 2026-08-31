@@ -55,7 +55,9 @@ endif;
 	&middot; <span class="num"><?php echo esc_html( number_format_i18n( $reading['words'] ) ); ?></span> <?php esc_html_e( 'words', 'quire-ink' ); ?>
 	&middot; <span class="num"><?php echo esc_html( number_format_i18n( $reading['minutes'] ) ); ?></span> <?php esc_html_e( 'min read', 'quire-ink' ); ?>
 	<?php endif; ?>
+	<?php if ( '' !== get_the_author() ) : ?>
 	&middot; <span class="byline"><?php echo esc_html( get_the_author() ); ?></span>
+	<?php endif; ?>
 	<span class="meta-book"> &middot; <button type="button" class="book-mode-toggle" data-book-open><?php esc_html_e( 'Book mode', 'quire-ink' ); ?></button></span>
 </p>
 <h1 class="reading-font mt-2 fs-h1 font-semibold"><?php the_title(); ?></h1>
@@ -63,7 +65,9 @@ endif;
 
 <aside class="post-info t-small text-meta">
 	<p><time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time></p>
+	<?php if ( '' !== get_the_author() ) : ?>
 	<p class="byline"><?php echo esc_html( get_the_author() ); ?></p>
+	<?php endif; ?>
 	<?php if ( $reading['minutes'] > 0 ) : ?>
 	<p><span class="num"><?php echo esc_html( number_format_i18n( $reading['words'] ) ); ?></span> <?php esc_html_e( 'words', 'quire-ink' ); ?></p>
 	<p><span class="num"><?php echo esc_html( number_format_i18n( $reading['minutes'] ) ); ?></span> <?php esc_html_e( 'min read', 'quire-ink' ); ?></p>

@@ -67,6 +67,15 @@ function quireink_appearance_css() {
 		}
 	}
 
+	/*
+	 * The drop cap, always. Not a setting: the block editor offers one on any paragraph and
+	 * styles it three times the size this theme's own is, in a weight its typefaces do not
+	 * carry, so an author who ticks the box gets something from a different design. The
+	 * declarations are the blog engine's, taken off its book-mode sheet when the theme was
+	 * generated.
+	 */
+	$out .= quireink_dropcap_css();
+
 	$out .= quireink_shape_declarations();
 
 	if ( '' === $out ) {

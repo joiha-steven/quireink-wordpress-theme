@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-31T12:04:04+00:00\n"
+"POT-Creation-Date: 2026-08-31T12:11:05+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quire-ink\n"
@@ -145,7 +145,7 @@ msgstr ""
 #: functions.php:371
 #: inc/template-tags.php:58
 #: parts/rail-blocks.php:112
-#: single.php:72
+#: single.php:76
 msgid "Tags"
 msgstr ""
 
@@ -597,8 +597,8 @@ msgid "Back to top"
 msgstr ""
 
 #: inc/i18n-data.php:104
-#: single.php:59
-#: single.php:75
+#: single.php:61
+#: single.php:79
 msgid "Book mode"
 msgstr ""
 
@@ -645,7 +645,7 @@ msgstr ""
 
 #: inc/template-tags.php:59
 #: parts/rail-blocks.php:79
-#: single.php:73
+#: single.php:77
 msgid "Categories"
 msgstr ""
 
@@ -659,7 +659,7 @@ msgstr ""
 
 #: inc/template-tags.php:156
 #: single.php:56
-#: single.php:69
+#: single.php:73
 msgid "min read"
 msgstr ""
 
@@ -851,7 +851,7 @@ msgid "Search posts"
 msgstr ""
 
 #: single.php:55
-#: single.php:68
+#: single.php:72
 msgid "words"
 msgstr ""
 

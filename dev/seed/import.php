@@ -118,6 +118,7 @@ if ( file_exists( $blocks_file ) ) {
 			array(
 				'ID'           => $existing_blocks->ID,
 				'post_content' => file_get_contents( $blocks_file ),
+				'post_author'  => 1,
 			)
 		);
 		WP_CLI::log( 'blocks: updated /every-core-block-on-one-page' );
@@ -128,6 +129,9 @@ if ( file_exists( $blocks_file ) ) {
 				'post_status'  => 'publish',
 				'post_title'   => 'Every core block, on one page',
 				'post_name'    => 'every-core-block-on-one-page',
+				// Without an author the byline is empty and the meta line prints its two
+				// separators back to back. wp_insert_post does not default it.
+				'post_author'  => 1,
 				'post_content' => file_get_contents( $blocks_file ),
 			)
 		);
@@ -171,6 +175,7 @@ foreach ( $fixtures as $f ) {
 		'post_title'    => $f['title'],
 		'post_name'     => $f['slug'],
 		'post_content'  => $f['content'],
+		'post_author'   => 1,
 		'post_password' => $f['password'],
 	);
 	if ( $found ) {
