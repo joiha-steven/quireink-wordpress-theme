@@ -88,8 +88,27 @@ class Quireink_Comment_Walker extends Walker_Comment {
 	private function render( $comment, $depth, $args ) {
 		?>
 		<li id="comment-<?php comment_ID(); ?>" <?php comment_class( 'comment', $comment ); ?>>
+			<?php
+			/*
+			 * The post's own author, said in a WORD rather than in a colour.
+			 *
+			 * WordPress puts `bypostauthor` on the item and the sheet draws nothing for it,
+			 * so in a thread the writer's own reply looked exactly like a stranger's. The
+			 * marker is a word in the meta line because a colour would be this theme
+			 * deciding something the blog engine has not, and because a distinction carried
+			 * only by colour is not a distinction for every reader.
+			 *
+			 * Registered comments only: a name typed into the form is not proof of identity,
+			 * and `bypostauthor` is set from the account, not from the string.
+			 */
+			$quireink_author = $comment->user_id
+				&& (int) $comment->user_id === (int) get_post_field( 'post_author', $comment->comment_post_ID );
+			?>
 			<p class="comment-meta t-small">
 				<span class="comment-name"><?php echo esc_html( get_comment_author( $comment ) ); ?></span>
+				<?php if ( $quireink_author ) : ?>
+					&middot; <?php echo esc_html_x( 'author', 'marks a comment written by the post author', 'quire-ink' ); ?>
+				<?php endif; ?>
 				&middot; <time datetime="<?php echo esc_attr( get_comment_date( 'c', $comment ) ); ?>"><?php echo esc_html( get_comment_date( '', $comment ) ); ?></time>
 				<?php if ( '1' !== $comment->comment_approved ) : ?>
 					&middot; <?php esc_html_e( 'awaiting moderation', 'quire-ink' ); ?>

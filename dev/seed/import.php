@@ -96,3 +96,68 @@ $locations            = get_theme_mod( 'nav_menu_locations', array() );
 $locations['primary'] = $menu_id;
 set_theme_mod( 'nav_menu_locations', $locations );
 WP_CLI::log( 'rail menu: ' . count( (array) wp_get_nav_menu_items( $menu_id ) ) . ' items' );
+
+/*
+ * A comment thread, because the comment surface is otherwise never exercised.
+ *
+ * Everything under `#comments` is WordPress's markup wearing Quire Ink's class names, and
+ * every defect found there so far was found by putting real comments in front of it: a
+ * container opened in one field and closed in another, a consent checkbox printed twice, a
+ * reply link with no top margin, an author whose own reply looked like a stranger's. None of
+ * those are visible on an empty thread, and an empty thread is what a fresh seed left.
+ *
+ * Three shapes, because they fail differently: a long comment that wraps, a REPLY from the
+ * post's own author (which is the only way `bypostauthor` ever fires), and a one-line comment
+ * with a URL on the name.
+ */
+$thread_post = get_posts(
+	array(
+		'numberposts' => 1,
+		'orderby'     => 'date',
+		'order'       => 'DESC',
+		'fields'      => 'ids',
+	)
+);
+if ( empty( $thread_post ) ) {
+	WP_CLI::log( 'comments: no post to attach to' );
+	return;
+}
+$thread_post = (int) $thread_post[0];
+
+// Idempotent: seeding twice must not stack four threads on one article.
+if ( get_comments( array( 'post_id' => $thread_post, 'count' => true ) ) > 0 ) {
+	WP_CLI::log( 'comments: already present, left alone' );
+	return;
+}
+
+$first = wp_insert_comment(
+	array(
+		'comment_post_ID'      => $thread_post,
+		'comment_author'       => 'Lan Nguyễn',
+		'comment_author_email' => 'lan@example.com',
+		'comment_content'      => 'Bài này đúng thứ tôi đang tìm. Con NAS của tôi cũng chạy Docker, nhưng phần chứng chỉ thì tôi vẫn để Synology tự lo. Anh có gặp trục trặc gì với chỗ đó không?',
+		'comment_approved'     => 1,
+	)
+);
+wp_insert_comment(
+	array(
+		'comment_post_ID'      => $thread_post,
+		'comment_parent'       => $first,
+		'user_id'              => (int) get_post_field( 'post_author', $thread_post ),
+		'comment_author'       => get_the_author_meta( 'display_name', (int) get_post_field( 'post_author', $thread_post ) ),
+		'comment_author_email' => 'admin@example.com',
+		'comment_content'      => 'Có, và nó là lý do có bài sau. Tóm tắt: DSM gia hạn chứng chỉ nhưng không nạp lại vào reverse proxy, nên site chết lặng sau chín mươi ngày.',
+		'comment_approved'     => 1,
+	)
+);
+wp_insert_comment(
+	array(
+		'comment_post_ID'      => $thread_post,
+		'comment_author'       => 'Trung',
+		'comment_author_email' => 'trung@example.com',
+		'comment_author_url'   => 'https://example.com',
+		'comment_content'      => 'Một câu ngắn.',
+		'comment_approved'     => 1,
+	)
+);
+WP_CLI::log( 'comments: 3 on post ' . $thread_post . ' (one reply from the post author)' );

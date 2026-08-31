@@ -161,6 +161,20 @@ confirmed:
   field list a theme passes without it, deliberately, so it has to be unset in
   `comment_form_fields`. Leaving it out printed the consent twice.
 
+**The post's own author is marked, in a word.** WordPress puts `bypostauthor` on the item and
+the sheet draws nothing for it, so in a thread the writer's own reply looked exactly like a
+stranger's. It says `author` in the meta line now, between the name and the date. Not a
+colour: a colour would be this theme deciding something the engine has not, and a distinction
+carried only by colour is not a distinction for every reader. It is set from the account, not
+from the name typed into the form.
+
+**`dev/seed.sh` creates the thread now**, three comments on the newest post - one that wraps,
+one REPLY from the post's author, which is the only way `bypostauthor` ever fires, and a
+one-liner with a URL on the name. Every comment defect found here was found by putting real
+comments in front of the markup, and a fresh seed used to leave an empty thread, so the
+surface was only ever checked when somebody remembered to fill it by hand. Re-running the
+seeder leaves an existing thread alone.
+
 Two additions with no counterpart in the blog engine. WordPress prints a heading in front of
 the form, outside it, because it doubles as the "Reply to X" target and carries the cancel
 link; `.comment-form`'s top margin therefore opened below the title instead of above it, and
