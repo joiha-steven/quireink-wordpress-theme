@@ -22,7 +22,9 @@ analytics, no avatars, no request off your server at all.
 
 The look is not hand-written. It is generated from the stylesheet of the Quire Ink blog
 engine, the same sheet that blog renders with, so this is that reading surface driven from
-WordPress content rather than an impression of it.
+WordPress content rather than an impression of it. The engine is at
+https://quireink.com and https://github.com/joiha-steven/quireink; this theme is at
+https://github.com/joiha-steven/quireink-wordpress-theme, where its own documents live.
 
 = Reading =
 

@@ -55,7 +55,15 @@ LEAD=$(wpc post create --post_type=post --post_status=publish \
   --tags_input="typography,reading" --porcelain \
   --post_content='<!-- wp:paragraph --><p>A page is not only the block of text in the middle of it. The space around a column tells a reader how long a line will be before they start it, and a line they can measure is a line they will finish. Widen the column by a third and the same paragraph takes longer to read, which is the opposite of what the extra room seemed to promise.</p><!-- /wp:paragraph -->
 <!-- wp:heading --><h2>Where the number comes from</h2><!-- /wp:heading -->
-<!-- wp:paragraph --><p>Seventy characters is not a rule handed down from anywhere. It is roughly where the eye stops having to hunt for the start of the next line, and it happens to be close to what a printed book settles on after four hundred years of trying.</p><!-- /wp:paragraph -->')
+<!-- wp:paragraph --><p>Seventy characters is not a rule handed down from anywhere. It is roughly where the eye stops having to hunt for the start of the next line, and it happens to be close to what a printed book settles on after four hundred years of trying.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>The number is a range rather than a point. Somewhere between sixty and eighty a line stops being work, and where it lands inside that range depends on the face, the size and how far apart the lines sit.</p><!-- /wp:paragraph -->
+<!-- wp:heading --><h2>What the gutter is for</h2><!-- /wp:heading -->
+<!-- wp:paragraph --><p>Holding the column to that width leaves room on both sides, and the room is not waste. One side takes the contents of the piece, the other takes its facts: when it was written, how long it runs, what it is filed under.</p><!-- /wp:paragraph -->
+<!-- wp:quote --><blockquote class="wp-block-quote"><p>A margin is not empty space. It is the part of the page that tells you where the page ends.</p></blockquote><!-- /wp:quote -->
+<!-- wp:heading --><h2>Reading on a phone</h2><!-- /wp:heading -->
+<!-- wp:paragraph --><p>None of it survives contact with a narrow screen, and none of it should. Below the width that holds a rail beside a column, the gutters fold away, the contents move behind a button and the column takes the screen.</p><!-- /wp:paragraph -->
+<!-- wp:heading --><h2>The part that is a taste</h2><!-- /wp:heading -->
+<!-- wp:paragraph --><p>Indented paragraphs, justified lines and hyphenation belong to print, and on a screen they are a preference rather than an improvement. They ship switched off, and the switch is one line in the Customizer.</p><!-- /wp:paragraph -->')
 
 wpc post create --post_type=post --post_status=publish \
   --post_title="Six palettes, and why none of them is blue on white" \
@@ -79,7 +87,7 @@ wpc menu item add-term "$MENU" category "$CRAFT" >/dev/null
 wpc menu item add-term "$MENU" category "$NOTES" >/dev/null
 wpc menu location assign "$MENU" primary >/dev/null
 
-echo "--- rendering"
+echo "--- the directory's screenshot"
 SHOT_SCALE=2 tools/shot.sh "http://127.0.0.1:8099/" "$WIDE" 1440 1080
 sips -z 900 1200 "$WIDE" --out "$OUT" >/dev/null
 
@@ -87,3 +95,32 @@ W=$(sips -g pixelWidth "$OUT" | awk '/pixelWidth/{print $2}')
 H=$(sips -g pixelHeight "$OUT" | awk '/pixelHeight/{print $2}')
 [ "$W" = "1200" ] && [ "$H" = "900" ] || { echo "wrong size: ${W}x${H}, wanted 1200x900" >&2; exit 1; }
 printf '%s  %s  %sx%s\n' "$(du -h "$OUT" | cut -f1)" "$OUT" "$W" "$H"
+
+# The pictures on the repository's front page, from the same seed. They are NOT in the theme:
+# the submission zip is `git archive HEAD:quire-ink`, so nothing under docs/ ever ships.
+#
+# Dark is set through the theme's own Customizer setting rather than by driving the reader's
+# toggle, because a headless render has no way to click and the setting is the same code path
+# a site owner uses to choose what a first-time reader sees.
+echo "--- the repository's pictures"
+mkdir -p docs/shots
+ART=$(wpc post list --post_type=post --posts_per_page=1 --field=url)
+
+shot_scaled() { # url, out, width, height, target-width
+  SHOT_SCALE=2 tools/shot.sh "$1" ".tmp/shots/_raw.png" "$3" "$4" >/dev/null
+  sips -Z "$5" ".tmp/shots/_raw.png" --out "$2" >/dev/null
+  printf '  %s  %s\n' "$(du -h "$2" | cut -f1)" "$2"
+}
+
+shot_scaled "http://127.0.0.1:8099/" docs/shots/listing.png 1440 1000 1440
+shot_scaled "$ART" docs/shots/article.png 1440 1400 1440
+
+wpc theme mod set quireink_default_scheme dark >/dev/null
+shot_scaled "$ART" docs/shots/article-dark.png 1440 1400 1440
+wpc theme mod remove quireink_default_scheme >/dev/null
+
+wpc theme mod set quireink_book_text on >/dev/null 2>&1 || true
+shot_scaled "$ART" docs/shots/book-typography.png 1440 1400 1440
+wpc theme mod remove quireink_book_text >/dev/null 2>&1 || true
+
+rm -f .tmp/shots/_raw.png
