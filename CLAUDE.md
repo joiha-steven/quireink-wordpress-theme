@@ -26,6 +26,10 @@ dev/seed.sh      # real articles from the live blog, converted to Gutenberg bloc
 tools/shot.sh <url> .tmp/shots/<name>.png
 ```
 
+`shot.sh` refuses below 500px and says why: Chrome's headless window has an OS minimum, so a
+390px request came back as a 500px page cropped to 390 — which reads as a theme that
+overflows. Phone widths are checked in the browser pane's device emulation.
+
 **Open the page.**
 
 ## Read first

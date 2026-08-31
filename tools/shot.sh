@@ -10,6 +10,15 @@
 #   * `--screenshot` writes the file and then sometimes does not exit. The watchdog below
 #     waits for the file rather than for the process, which is the thing actually wanted.
 #     macOS has no `timeout(1)`, so this is spelled out rather than delegated.
+#   * headless=new opens a real window, and the window has an OS MINIMUM WIDTH. Ask for 390
+#     and Chrome lays the page out at 500 and hands back the left 390 pixels of it, with no
+#     warning and a file of exactly the size requested. Measured: 480, 460, 420 and 390 all
+#     reproduce the 500px render line for line, with the header icons sliced by the right
+#     edge; 500 and 600 wrap differently from each other and from all of them. Every phone
+#     screenshot taken with this script before that was measured was a desktop page cropped,
+#     which is worse than no screenshot - it invents overflow that is not there. Below the
+#     floor this now REFUSES. Phone widths are checked in the browser pane, which emulates
+#     the device rather than shrinking a window.
 #
 # Usage: shot.sh <url> <out.png> [width] [height]
 set -euo pipefail
@@ -23,6 +32,16 @@ WAIT="${SHOT_WAIT:-60}"
 # screenshot is the exception: WordPress.org wants a file that is EXACTLY 1200x900, so that
 # one is taken at 1.
 SCALE="${SHOT_SCALE:-2}"
+
+# Chrome will not open a window narrower than this, and says nothing when it declines to.
+FLOOR=500
+if [ "$W" -lt "$FLOOR" ]; then
+  echo "shot.sh: refusing ${W}px." >&2
+  echo "  Chrome's window floor is ${FLOOR}px: it would render the page at ${FLOOR} and hand back" >&2
+  echo "  the left ${W} pixels, which looks exactly like a theme that overflows." >&2
+  echo "  For a phone, use the browser pane's mobile emulation instead." >&2
+  exit 2
+fi
 
 CHROME="${CHROME:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
 PROFILE="$(mktemp -d)"

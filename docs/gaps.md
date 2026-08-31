@@ -86,6 +86,25 @@ Measured after: Literata at 672px in both, headings matching, inline code in Jet
 its tinted ground — and a paragraph set to "Large" in the sidebar still measures 36px, because
 the author's own choices have to beat the theme and do.
 
+**A phone was never actually photographed.** `tools/shot.sh` at 390px produced a page whose
+body text ran off the right edge and whose header icons were sliced in half - a theme that
+overflows, in a file exactly 390 pixels wide. It does not overflow. `headless=new` opens a
+real window and the window has an OS minimum: Chrome laid the page out at 500 and returned
+the left 390 pixels of it. Measured by rendering the same page at 600, 540, 500, 480, 460,
+420 and 390: everything from 480 down reproduces the 500px render line for line, and only 500
+and 600 wrap differently. The script refuses below 500 now, with the reason.
+
+Measured properly, in device emulation at 375px, on every template: `scrollWidth` equals
+`clientWidth` on all of them, so nothing scrolls sideways. The only elements outside the
+viewport are outside it on the LEFT and meant to be - the skip link at -9999px and the closed
+rail drawer at -300px. The reading column is 327px inside 375, the search form stacks to a
+column, the comment fields collapse to one column and the comment actions wrap.
+
+**Dark was checked by measurement rather than by eye**, because the numbers are the stronger
+evidence: 21 elements across three templates, every one of them - text, ground and rule -
+different under `html.dark` than without it, and none left behind. `check:contrast` already
+holds the ratios for all six palettes in both schemes.
+
 **Three blocks were wearing names no sheet has.** The listing pages said `list-head`, the
 pager said `pagination t-small`, the empty state said `t-small text-meta` inside an
 `article.reveal`. Every one of those spellings is correct, every one rendered, and not one of
