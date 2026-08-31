@@ -68,9 +68,19 @@ the engine draws its own comment fields the same way, so this belongs upstream r
   `check:generated`, which also catches a `bridge.css` edit that forgot to mirror. Checked by
   installing Arabic on the local stack and measuring both gutters: 40px each side, no
   horizontal overflow. `rtl-language-support` is declared.
-* **A `.zip` for submission** must be named `quire-ink.zip` and contain a single `quire-ink/`
-  directory. The repository is already laid out that way, so this is `git archive` and nothing
-  more — no build step, no compilation, no bundler.
+* ~~**A `.zip` for submission**~~ is one command, because the repository is laid out the way
+  the directory wants it — no build step, no compilation, no bundler:
+
+  ```
+  git archive --format=zip --prefix=quire-ink/ -o .tmp/dist/quire-ink.zip HEAD:quire-ink
+  ```
+
+  It builds from `HEAD`, not from the working tree, so an uncommitted edit cannot ship by
+  accident. Measured on the last build: 732 KB, 64 files, exactly one top-level directory,
+  and `diff -rq` against the working tree reports no difference — nothing gitignored is
+  missing from it and nothing untracked is in it. Build it into `.tmp/`, which is gitignored:
+  a release artifact committed to the repository is a second source of truth for the same
+  bytes.
 
 ## Already done
 
