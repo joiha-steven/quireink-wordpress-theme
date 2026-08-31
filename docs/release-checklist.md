@@ -22,9 +22,12 @@ the review handbook asks of a free theme. Both verbatim texts are fetched and in
 
 * **`Contributors:` in readme.txt** is currently `joihasteven` and must be a real
   WordPress.org username, or the submission is rejected.
-* **`Theme URI` and `Author URI`** in `style.css` both point at `quireink.com`. Reviewers
-  expect the first to be the theme's own page and the second the author's; one page cannot
-  honestly be both.
+* ~~**`Theme URI` and `Author URI`**~~ are two different pages now. `Theme URI` is the public
+  repository, which is the theme's own page in the sense a reviewer means: the source, the
+  history and these documents. `Author URI` stays `quireink.com`. The repository was private
+  when this line was written, which is why it could not be the answer then — it was opened
+  after reading 22 commits of history for keys, because publishing a repository publishes
+  what it used to contain as well as what it contains.
 * ~~**`Tested up to:`**~~ says **7.1**, which is what `wp core version` reports on the local
   stack and what every measurement in these documents was taken on. It had said 6.8, from the
   Docker image's tag rather than from the install — the tag is `wordpress:6.8-php8.3-apache`
