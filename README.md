@@ -131,7 +131,8 @@ git archive --format=zip --prefix=quire-ink/ -o quire-ink.zip HEAD:quire-ink
 
 No build step, no compilation, no bundler: the repository is laid out the way the directory
 wants it. Then Appearance → Customize for the palette and the shape, and Appearance → Menus
-to put a menu in the **Rail menu** location, which is the sidebar.
+to put a menu in the **Rail menu** location, which is the sidebar, or in **Footer menu** for
+a flat row of links above the credit.
 
 ## The idea
 

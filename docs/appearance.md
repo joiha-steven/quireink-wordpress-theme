@@ -83,7 +83,11 @@ itself — the theme rewrites class names, it does not fight plugin CSS.
 ## What WordPress provides
 
 **Site Identity** — the logo (any shape; it is not cropped), the site title, the tagline, the
-icon. **Menus** — assign one to *Rail menu* and it becomes the first block in the sidebar.
+icon. **Menus** — assign one to *Rail menu* and it becomes the first block in the sidebar;
+one in *Footer menu* prints as a flat centred row above the credit, one level deep. The rail's
+row classes are put on by `nav_menu_link_attributes`, which fires for EVERY menu on the page,
+so that filter tests the location: without the test the footer links arrived wearing
+`rail-row`, a full-width row with a hover slab and a marker down its side.
 **Homepage Settings**. **Additional CSS** — see below.
 
 Mark a post **Sticky** and it appears under *Featured* in the rail, and takes an accent bullet

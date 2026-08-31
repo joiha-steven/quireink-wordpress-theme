@@ -20,6 +20,21 @@
 <?php get_template_part( 'parts/rail' ); ?>
 </div>
 <footer class="site">
+	<?php
+	if ( has_nav_menu( 'footer' ) ) {
+		wp_nav_menu(
+			array(
+				'theme_location'       => 'footer',
+				'container'            => 'nav',
+				'container_class'      => 'footer-nav',
+				'container_aria_label' => __( 'Footer', 'quire-ink' ),
+				'menu_class'           => 'footer-menu',
+				'depth'                => 1,
+				'fallback_cb'          => false,
+			)
+		);
+	}
+	?>
 	<p class="footer-text">
 	<?php
 	printf(

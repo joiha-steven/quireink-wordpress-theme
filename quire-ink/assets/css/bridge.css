@@ -254,3 +254,20 @@
 	white-space: normal;
 	color: var(--c-heading);
 }
+
+/* ---------- footer menu ----------------------------------------------------------------
+ * A second nav location, and the only block on the page with no counterpart upstream: the
+ * blog engine's footer is one line and has never had a menu under it. So this is the one
+ * place the theme states a layout rather than translating one, and it states as little as it
+ * can - a flat centred run, on the same line rhythm as the credit above it. `footer.site a`
+ * already supplies the colour, the underline, the hover and the tap target.
+ */
+.footer-menu {
+	list-style: none;
+	margin: 0 0 calc(var(--sp) * .5);
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: calc(var(--sp) * .1) calc(var(--sp) * .75);
+}

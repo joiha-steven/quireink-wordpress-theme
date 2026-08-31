@@ -37,6 +37,7 @@ const ALLOWED = new Map<string, string>([
   ['info-terms', 'the blog engine emits this name too and styles neither'],
   ['required', 'the asterisk in a comment label; core themes colour it, this one does not'],
   ['page-links', 'wp_link_pages on a multi-page post; .pager would spread the numbers apart'],
+  ['post-password-form', 'core\'s own name for this form; plugins and custom CSS target it'],
   ['tagcloud', 'core widget markup, inside a rail block the theme does style'],
   ['tag-link-count', 'core widget markup'],
   ['widget', 'core widget wrapper, inside a rail block the theme does style'],

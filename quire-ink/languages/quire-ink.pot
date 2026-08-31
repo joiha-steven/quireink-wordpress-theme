@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-31T09:07:24+00:00\n"
+"POT-Creation-Date: 2026-08-31T12:04:04+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quire-ink\n"
@@ -21,9 +21,8 @@ msgid "Quire Ink"
 msgstr ""
 
 #. Theme URI of the theme
-#. Author URI of the theme
 #: style.css
-msgid "https://quireink.com"
+msgid "https://github.com/joiha-steven/quireink-wordpress-theme"
 msgstr ""
 
 #. Description of the theme
@@ -34,6 +33,11 @@ msgstr ""
 #. Author of the theme
 #: style.css
 msgid "Trần Mạnh Hùng"
+msgstr ""
+
+#. Author URI of the theme
+#: style.css
+msgid "https://quireink.com"
 msgstr ""
 
 #: 404.php:15
@@ -110,14 +114,18 @@ msgstr ""
 msgid "Post comment"
 msgstr ""
 
+#: footer.php:30
+msgid "Footer"
+msgstr ""
+
 #. translators: 1: current year, 2: site name
-#: footer.php:27
+#: footer.php:42
 #, php-format
 msgid "© %1$s %2$s"
 msgstr ""
 
 #. translators: the theme credit in the footer. The site runs WordPress; this names the THEME, so avoid "powered by", which claims the blog engine.
-#: footer.php:38
+#: footer.php:53
 msgid "Quire Ink theme"
 msgstr ""
 
@@ -125,19 +133,23 @@ msgstr ""
 msgid "Rail menu"
 msgstr ""
 
-#: functions.php:337
-#: functions.php:339
+#: functions.php:95
+msgid "Footer menu"
+msgstr ""
+
+#: functions.php:348
+#: functions.php:350
 msgid "Table of contents"
 msgstr ""
 
-#: functions.php:360
+#: functions.php:371
 #: inc/template-tags.php:58
 #: parts/rail-blocks.php:112
-#: single.php:68
+#: single.php:72
 msgid "Tags"
 msgstr ""
 
-#: functions.php:363
+#: functions.php:374
 msgid "Comments"
 msgstr ""
 
@@ -478,6 +490,19 @@ msgstr ""
 msgid "A single \"Quire Ink theme\" link beside the copyright line. It names the theme, not the engine: the site is running WordPress."
 msgstr ""
 
+#: inc/forms.php:35
+msgid "This post is behind a password."
+msgstr ""
+
+#: inc/forms.php:40
+#: inc/forms.php:43
+msgid "Password"
+msgstr ""
+
+#: inc/forms.php:44
+msgid "Read it"
+msgstr ""
+
 #: inc/i18n-data.php:24
 msgid "Mono"
 msgstr ""
@@ -572,8 +597,8 @@ msgid "Back to top"
 msgstr ""
 
 #: inc/i18n-data.php:104
-#: single.php:57
-#: single.php:71
+#: single.php:59
+#: single.php:75
 msgid "Book mode"
 msgstr ""
 
@@ -620,7 +645,7 @@ msgstr ""
 
 #: inc/template-tags.php:59
 #: parts/rail-blocks.php:79
-#: single.php:69
+#: single.php:73
 msgid "Categories"
 msgstr ""
 
@@ -633,8 +658,8 @@ msgid "Related posts"
 msgstr ""
 
 #: inc/template-tags.php:156
-#: single.php:55
-#: single.php:66
+#: single.php:56
+#: single.php:69
 msgid "min read"
 msgstr ""
 
@@ -825,8 +850,8 @@ msgstr ""
 msgid "Search posts"
 msgstr ""
 
-#: single.php:54
-#: single.php:65
+#: single.php:55
+#: single.php:68
 msgid "words"
 msgstr ""
 

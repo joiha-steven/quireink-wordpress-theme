@@ -136,6 +136,53 @@ if ( file_exists( $blocks_file ) ) {
 }
 
 /*
+ * Two more surfaces nobody opens while writing a theme, for the same reason as the sampler
+ * above: ticking "password protected" or splitting a post into pages is one click in the
+ * editor and there is no occasion to make it. The password form arrived wearing nothing at
+ * all - a browser default box and a grey system button in the middle of a reading column -
+ * and the info column beside it was reporting the word count of text the password withholds.
+ */
+$fixtures = array(
+	array(
+		'slug'     => 'a-post-behind-a-password',
+		'title'    => 'A post behind a password',
+		'password' => 'secret',
+		'content'  => '<!-- wp:paragraph --><p>The content behind the password, which a reader reaches only after typing it. The password on this one is <code>secret</code>.</p><!-- /wp:paragraph -->',
+	),
+	array(
+		'slug'     => 'a-post-in-three-pages',
+		'title'    => 'A post in three pages',
+		'password' => '',
+		// The page break is the INNER `<!--nextpage-->`; the block delimiter around it is not
+		// what WordPress splits on, and a post written with only the delimiter comes out as one
+		// page with no links under it, which looks exactly like a theme that dropped them.
+		'content'  => '<!-- wp:paragraph --><p>Page one of a post split with the page-break block.</p><!-- /wp:paragraph -->'
+			. '<!-- wp:nextpage --><!--nextpage--><!-- /wp:nextpage -->'
+			. '<!-- wp:paragraph --><p>Page two, reached through the links the theme prints under the article.</p><!-- /wp:paragraph -->'
+			. '<!-- wp:nextpage --><!--nextpage--><!-- /wp:nextpage -->'
+			. '<!-- wp:paragraph --><p>And page three, the last one.</p><!-- /wp:paragraph -->',
+	),
+);
+foreach ( $fixtures as $f ) {
+	$found = get_page_by_path( $f['slug'], OBJECT, 'post' );
+	$args  = array(
+		'post_type'     => 'post',
+		'post_status'   => 'publish',
+		'post_title'    => $f['title'],
+		'post_name'     => $f['slug'],
+		'post_content'  => $f['content'],
+		'post_password' => $f['password'],
+	);
+	if ( $found ) {
+		$args['ID'] = $found->ID;
+		wp_update_post( $args );
+	} else {
+		wp_insert_post( $args );
+	}
+}
+WP_CLI::log( 'fixtures: password post and three-page post' );
+
+/*
  * A comment thread, because the comment surface is otherwise never exercised.
  *
  * Everything under `#comments` is WordPress's markup wearing Quire Ink's class names, and
@@ -148,16 +195,23 @@ if ( file_exists( $blocks_file ) ) {
  * post's own author (which is the only way `bypostauthor` ever fires), and a one-line comment
  * with a URL on the name.
  */
-// Not the block sampler, which is the newest post the moment it is written and is a test
-// page rather than a piece of writing. A thread belongs under something somebody wrote.
-$sampler = get_page_by_path( 'every-core-block-on-one-page', OBJECT, 'post' );
+// Not any of the fixtures above. Each is the newest post the moment it is written, and each
+// is a page for looking at rather than a piece of writing. A thread belongs under something
+// somebody wrote, which here means one of the articles the seeder pulled off the live blog.
+$fixture_ids = array();
+foreach ( array( 'every-core-block-on-one-page', 'a-post-behind-a-password', 'a-post-in-three-pages' ) as $slug ) {
+	$found = get_page_by_path( $slug, OBJECT, 'post' );
+	if ( $found ) {
+		$fixture_ids[] = $found->ID;
+	}
+}
 $thread_post = get_posts(
 	array(
 		'numberposts' => 1,
 		'orderby'     => 'date',
 		'order'       => 'DESC',
 		'fields'      => 'ids',
-		'exclude'     => $sampler ? array( $sampler->ID ) : array(),
+		'exclude'     => $fixture_ids,
 	)
 );
 if ( empty( $thread_post ) ) {

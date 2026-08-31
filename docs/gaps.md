@@ -160,6 +160,38 @@ it: every class a template prints must reach a rule, or be named in an allowlist
 reason. Sixteen are named there — core's own markup, and the two that
 [`quireink_align_classes`](../quire-ink/inc/template-tags.php) rewrites at render time.
 
+**Three more surfaces nobody opens while writing a theme.** Ticking "password protected" or
+splitting a post into pages is one click in the editor and there is no occasion to make it;
+an attachment page needs an upload. All three are seeded now.
+
+* **The password form arrived wearing nothing at all** - `get_the_password_form()` prints a
+  bare label, an unclassed input and an unclassed submit, so a protected post showed a browser
+  default box and a grey system button in the middle of a reading column. It wears `.subscribe`
+  now, the engine's own name for a short form of one field and one button, which the newsletter
+  box and the search page already use. The action, the field name and the `#pwbox-<id>` are
+  WordPress's and cannot change, so anything looking for them still finds them.
+* **The info column beside a protected post was reporting its word count and reading time**,
+  which measure text the password is there to withhold. `quireink_reading()` declines to
+  measure a protected post and the three places that print it skip the line rather than
+  printing a zero.
+* **Attachment pages are not a gap.** Since WordPress 6.4 core disables them
+  (`wp_attachment_pages_enabled` is `0`) and redirects to the file, which is what a request
+  for one does here: HTTP 200 at the image itself. No `attachment.php` is needed, and one
+  would be dead code.
+
+**A post in three pages works**, and the first test of it did not, which is worth recording
+because the mistake looks exactly like a theme bug. `<!-- wp:nextpage /-->` is the block
+delimiter; the page break WordPress splits on is the `<!--nextpage-->` INSIDE it. Written with
+only the delimiter, a three-page post renders as one page with no links under it.
+
+**A footer menu.** The one block on the page with no counterpart upstream: the blog engine's
+footer is a single line and has never had a menu under it, so this is the one place the theme
+states a layout rather than translating one, and it states as little as it can. Registering it
+found a live defect in the theme's own filter: `nav_menu_link_attributes` fires for EVERY menu
+on the page, so `quireink_nav_link_atts` was putting `rail-row` on the footer links - a
+full-width row with a hover slab and an aria-current marker down its side. It tests the
+location now.
+
 **Every core block on one page, which nobody had ever inserted.** The pull quote taught this
 lesson once and it was not learned generally: a block that has never been inserted is a block
 nobody has ever looked at. One post now holds every core block the theme can render without a

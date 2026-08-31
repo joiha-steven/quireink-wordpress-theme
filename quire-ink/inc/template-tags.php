@@ -153,7 +153,7 @@ function quireink_list_row() {
 		<?php if ( $thumb ) : ?>
 			<a class="card-thumb" href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1"><?php the_post_thumbnail( 'side' === $thumb ? 'thumbnail' : 'medium_large' ); ?></a>
 		<?php endif; ?>
-		<p class="t-small text-meta"><time class="meta-part" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time> &middot; <span class="meta-part"><span class="num"><?php echo esc_html( number_format_i18n( $reading['minutes'] ) ); ?></span> <?php esc_html_e( 'min read', 'quire-ink' ); ?></span></p>
+		<p class="t-small text-meta"><time class="meta-part" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time><?php if ( $reading['minutes'] > 0 ) : ?> &middot; <span class="meta-part"><span class="num"><?php echo esc_html( number_format_i18n( $reading['minutes'] ) ); ?></span> <?php esc_html_e( 'min read', 'quire-ink' ); ?></span><?php endif; ?></p>
 		<h2 class="reading-font mt-2 fs-h2 font-semibold"><a class="link-accent" href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
 		<p class="reading-font mt-3 t-body text-text"><?php echo esc_html( get_the_excerpt() ); ?></p>
 	</article>
@@ -208,11 +208,17 @@ function quireink_pagination() {
  * @param array $atts Link attributes.
  * @return array
  */
-function quireink_nav_link_atts( $atts ) {
+function quireink_nav_link_atts( $atts, $item = null, $args = null ) {
+	// The RAIL's rows, and only the rail's. `nav_menu_link_attributes` fires for every menu
+	// on the page, so without this test the footer menu would arrive wearing `rail-row`,
+	// which is a full-width row with a hover slab and an aria-current marker down its side.
+	if ( ! isset( $args->theme_location ) || 'primary' !== $args->theme_location ) {
+		return $atts;
+	}
 	$atts['class'] = trim( ( isset( $atts['class'] ) ? $atts['class'] : '' ) . ' rail-row link-accent t-small' );
 	return $atts;
 }
-add_filter( 'nav_menu_link_attributes', 'quireink_nav_link_atts' );
+add_filter( 'nav_menu_link_attributes', 'quireink_nav_link_atts', 10, 3 );
 
 /**
  * Give an aligned block Quire Ink's own class beside WordPress's.

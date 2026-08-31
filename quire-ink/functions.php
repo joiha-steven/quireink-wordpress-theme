@@ -89,6 +89,10 @@ function quireink_setup() {
 	register_nav_menus(
 		array(
 			'primary' => __( 'Rail menu', 'quire-ink' ),
+			// A flat run of links under the credit. Not a second rail: the footer is one
+			// centred line of meta text and this is another, which is where a site puts the
+			// three pages that are not writing - about, contact, a privacy policy.
+			'footer'  => __( 'Footer menu', 'quire-ink' ),
 		)
 	);
 }
@@ -239,6 +243,13 @@ function quireink_reading( $post_id ) {
 	// NOT `str_word_count`. It counts runs of ASCII letters, so every Vietnamese diacritic
 	// splits a word in half: this article measured 4,220 words against the live site's 2,799
 	// and the reading time came out at 21 minutes instead of 14.
+	// A protected post is text the author declined to show, so its length is not the theme's
+	// to report. The info column beside one was printing "[13] words · [1] min read" over a
+	// password box, which reads as a bug to a reader as much as it is a small leak.
+	if ( post_password_required( $post_id ) ) {
+		return array( 'words' => 0, 'minutes' => 0 );
+	}
+
 	$text  = wp_strip_all_tags( get_post_field( 'post_content', $post_id ) );
 	$words = count( preg_split( '/\s+/u', trim( $text ), -1, PREG_SPLIT_NO_EMPTY ) );
 	return array(
@@ -379,6 +390,7 @@ function quireink_toc() {
 require get_template_directory() . '/inc/template-tags.php';
 require get_template_directory() . '/inc/comment-walker.php';
 require get_template_directory() . '/inc/blocks.php';
+require get_template_directory() . '/inc/forms.php';
 require get_template_directory() . '/inc/rail-widgets.php';
 require get_template_directory() . '/inc/generated-appearance.php';
 require get_template_directory() . '/inc/customizer.php';

@@ -114,7 +114,8 @@ installing Arabic and measuring both gutters.
 
 1. Appearance -> Themes -> Add New -> Upload Theme, then Activate.
 2. Appearance -> Customize, for the palette, the shape and the reading controls.
-3. Appearance -> Menus, and assign a menu to the "Rail menu" location. That is the sidebar.
+3. Appearance -> Menus. A menu in the "Rail menu" location becomes the sidebar; one in
+   "Footer menu" becomes a flat row of links above the credit line.
 
 Mark a post Sticky and it appears under Featured in the rail. Give a post some headings and
 its contents appear in the gutter.
