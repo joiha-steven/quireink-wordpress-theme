@@ -115,7 +115,20 @@ class Quireink_Comment_Walker extends Walker_Comment {
 				<?php endif; ?>
 			</p>
 
-			<div class="comment-body">
+			<?php
+			/*
+			 * The id is what core's `comment-reply.js` inserts the form AFTER, and it has to
+			 * be an element INSIDE the <li>.
+			 *
+			 * With `add_below => 'comment'` the anchor is the <li> itself, so the form landed
+			 * as a sibling of it - a <div> as a direct child of a <ul>, which no list may
+			 * contain, and outside `.comment`, so the sheet's own rule for a reply form
+			 * (`.comment .comment-form`, written to strip the card's border because a second
+			 * bordered box inside the thread boxes a box) never applied. Replying opened a
+			 * full card in the middle of the conversation.
+			 */
+			?>
+			<div class="comment-body" id="div-comment-<?php comment_ID(); ?>">
 				<?php comment_text( $comment ); ?>
 			</div>
 
@@ -127,7 +140,7 @@ class Quireink_Comment_Walker extends Walker_Comment {
 						'depth'     => $depth,
 						'max_depth' => isset( $args['max_depth'] ) ? $args['max_depth'] : 0,
 						'reply_text' => __( 'Reply', 'quire-ink' ),
-						'add_below' => 'comment',
+						'add_below' => 'div-comment',
 					),
 					array( 'before' => '', 'after' => '' )
 				),
@@ -162,6 +175,15 @@ class Quireink_Comment_Walker extends Walker_Comment {
  * @return string
  */
 function quireink_reply_link_class( $link ) {
-	return str_replace( "class='comment-reply-link", "class='comment-reply comment-reply-link", $link );
+	// Match the attribute whichever quote WordPress used. It writes `class="comment-reply-link"`
+	// with double quotes, and this looked for single ones, so the alias had never once applied:
+	// the sheet's `.comment-reply` - its meta colour, its top margin and its hover - reached
+	// nothing, on every thread, since the day it was written. Nothing was red, because a filter
+	// that changes nothing returns the string it was given.
+	return (string) preg_replace(
+		'/class=(["\'])comment-reply-link/',
+		'class=$1comment-reply comment-reply-link',
+		$link
+	);
 }
 add_filter( 'comment_reply_link', 'quireink_reply_link_class' );

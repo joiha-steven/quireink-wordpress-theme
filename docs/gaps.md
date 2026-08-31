@@ -160,6 +160,34 @@ it: every class a template prints must reach a rule, or be named in an allowlist
 reason. Sixteen are named there — core's own markup, and the two that
 [`quireink_align_classes`](../quire-ink/inc/template-tags.php) rewrites at render time.
 
+**The search overlay could never have returned anything.** `[/find]` in the header, and the
+`/` key anywhere on the page, open an overlay that searches as you type. It is in the copied
+reader bundle, and it fetches `/api/search?q=`, which is the blog engine's route. WordPress
+does not have it. `if (!res.ok) return` is the bundle's whole error handling, so the overlay
+opened, took focus, and sat saying "Type to search posts." for as long as anyone typed, on
+every page, since the first day.
+
+It shipped that way for the same reason book mode did: until the origin bug was found, no
+render in this project had ever run JavaScript. The bundle may not be edited, so the route is
+answered instead of moved — `inc/search-api.php`, on `parse_request`, eight posts, and the
+shape read off the bundle rather than guessed. `slug` carries the whole path under the site
+root rather than the post's slug, because the bundle prefixes one slash and a real slug would
+404 on any site whose permalinks are not `/%postname%/`.
+
+**Two things in the comment thread that a click found and no reading would have.**
+
+* **The reply form was landing outside the comment**, as a `<div>` that is a direct child of
+  a `<ul>` — which no list may contain — because `add_below` named the `<li>` itself. So the
+  sheet's own rule for a reply form, written to strip the card's border because a second
+  bordered box inside a thread boxes a box, reached nothing: replying opened a full card in
+  the middle of the conversation. The anchor is the comment body now, which is inside the item.
+* **The Reply link's class alias had never once applied.** The filter looked for
+  `class='comment-reply-link` with a single quote and WordPress writes a double one, so
+  `.comment-reply` — its meta colour, its top margin, its hover — reached nothing on every
+  thread since the day it was written. A filter that changes nothing returns the string it
+  was given, so there was nothing to see. `check:classes` cannot catch this: it reads classes
+  templates PRINT, and this one is added at run time.
+
 **The drop cap was core's, three times over.** Recorded here a day earlier as "looked wrong
 and measured fine", on the strength of one measurement that asked the wrong question: whether
 it collided with the block under it. It does not collide. It is `font-size:8.4em` at
