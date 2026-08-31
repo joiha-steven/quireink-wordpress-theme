@@ -2,9 +2,12 @@
 
 **In force.**
 
-Theme Check runs clean of REQUIRED and WARNING findings. Four RECOMMENDED items remain and
-all three are answered here, so nobody has to work out whether they were missed. A fourth, the
-missing widget area, was answered and then reversed — see [0008](0008-the-rail-is-a-widget-area.md).
+Theme Check runs clean of REQUIRED and WARNING findings. Four RECOMMENDED items were answered
+here so that nobody has to work out whether they were missed; one of the four, the missing
+widget area, was then reversed — see [0008](0008-the-rail-is-a-widget-area.md) — so **three
+remain**, and those three are what the directory's own run reports on
+[ticket #288845](https://themes.trac.wordpress.org/ticket/288845), word for word the same as
+`dev/check-theme.sh` says here.
 
 ## No widget areas — SUPERSEDED by [0008](0008-the-rail-is-a-widget-area.md)
 

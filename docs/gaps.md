@@ -137,6 +137,18 @@ it: every class a template prints must reach a rule, or be named in an allowlist
 reason. Sixteen are named there — core's own markup, and the two that
 [`quireink_align_classes`](../quire-ink/inc/template-tags.php) rewrites at render time.
 
+**On a virgin WordPress the rail empties itself correctly.** Checked the way the directory
+checks it - a reset database, `wp core install`, the theme activated, nothing but Hello world!
+and Sample Page - because that is the install a reviewer opens and it is not an install this
+project ever had. Every rail block whose source is empty simply does not print: no menu, so no
+menu rows; no sticky post, so no Featured; no tags, so no Tags. What is left is Categories and
+Archive, each with a count of 1, and the page reads as a new blog rather than as a broken one.
+The article page keeps its right-hand info column, and drops the table-of-contents rail
+because "Hello world!" has no headings.
+
+The one thing a reviewer sees there that this theme would rather they did not is the next
+paragraph.
+
 **The rail's hairline runs past the content on a short page**, several hundred pixels of it,
 and that one is NOT a defect here: `main{flex:1}` and `.with-rail{position:relative;flex:1}`
 are the engine's own rules, so the rail stretches to a row that a sticky footer has already
