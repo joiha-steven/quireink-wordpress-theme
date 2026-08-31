@@ -25,8 +25,12 @@ the review handbook asks of a free theme. Both verbatim texts are fetched and in
 * **`Theme URI` and `Author URI`** in `style.css` both point at `quireink.com`. Reviewers
   expect the first to be the theme's own page and the second the author's; one page cannot
   honestly be both.
-* **`Tested up to:`** has to name a WordPress version the theme was actually opened in. It
-  says 6.8 and the local stack runs 6.8, which is true today and stops being true on its own.
+* ~~**`Tested up to:`**~~ says **7.1**, which is what `wp core version` reports on the local
+  stack and what every measurement in these documents was taken on. It had said 6.8, from the
+  Docker image's tag rather than from the install — the tag is `wordpress:6.8-php8.3-apache`
+  and the container updated itself past it. A version read off a filename is not a version the
+  theme was opened in. It goes stale on its own, so re-read it before a release rather than
+  trusting this line.
 
 ## Measured, and one of them says no
 
