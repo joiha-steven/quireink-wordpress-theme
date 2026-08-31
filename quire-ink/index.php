@@ -15,20 +15,22 @@ get_header();
  * measures anything, and below the timeline breakpoint the markers are simply display:none.
  */
 ?>
+<?php if ( have_posts() ) : ?>
 <div class="post-list tl-feed">
 <?php
-if ( have_posts() ) :
 	quireink_timeline_reset();
 	while ( have_posts() ) :
 		the_post();
 		quireink_list_row();
 	endwhile;
 	quireink_timeline_end();
+?>
+</div>
+<?php
 	quireink_pagination();
 else :
 	get_template_part( 'parts/none' );
 endif;
 ?>
-</div>
 <?php
 get_footer();

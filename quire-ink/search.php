@@ -11,8 +11,8 @@
 
 get_header();
 ?>
-<header class="list-head">
-	<h1 class="t-h2 reading-font">
+<header class="listing-head">
+	<h1>
 	<?php
 	printf(
 		/* translators: %s: search query */
@@ -23,18 +23,20 @@ get_header();
 	</h1>
 	<?php get_search_form(); ?>
 </header>
+<?php if ( have_posts() ) : ?>
 <div class="post-list">
 <?php
-if ( have_posts() ) :
 	while ( have_posts() ) :
 		the_post();
 		quireink_list_row();
 	endwhile;
+?>
+</div>
+<?php
 	quireink_pagination();
 else :
 	get_template_part( 'parts/none' );
 endif;
 ?>
-</div>
 <?php
 get_footer();

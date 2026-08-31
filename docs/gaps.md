@@ -86,6 +86,45 @@ Measured after: Literata at 672px in both, headings matching, inline code in Jet
 its tinted ground — and a paragraph set to "Large" in the sidebar still measures 36px, because
 the author's own choices have to beat the theme and do.
 
+**Three blocks were wearing names no sheet has.** The listing pages said `list-head`, the
+pager said `pagination t-small`, the empty state said `t-small text-meta` inside an
+`article.reveal`. Every one of those spellings is correct, every one rendered, and not one of
+them matched a rule: the sheet carries `.listing-head`, `.pager`, `.pager-count` and `.empty`,
+which are the blog engine's own names for the same four blocks.
+
+What that cost was separation, because separation is what those rules are mostly made of.
+`.listing-head{margin:0 0 2rem}` never ran, so "Category: Selfhost" sat on the first post's
+date and the search field sat on the first result, on three templates. `.pager` never ran, so
+the pager arrived with no hairline over it and no top margin and read as one more line of the
+last excerpt. Nothing was red. A class that matches nothing looks exactly like a class that
+matches something.
+
+The pager had a second cause underneath the first. The theme asked for two classes and
+WordPress returned one: `the_posts_pagination()` puts its list through
+`sanitize_html_class()`, which is a function for a SINGLE class and strips the space, so
+`pagination t-small` reached the page welded into `paginationt-small`. It is now the engine's
+own markup — newer, a position, older — which also drops numbered pages, matching a decision
+the engine recorded for itself: deep page numbers are URLs a crawler walks and a reader
+does not use.
+
+Two smaller things came out with them. The archive heading was being set in the reading face,
+where the engine's sheet says in as many words that an archive heading is chrome and stays in
+the chrome face — it is furniture, not the reader's words. And a search that matched nothing
+was answered with "No posts here yet", which tells a reader the whole blog is empty; a failed
+search and an empty archive are not the same sentence and no longer share one.
+
+[`check:classes`](../tools/checks/dead-classes.ts) is the guard that would have caught all of
+it: every class a template prints must reach a rule, or be named in an allowlist with a
+reason. Sixteen are named there — core's own markup, and the two that
+[`quireink_align_classes`](../quire-ink/inc/template-tags.php) rewrites at render time.
+
+**The rail's hairline runs past the content on a short page**, several hundred pixels of it,
+and that one is NOT a defect here: `main{flex:1}` and `.with-rail{position:relative;flex:1}`
+are the engine's own rules, so the rail stretches to a row that a sticky footer has already
+pushed to the bottom of the window. Quire Ink does the same thing; its pages are just rarely
+three lines long, and a WordPress page can be. Answering it would mean this theme overruling
+the engine's layout, which is the one thing it does not do.
+
 **Comments** are WordPress's thread and form wearing Quire Ink's class names. The base sheet
 already carried 35 rules for them, written for Quire Ink's own comment island, and they apply
 to any markup that uses the same names. Four things that markup told us and a screenshot

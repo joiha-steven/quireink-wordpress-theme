@@ -2,7 +2,7 @@
 
 | Doing | Read |
 |---|---|
-| Anything at all | [`invariants.md`](invariants.md) — the 6 load-bearing rules and what pins each |
+| Anything at all | [`invariants.md`](invariants.md) — the 7 load-bearing rules and what pins each |
 | Adding or changing a setting | [`appearance.md`](appearance.md) — the OWNER's map of every knob, the variables custom CSS may target, and what cannot be changed. It is a promise to users: update it in the same commit |
 | Touching anything a reader sees | [`conventions/`](conventions/README.md) — the three files below, and the rule underneath all of them |
 | Touching CSS | [`conventions/css.md`](conventions/css.md) — which sheet a rule belongs in, and the order they load |
@@ -19,7 +19,7 @@
 bun run check:all
 ```
 
-Seven static guards: `filesize` · `order` · `bridge` · `contrast` · `escape` · `generated` · `docs`. Seconds,
+Eight static guards: `filesize` · `order` · `bridge` · `contrast` · `classes` · `escape` · `generated` · `docs`. Seconds,
 not minutes. `check:generated` skips with a warning when there is no Quire Ink checkout beside
 this one.
 

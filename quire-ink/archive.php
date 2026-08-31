@@ -7,8 +7,8 @@
 
 get_header();
 ?>
-<header class="list-head">
-	<h1 class="t-h2 reading-font"><?php the_archive_title(); ?></h1>
+<header class="listing-head">
+	<h1><?php the_archive_title(); ?></h1>
 	<?php if ( get_the_archive_description() ) : ?>
 		<div class="t-small text-meta"><?php the_archive_description(); ?></div>
 	<?php endif; ?>
@@ -21,20 +21,22 @@ get_header();
  * measures anything, and below the timeline breakpoint the markers are simply display:none.
  */
 ?>
+<?php if ( have_posts() ) : ?>
 <div class="post-list tl-feed">
 <?php
-if ( have_posts() ) :
 	quireink_timeline_reset();
 	while ( have_posts() ) :
 		the_post();
 		quireink_list_row();
 	endwhile;
 	quireink_timeline_end();
+?>
+</div>
+<?php
 	quireink_pagination();
 else :
 	get_template_part( 'parts/none' );
 endif;
 ?>
-</div>
 <?php
 get_footer();

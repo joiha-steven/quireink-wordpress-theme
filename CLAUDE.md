@@ -13,7 +13,7 @@ copy of the look is GPL, the blog engine is not.
 bun run check:all
 ```
 
-Seven static guards — `filesize` · `order` · `bridge` · `contrast` · `escape` · `generated` · `docs`. Seconds.
+Eight static guards — `filesize` · `order` · `bridge` · `contrast` · `classes` · `escape` · `generated` · `docs`. Seconds.
 `check:generated` skips with a warning when there is no Quire Ink checkout beside this one.
 
 `check:all` proves the seams hold. It cannot tell you the rail is empty, a figure is at the
@@ -32,7 +32,7 @@ tools/shot.sh <url> .tmp/shots/<name>.png
 
 | Doing | Read |
 |---|---|
-| Anything at all | [`docs/invariants.md`](./docs/invariants.md) — the 6 load-bearing rules |
+| Anything at all | [`docs/invariants.md`](./docs/invariants.md) — the 7 load-bearing rules |
 | Finding your way | [`docs/README.md`](./docs/README.md) — the index |
 | Adding or changing a setting | [`docs/appearance.md`](./docs/appearance.md) — every knob, and what cannot be changed. Update it in the SAME commit |
 | Touching CSS | [`docs/conventions/css.md`](./docs/conventions/css.md) |
@@ -51,6 +51,7 @@ tools/shot.sh <url> .tmp/shots/<name>.png
 | The rail, the table of contents, the desktop three-column layout | `quire-ink/functions.php` (`quireink_anchor_headings`, `quireink_toc`), `quire-ink/single.php` |
 | An article's furniture — byline, word count, terms | `quire-ink/single.php`, `quire-ink/inc/template-tags.php` |
 | The listing page | `quire-ink/index.php`, `quireink_list_row()` |
+| A block looks unstyled although its class is spelled right | `bun run check:classes` first — the sheet usually has the block under the blog engine's own name (`.listing-head`, `.pager`, `.empty`) |
 | A knob in the Customizer | `quire-ink/inc/customizer.php` |
 | Strings the reader JS puts on screen | `quire-ink/inc/i18n-data.php` — they are `data-` attributes on `<body>`, read at run time |
 | The local WordPress | `dev/docker-compose.yml`, `dev/up.sh` |

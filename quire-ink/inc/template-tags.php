@@ -161,17 +161,41 @@ function quireink_list_row() {
 }
 
 /**
- * Older / newer, in the shape the listing sheet expects.
+ * Newer, position, older - the pager the listing sheet already draws.
+ *
+ * NOT `the_posts_pagination()`. That helper puts its class list through
+ * `sanitize_html_class()`, which takes ONE class and strips whitespace out of anything else,
+ * so `pagination t-small` reached the page welded into `paginationt-small` - a name no sheet
+ * has ever carried. The pager arrived with no rule at all: no hairline over it, no top
+ * margin, no small size, sitting against the last excerpt as though it were one more line of
+ * the article. Nothing was red, because every class involved was spelled correctly.
+ *
+ * `.pager` is the blog engine's own name for this block and its rule is where the separation
+ * lives - a rule across the top, 1rem under it, the two links pushed apart. The empty spans
+ * are what hold the count in the middle when only one side has a link.
+ *
+ * Page NUMBERS are not printed, because the engine does not print them: deep page numbers
+ * are URLs a crawler walks and a reader does not use, and that is a decision recorded
+ * upstream rather than a shortcut taken here.
  */
 function quireink_pagination() {
-	the_posts_pagination(
-		array(
-			'mid_size'           => 1,
-			'prev_text'          => __( 'Newer', 'quire-ink' ),
-			'next_text'          => __( 'Older', 'quire-ink' ),
-			'screen_reader_text' => __( 'Posts', 'quire-ink' ),
-			'class'              => 'pagination t-small',
-		)
+	global $wp_query;
+
+	$total = isset( $wp_query->max_num_pages ) ? (int) $wp_query->max_num_pages : 1;
+	if ( $total < 2 ) {
+		return;
+	}
+
+	$page = max( 1, (int) get_query_var( 'paged' ) );
+	$prev = get_previous_posts_link( __( 'Newer', 'quire-ink' ) );
+	$next = get_next_posts_link( __( 'Older', 'quire-ink' ), $total );
+
+	printf(
+		'<nav class="pager" aria-label="%1$s">%2$s<span class="pager-count">%3$s</span>%4$s</nav>',
+		esc_attr__( 'Posts', 'quire-ink' ),
+		$prev ? wp_kses_post( $prev ) : '<span></span>',
+		esc_html( number_format_i18n( $page ) . ' / ' . number_format_i18n( $total ) ),
+		$next ? wp_kses_post( $next ) : '<span></span>'
 	);
 }
 
