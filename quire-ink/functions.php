@@ -28,7 +28,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'QUIREINK_VERSION', '0.1.0' );
+// The same number style.css declares, and it has to stay that way: it is the `?ver=` on
+// every sheet and script, so a stale value serves a reader last release's cache. It said
+// 0.1.0 through the whole of 0.1.1, and `check:headers` could not see it - that guard reads
+// style.css against readme.txt, and this is neither.
+define( 'QUIREINK_VERSION', '0.1.2' );
 
 /**
  * The reading measure, for anything that asks WordPress rather than the stylesheet.

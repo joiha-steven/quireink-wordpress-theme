@@ -3,7 +3,7 @@ Contributors: joihasteven
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Tags: blog, one-column, two-columns, left-sidebar, custom-colors, custom-logo, custom-menu, featured-images, sticky-post, threaded-comments, theme-options, translation-ready, rtl-language-support, block-patterns, block-styles, editor-style, wide-blocks
@@ -218,6 +218,31 @@ words in it were written for the screenshot. It contains no third-party images a
 photographs.
 
 == Changelog ==
+
+= 0.1.2 =
+Five findings from the WordPress.org theme review, ticket 288845. Four were code; the
+fifth asked for a copyright and licence line the readme already carried.
+
+What this release still does NOT do. It is a beta, and it has still only been run on the
+one site it was written against. Keeping the closed drawer out of the tab order is
+JavaScript, so with scripting off it is focusable exactly as it was. And
+`accessibility-ready` is still not declared: a form field's hairline measures 1.16:1
+against the page where WCAG 2.1 asks 3:1, that colour belongs to the blog engine this
+theme is generated from, and it is answered there rather than overridden here.
+
+* The sidebar is reached by keyboard where a reader sees it: in the gutter beside the
+  first line, not after every link on the page. It was printed from the footer, so on a
+  listing page it came eight article links late.
+* The off-canvas drawer is out of the tab order while it is closed. It sits off the left
+  edge of the screen and was still focusable, which is eight invisible stops before the
+  article on a phone.
+* A menu with child items shows them. Both menu locations rendered their top level and
+  dropped every level under it. In the rail a child is indented on both sides, because
+  the rail ranges left as a drawer and right in the desktop gutter.
+* The "Skip to content" link is no longer drawn behind the WordPress admin bar, which is
+  fixed to the top of the viewport for a logged-in reader and covered it on every page.
+* A long unbroken title no longer gives the page a horizontal scrollbar. An 87-character
+  title measured 1905px of document against a 1440px viewport.
 
 = 0.1.1 =
 Still a beta: the theme has not been run on a site other than the one it was written

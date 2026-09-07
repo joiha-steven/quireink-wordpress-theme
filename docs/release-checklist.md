@@ -43,9 +43,14 @@ Checking the last of them turned up a fourth thing nobody had listed. `style.css
 `sticky-post`, `theme-options`. WordPress.org reads both files and reconciles neither: one is
 what the directory files the theme under, the other is what a reader sees on the page, and the
 theme had grown four capabilities while telling half the story about them.
-[`check:headers`](../tools/checks/headers.ts) compares the two now — the shared fields, the
-tags as a set, `Version` against `Stable tag`, and the name over the readme against the theme
-name.
+[`check:headers`](../tools/checks/headers.ts) compares them now — the shared fields, the tags
+as a set, `Version` against `Stable tag`, and the name over the readme against the theme name.
+
+**The version number lives in THREE files, and the third one was wrong for a whole release.**
+`QUIREINK_VERSION` in `functions.php` is the `?ver=` every sheet and script is served under, so
+a stale value hands a returning reader last release's cache of a sheet that has changed. It sat
+at `0.1.0` through the whole of 0.1.1 while `style.css` and `readme.txt` agreed with each other
+and both disagreed with what the browser was asked to fetch. The guard reads all three now.
 
 ## Measured, and one of them says no
 

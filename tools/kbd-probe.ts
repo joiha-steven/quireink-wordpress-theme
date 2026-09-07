@@ -154,5 +154,12 @@ if (shot) {
   console.error(`shot → ${shot}`)
 }
 
-ws.close(); chrome.kill()
-await Bun.$`rm -rf ${PROFILE}`.quiet()
+// Explicitly, and in this order. An open WebSocket keeps Bun's event loop alive, so a run that
+// forgot to close it hung after printing its answer - which reads as a probe that failed rather
+// than one that finished. And `rm -rf` on a Chrome profile races the browser's own teardown and
+// exits non-zero on "Directory not empty", so it is allowed to fail: a leftover directory under
+// the OS temp root is not worth a red run.
+ws.close()
+chrome.kill()
+await Bun.$`rm -rf ${PROFILE}`.quiet().nothrow()
+process.exit(0)
