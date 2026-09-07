@@ -3,9 +3,9 @@
  * One article.
  *
  * The order of the children of <article> is the sheet's, not a preference: the meta line and
- * the h1 sit in a <header>, the same facts repeat in an <aside class="post-info"> that only
- * desktop shows, the table of contents is a sibling rail, and the words live in
- * `#post-body.prose`.
+ * the h1 sit in a <header>, the table of contents is a sibling rail in the left gutter, the
+ * same facts as the meta line repeat in an <aside class="post-info"> that only desktop shows,
+ * and the words live in `#post-body.prose`.
  *
  * THE BYLINE IS PRINTED TWICE, and that is the fix rather than the bug. `.post-meta` is
  * hidden on desktop - the facts move to the right-hand column there - so a byline printed
@@ -63,6 +63,17 @@ endif;
 <h1 class="reading-font mt-2 fs-h1 font-semibold"><?php the_title(); ?></h1>
 </header>
 
+<?php
+/*
+ * The table of contents comes BEFORE the meta column, and that is the same keyboard rule that
+ * puts the site rail ahead of `<main>` in header.php: on desktop this is the sidebar, in the
+ * left gutter, and a reader tabbing an article should reach it before the furniture ranged
+ * down the right-hand side. Both columns are out of flow above the breakpoint and both are
+ * absent below it, so the move is order and nothing else.
+ */
+quireink_toc();
+?>
+
 <aside class="post-info t-small text-meta">
 	<p><time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time></p>
 	<?php if ( '' !== get_the_author() ) : ?>
@@ -78,8 +89,6 @@ endif;
 	?>
 	<p class="info-action"><button type="button" class="book-mode-toggle" data-book-open><?php esc_html_e( 'Book mode', 'quire-ink' ); ?></button></p>
 </aside>
-
-<?php quireink_toc(); ?>
 
 <div id="post-body" class="prose">
 <?php

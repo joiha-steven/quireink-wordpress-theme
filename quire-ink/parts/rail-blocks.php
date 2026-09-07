@@ -34,7 +34,12 @@ if ( has_nav_menu( 'primary' ) ) {
 		array(
 			'theme_location' => 'primary',
 			'container'      => false,
-			'depth'          => 1,
+			// EVERY level, not just the first. A menu with children used to render as its
+			// top level alone: the child pages an owner had put under About were in the
+			// database, on the Menus screen, and nowhere on the site. A child is indented
+			// by `bridge.css`, on the rail's own padding token and on both sides of it,
+			// because the rail ranges left in the drawer and right in the gutter.
+			'depth'          => 0,
 			'items_wrap'     => '<ul>%3$s</ul>',
 			// The row's text is wrapped so the chrome can range it against the divider; a bare
 			// text node has nothing to align.
@@ -66,8 +71,17 @@ if ( $featured ) {
 	<div>
 		<h2><?php esc_html_e( 'Featured', 'quire-ink' ); ?></h2>
 		<ul style="--count-w:1ch">
-		<?php foreach ( $featured as $post ) : ?>
-			<li><a class="rail-row link-accent t-small" href="<?php echo esc_url( get_permalink( $post ) ); ?>"><span><?php echo esc_html( get_the_title( $post ) ); ?></span></a></li>
+		<?php
+		/*
+		 * `$sticky` rather than `$post`. A template loaded through get_template_part() runs
+		 * inside load_template(), which globalises `$post` - so a loop variable called `$post`
+		 * here is the page's current post, overwritten. It did not show while the rail was
+		 * printed from the footer, after the loop had finished with it. The rail is printed
+		 * before `<main>` now.
+		 */
+		?>
+		<?php foreach ( $featured as $sticky ) : ?>
+			<li><a class="rail-row link-accent t-small" href="<?php echo esc_url( get_permalink( $sticky ) ); ?>"><span><?php echo esc_html( get_the_title( $sticky ) ); ?></span></a></li>
 		<?php endforeach; ?>
 		</ul>
 	</div>

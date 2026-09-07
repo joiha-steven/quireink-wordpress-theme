@@ -35,7 +35,7 @@ owner sees was never the one shipping the failure.
 |---|---|
 | One `h1` per page, no heading level skipped | article page: `h1` → `h2` → `h3`, no jumps |
 | Landmarks | `header.site`, `<main id="content">`, `<nav>`, `footer.site` |
-| Skip link | `.skip-link` → `#content`; `.skip-link:focus` moves it to 8px/8px with a background and a border, and nothing later in the cascade overrides it |
+| Skip link | `.skip-link` → `#content`; `.skip-link:focus` moves it to 8px/8px with a background and a border, and nothing later in the cascade overrides it. Clear of the admin bar — see below |
 | Focus ring | `:focus-visible{outline:2px solid var(--c-accent);outline-offset:2px}`, and the accent measures 5.02:1 or better in every palette |
 | Outline removed anywhere? | Once, on `.book-stage` — a reading surface that holds a dialog's initial focus, not a control. Documented as such upstream |
 | Links in running text | `.prose a{text-decoration:underline}`, so they are not distinguished by colour alone |
@@ -44,6 +44,42 @@ owner sees was never the one shipping the failure.
 | Autoplay | none |
 | `aria-hidden` hiding focusable things | none |
 | `lang` | on `<html>`, from `language_attributes()` |
+
+## Focus order, the admin bar, and a title nobody can break
+
+Three more, all found by a WordPress.org reviewer on
+[ticket #288845](https://themes.trac.wordpress.org/ticket/288845) and all measured here before
+and after. The measurements are [`tools/kbd-probe.ts`](../tools/kbd-probe.ts): headless Chrome
+driven over CDP, tabbing a real page and reporting what has focus, where it is, and whether it
+is on screen. It is not part of `check:all` — it needs a running site and a browser — but it is
+re-runnable, which is the difference between a measurement and a memory.
+
+**The sidebar came last.** Above the rail breakpoint the rail sits in the LEFT gutter, level
+with the first line — and it was printed from `footer.php`, so it came after `<main>` in the
+document. On the listing page that is eight article links before the sidebar: `header → main
+→ rail` where a reader sees `header → rail → main`, which is SC 2.4.3. It is printed from
+`header.php` now, before `<main>`. Nothing moved on screen, because `.rail` is out of flow at
+every width. Same move inside an article, where `quireink_toc()` now comes before the
+right-hand meta column.
+
+**And moving it exposed the drawer.** Below the breakpoint the same element is parked at
+`translateX(-100%)`, off the left edge — still focusable, so putting it first would have meant
+eight invisible stops before the article on every phone. The closed drawer is `inert` now,
+from twelve lines inlined after `core.js`. Measured across eight templates at 1440, 700 and
+390: **0 focus stops off screen**, and every rail link reachable the moment the drawer opens.
+
+**The skip link was drawn behind the admin bar.** `.skip-link:focus` places itself 8px from
+the top of the page; WordPress's bar is 32px tall, fixed, at z-index 99999. So on every page
+of a logged-in site the first control a keyboard reached was under something else. Measured:
+focused top 8px against a bar whose bottom is 32px. It now takes a `margin-top` of
+`var(--wp-admin--admin-bar--height, 0px)` — WordPress's own declaration, 32px on a desktop
+and 46px under 782px — and measures 40px and 54px, clear in both.
+
+**A long title scrolled the page sideways.** One unbroken string in a post title is a single
+word by every line-breaking rule there is: an 87-character title at 1440px gave the document
+a scrollWidth of **1905px** against a 1440px viewport. `.wrap` carries `overflow-wrap:
+break-word` now, inherited by every title, rail row, term and caption under it. Measured at
+1440, 700 and 390 across eight templates: **0px of horizontal overflow** everywhere.
 
 ## The two defects it found
 

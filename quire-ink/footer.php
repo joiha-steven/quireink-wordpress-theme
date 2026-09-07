@@ -17,7 +17,13 @@
 
 ?>
 </main>
-<?php get_template_part( 'parts/rail' ); ?>
+<?php
+/*
+ * The rail is opened in header.php, BEFORE `<main>`, so that a keyboard reaches the sidebar
+ * where a reader sees it - in the gutter beside the first line, not after the last link on the
+ * page. It closed here for as long as it was printed here; there is nothing left to close.
+ */
+?>
 </div>
 <footer class="site">
 	<?php
@@ -29,7 +35,12 @@
 				'container_class'      => 'footer-nav',
 				'container_aria_label' => __( 'Footer', 'quire-ink' ),
 				'menu_class'           => 'footer-menu',
-				'depth'                => 1,
+				// Every level. The row stays one row: a child joins the same centred run
+				// straight after its parent, because `.footer-menu` and its sub-menus are the
+				// same flex flow. A footer line has no room for an indent and no gutter to
+				// hang one in, and a level that renders nowhere is worse than a level that
+				// renders flat.
+				'depth'                => 0,
 				'fallback_cb'          => false,
 			)
 		);

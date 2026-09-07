@@ -137,6 +137,7 @@ function quireink_assets() {
 	wp_enqueue_style( 'quireink-style', get_stylesheet_uri(), array( 'quireink-bridge' ), $v );
 
 	wp_enqueue_script( 'quireink-core', $dir . '/assets/js/core.js', array(), $v, array( 'strategy' => 'defer', 'in_footer' => false ) );
+	wp_add_inline_script( 'quireink-core', quireink_rail_inert_js(), 'after' );
 
 	if ( is_singular() ) {
 		wp_enqueue_script( 'quireink-post', $dir . '/assets/js/post.js', array( 'quireink-core' ), $v, array( 'strategy' => 'defer', 'in_footer' => false ) );
@@ -188,6 +189,39 @@ function quireink_editor_css() {
 	);
 }
 add_action( 'enqueue_block_assets', 'quireink_editor_css' );
+
+/**
+ * Keep the closed drawer out of the tab order.
+ *
+ * THE PROBLEM THIS ANSWERS. The rail is printed before `<main>` so that a keyboard reaches
+ * the sidebar where a reader sees it - in the left gutter, beside the first line. Above the
+ * rail breakpoint that is exactly right. Below it the same element is a drawer parked at
+ * `translateX(-100%)`, off the left edge of the screen and opened from the header's menu
+ * button - and a translated element is still focusable, so on a phone the first eight Tab
+ * presses after the header went to links nobody could see, before the article was reached.
+ *
+ * `inert` is the whole fix: it takes the subtree out of the tab order AND out of the
+ * accessibility tree, which is what an off-screen drawer should be, and gives it all back
+ * the moment the drawer opens.
+ *
+ * WHY THIS IS NOT CSS. The honest test is `visibility:hidden` on the closed drawer, undone
+ * above the breakpoint - and the breakpoint is COMPUTED from the reading column by the blog
+ * engine, emitted into the generated sheet, and cannot be read by a media query written here.
+ * Writing the number into `bridge.css` would be the one thing invariant 3 exists to prevent.
+ * Reading `position` back off the element asks the sheet what it actually decided, at
+ * whatever width, without this file knowing the number at all: `fixed` is the drawer,
+ * `absolute` is the gutter.
+ *
+ * With JavaScript off the drawer is focusable, which is where it was before. That is the
+ * shape of an enhancement rather than a fix that can fail closed.
+ *
+ * @return string
+ */
+function quireink_rail_inert_js() {
+	return <<<'JS'
+(function(){var run=function(){var rails=document.querySelectorAll('.rail');if(!rails.length||!('inert' in rails[0]))return;var html=document.documentElement;var sync=function(){for(var i=0;i<rails.length;i++){rails[i].inert=getComputedStyle(rails[i]).position==='fixed'&&html.dataset.rail!=='open';}};sync();addEventListener('resize',sync,{passive:true});new MutationObserver(sync).observe(html,{attributes:true,attributeFilter:['data-rail']});};if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);}else{run();}})();
+JS;
+}
 
 /**
  * Load the reader bundles as ES modules.

@@ -58,4 +58,20 @@
 	</div>
 </div>
 </header>
-<div class="with-rail"><main id="content">
+<div class="with-rail">
+<?php
+/*
+ * THE RAIL IS PRINTED BEFORE `<main>`, and that is a keyboard rule rather than a layout one.
+ * Above the rail breakpoint the sidebar sits in the LEFT gutter, level with the first line of
+ * the article, so a reader tabbing through the page expects it between the site bar and the
+ * words - and it used to come last, after every link in the listing, because it was printed
+ * from footer.php. WCAG 2.4.3 asks focus order to follow the order a sighted reader sees.
+ *
+ * Nothing moves on screen: `.rail` is out of flow at every width - absolute in the gutter
+ * above the breakpoint, fixed as a drawer below it - so where it sits among its siblings
+ * changes the tab order and nothing else. On a single post it prints nothing at all and the
+ * article's own table of contents takes the gutter instead.
+ */
+get_template_part( 'parts/rail' );
+?>
+<main id="content">

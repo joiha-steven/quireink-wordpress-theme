@@ -24,7 +24,15 @@ happened here, all three passed every check, and all three were obvious in a scr
 dev/up.sh        # WordPress on http://localhost:8099, admin / admin
 dev/seed.sh      # real articles from the live blog, converted to Gutenberg blocks
 tools/shot.sh <url> .tmp/shots/<name>.png
+tools/kbd-probe.ts <url> [--width=] [--open-rail]   # what the KEYBOARD reaches
 ```
+
+`kbd-probe.ts` answers the questions a picture cannot: the tab order with each stop's region
+and whether it is on screen, the document's horizontal overflow, and the skip link's box
+against the admin bar. An off-screen drawer is invisible and still focusable, and a control
+under the admin bar looks exactly like one that is not there; both shipped. Its `--width` is
+honest below 500px, unlike `shot.sh`, because it emulates the device rather than sizing a
+window.
 
 `shot.sh` refuses two things, each because it once produced a picture that lied. It will not
 render below 500px: Chrome's headless window has an OS minimum, so a 390px request came back

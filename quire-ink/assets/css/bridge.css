@@ -262,12 +262,78 @@
  * can - a flat centred run, on the same line rhythm as the credit above it. `footer.site a`
  * already supplies the colour, the underline, the hover and the tap target.
  */
-.footer-menu {
+.footer-menu,
+/* A child menu item joins the same centred run rather than opening a second block: the
+   <li> becomes a flex row holding its own link and its children's, on the gap the run
+   already uses. A footer line has no gutter to indent into. */
+.footer-menu li,
+.footer-menu .sub-menu {
 	list-style: none;
-	margin: 0 0 calc(var(--sp) * .5);
+	margin: 0;
 	padding: 0;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
 	gap: calc(var(--sp) * .1) calc(var(--sp) * .75);
+}
+.footer-menu {
+	margin-bottom: calc(var(--sp) * .5);
+}
+
+/* ---------- a menu with a second level --------------------------------------------------
+ * The rail carries a nav menu and a WordPress menu can nest; Quire Ink's own never did, so
+ * the sheet has no rule for a list inside a list, and two of its rules meet a shape they were
+ * not written for.
+ *
+ * THE INDENT IS ON BOTH SIDES. The rail ranges LEFT as a drawer and RIGHT in the desktop
+ * gutter, so a one-sided indent is correct at one width and invisible at the other. `padding-
+ * inline` is the same figure on each side and lands on whichever one the row is ranged to.
+ * `--rail-pad` is the rail's own step, the one the accent marker is held off the text by.
+ *
+ * THE LINE NUMBERS STAY ON THE TOP LEVEL. The IDE chrome numbers rail rows like lines of
+ * source - `counter-reset:ln` on every `ul`, `counter-increment` on every `li` - and a nested
+ * `<ul>` restarts that counter, so three items with two children under the first came out
+ * numbered 1, 1, 2, 2, 3. A child is a row under a line, not a line of its own.
+ *
+ * Nothing here is a size or a colour: an indent stated in the rail's own token, and the same
+ * chrome told what a second level is. */
+.rail nav ul ul.sub-menu {
+	padding-inline: var(--rail-pad);
+}
+.rail nav ul ul.sub-menu li {
+	counter-increment: none;
+}
+.rail nav ul ul.sub-menu li::before {
+	content: none;
+}
+
+/* ---------- the admin bar, and what it sits on top of ---------------------------------
+ * WordPress prints its own bar above the page for a logged-in reader, fixed to the top of
+ * the viewport at z-index 99999. `.skip-link:focus` places itself 8px from the top of the
+ * page, which is 24px UNDER that bar - so the first thing a keyboard reaches on every page
+ * of a logged-in site was a control drawn behind something else.
+ *
+ * The bar's height is WordPress's own to say and it says it: `--wp-admin--admin-bar--height`
+ * is declared on `html` by the admin bar's stylesheet, 32px on a desktop and 46px under
+ * 782px, where the bar is taller. Reading it is the only way this can stay correct when that
+ * number changes; the 0px fallback is the case where the bar is not there at all, and then
+ * this rule does nothing. */
+.admin-bar .skip-link:focus {
+	margin-top: var(--wp-admin--admin-bar--height, 0px);
+}
+
+/* ---------- a title nobody can break ---------------------------------------------------
+ * A post title is a form field: whatever is typed into it is what the page has to set. One
+ * long unbroken string - a URL, a German compound, a hostname - is a single word by every
+ * line-breaking rule there is, so it ran straight out of the reading column and gave the
+ * whole document a horizontal scrollbar. Measured on an 87-character title at 1440px: the
+ * page scrolled to 1905px against a 1440px viewport.
+ *
+ * `break-word` rather than `anywhere`: it breaks a word only when that word cannot fit on a
+ * line of its own, and it does not change how any box measures its minimum width, so no
+ * layout that fits today moves. It is set once on the shell and inherited, because the same
+ * string can arrive in a heading, a rail row, a term name, a comment or a caption, and a
+ * list of selectors is a list that goes stale. */
+.wrap {
+	overflow-wrap: break-word;
 }

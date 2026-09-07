@@ -205,13 +205,22 @@ function quireink_pagination() {
  * `wp_nav_menu` puts its classes on the <li>; Quire Ink's rail styles the <a>, because a row
  * that highlights has to be the thing the pointer is over.
  *
+ * A CHILD ROW GETS NOTHING EXTRA, and that is measured rather than lazy. The sheet's own
+ * two-level marks are `rail-lead` and `rail-sub`, and both draw a `::before` on a row that is
+ * `display:flex; justify-content:space-between` - so in the drawer, where the rail ranges
+ * left, the mark goes to one end of the row and the label to the other. It is the engine's
+ * own defect on a two-level table of contents and it is not this theme's to fix; putting a
+ * site menu through it would simply meet it far more often. A child is indented instead, in
+ * `bridge.css`, symmetrically, because the rail ranges left in the drawer and right in the
+ * gutter.
+ *
  * @param array $atts Link attributes.
  * @return array
  */
 function quireink_nav_link_atts( $atts, $item = null, $args = null ) {
-	// The RAIL's rows, and only the rail's. `nav_menu_link_attributes` fires for every menu
-	// on the page, so without this test the footer menu would arrive wearing `rail-row`,
-	// which is a full-width row with a hover slab and an aria-current marker down its side.
+	// The RAIL's rows, and only the rail's. `nav_menu_link_attributes` fires for every menu on
+	// the page, so without this test the footer menu would arrive wearing `rail-row`, a
+	// full-width row with a hover slab and an aria-current marker down its side.
 	if ( ! isset( $args->theme_location ) || 'primary' !== $args->theme_location ) {
 		return $atts;
 	}
