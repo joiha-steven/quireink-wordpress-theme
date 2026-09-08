@@ -280,27 +280,6 @@
 	margin-bottom: calc(var(--sp) * .5);
 }
 
-/* ---------- a menu with a second level --------------------------------------------------
- * The rail carries a nav menu and a WordPress menu can nest; Quire Ink's own never did, so
- * the sheet has no rule for a list inside a list, and two of its rules meet a shape they were
- * not written for.
- *
- * THE INDENT IS ON BOTH SIDES. The rail ranges LEFT as a drawer and RIGHT in the desktop
- * gutter, so a one-sided indent is correct at one width and invisible at the other. `padding-
- * inline` is the same figure on each side and lands on whichever one the row is ranged to.
- * `--rail-pad` is the rail's own step, the one the accent marker is held off the text by.
- *
- * THE LINE NUMBERS STAY ON THE TOP LEVEL. The IDE chrome numbers rail rows like lines of
- * source - `counter-reset:ln` on every `ul`, `counter-increment` on every `li` - and a nested
- * `<ul>` restarts that counter, so three items with two children under the first came out
- * numbered 1, 1, 2, 2, 3. A child is a row under a line, not a line of its own.
- *
- * Nothing here is a size or a colour: an indent stated in the rail's own token, and the same
- * chrome told what a second level is. */
-.rail nav ul ul.sub-menu {
-	padding-inline: var(--rail-pad);
-}
-
 /* ---------- the article's gutter holds two lists, and only one of them counts -----------
  * `quireink_toc()` prints the site's menu under the table of contents, so a post whose own
  * contents are too short to index still has a way back to the site. That is a second `<ul>`
@@ -315,18 +294,11 @@
  * arise. The contents keep theirs; the listing rail keeps its own, which is a different
  * column on a different page.
  *
- * NO INDENT EITHER. In the gutter the rail ranges right, so an indent moves a child AWAY from
- * the edge everything else is ranged to - four rows, three left edges, and nothing telling a
- * reader which raggedness means what. The drawer and the listing rail keep the indent, where
- * the column is longer and ranged left.
- *
- * `li.menu-item` is WordPress's own mark on its own rows, so neither rule can reach a row of
- * the contents. The child combinators keep them off a sub-menu's rows as well. */
+ * There is no indent to undo and no sub-menu to unnumber: `Quireink_Rail_Menu_Walker` emits
+ * one flat list, so every row of the menu is a sibling of every other. `li.menu-item` is
+ * WordPress's own mark on its own rows, so this cannot reach a row of the contents. */
 .toc .rail-inner nav > ul li.menu-item::before {
 	content: none;
-}
-.toc .rail-inner nav ul ul.sub-menu {
-	padding-inline: 0;
 }
 
 /* ---------- the admin bar, and what it sits on top of ---------------------------------

@@ -126,6 +126,45 @@ function quireink_article_owns_gutter() {
 }
 
 /**
+ * The rail's menu, flattened before it is walked.
+ *
+ * `wp_nav_menu` nests a second level in `<ul class="sub-menu">` inside the parent `<li>`, and
+ * in this column that shape fights the sheet three ways at once. Rows are spaced by
+ * `.rail li{margin-top:.5rem}` with `.rail li:first-child{margin-top:0}` to close the top of a
+ * block - and a sub-menu's first row is a `:first-child` too, so it sat 8px tighter under its
+ * parent than every other row while the row after it sat normally. The IDE chrome numbers rows
+ * from a counter reset on every `<ul>`, so a nested list restarted it and three items with two
+ * children read 1, 1, 2, 2, 3. And an indent has to pick a side, while this rail ranges left as
+ * a drawer and right in the gutter. One flat list answers all three by construction instead of
+ * by three more rules, and every level still renders, which is the thing that was missing.
+ *
+ * THE PARENTAGE IS CUT HERE, NOT IN A WALKER, and that is the second attempt. A walker that
+ * simply drops `start_lvl`/`end_lvl` removes the `<ul>` and leaves the children where the base
+ * class puts them - between the parent's `start_el` and its `end_el`, so the parent `<li>` was
+ * still open around them. Browsers close it for you and the page looks right, which is exactly
+ * how invalid markup survives a look. `wp_nav_menu_objects` runs BEFORE the tree is built, so
+ * with every parent set to 0 WordPress builds a flat list itself and closes every tag.
+ *
+ * WHAT IT COSTS, stated rather than hidden: the depth is no longer in the markup, so a screen
+ * reader hears four links rather than two with two under one of them. The alternative was a
+ * nested list carrying three exceptions and a visibly uneven column.
+ *
+ * @param array    $items Menu items.
+ * @param stdClass $args  wp_nav_menu arguments.
+ * @return array
+ */
+function quireink_flatten_rail_menu( $items, $args ) {
+	if ( ! isset( $args->theme_location ) || 'primary' !== $args->theme_location ) {
+		return $items;
+	}
+	foreach ( $items as $item ) {
+		$item->menu_item_parent = '0';
+	}
+	return $items;
+}
+add_filter( 'wp_nav_menu_objects', 'quireink_flatten_rail_menu', 10, 2 );
+
+/**
  * The site's menu, as a rail block.
  *
  * ONE renderer for two callers. The listing's rail prints it from `parts/rail-blocks.php`
@@ -152,9 +191,8 @@ function quireink_rail_menu( $heading = '' ) {
 			'container'      => false,
 			// EVERY level, not just the first. A menu with children used to render as its top
 			// level alone: the child pages an owner had put under About were in the database,
-			// on the Menus screen, and nowhere on the site. A child is indented by
-			// `bridge.css`, on the rail's own padding token and on both sides of it, because
-			// the rail ranges left in the drawer and right in the gutter.
+			// on the Menus screen, and nowhere on the site. They come out as one flat list -
+			// see quireink_flatten_rail_menu() for the three things nesting broke here.
 			'depth'          => 0,
 			'items_wrap'     => '<ul>%3$s</ul>',
 			// The row's text is wrapped so the chrome can range it against the divider; a bare
