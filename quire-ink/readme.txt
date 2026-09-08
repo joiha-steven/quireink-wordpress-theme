@@ -3,7 +3,7 @@ Contributors: joihasteven
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.2
+Stable tag: 0.1.3
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Tags: blog, one-column, two-columns, left-sidebar, custom-colors, custom-logo, custom-menu, featured-images, sticky-post, threaded-comments, theme-options, translation-ready, rtl-language-support, block-patterns, block-styles, editor-style, wide-blocks
@@ -218,6 +218,34 @@ words in it were written for the screenshot. It contains no third-party images a
 photographs.
 
 == Changelog ==
+
+= 0.1.3 =
+Two findings from the second pass of the WordPress.org theme review, ticket 288845.
+
+What this release still does NOT do. It is a beta, and it has still only been run on the
+one site it was written against. The rail renders a menu as a flat list, so every level
+is displayed and reachable but the depth is not in the markup and a screen reader hears
+one run of links. Keeping the closed drawer out of the tab order is JavaScript, so with
+scripting off it is focusable as before. And `accessibility-ready` is still not declared:
+a form field's hairline measures 1.16:1 against the page where WCAG 2.1 asks 3:1, and
+that colour belongs to the blog engine this theme is generated from.
+
+* No direct database queries. The rail's archive block counted posts per year with SQL of
+  its own; it asks `wp_get_archives()` now, which is core's answer to the same question
+  and caches it, which the hand-written query never did.
+* A menu assigned to the Rail menu location is reachable on an article. The rail stands
+  down on a post so the gutter can hold that article's table of contents, but the contents
+  need two headings, and below that floor there was no rail at all - and with none in the
+  document the theme's own script hid the header's menu button. So on a post with one
+  heading or none the menu was not in the gutter, not in the drawer, and had no control to
+  open either, at any width. The gutter now carries the menu under the contents, and
+  carries it alone when there is nothing to index.
+* A menu with child items renders as one flat list rather than a nested one. Every level
+  shows. Nesting met three rules this column was not written for: a sub-menu's first row
+  is also a `:first-child`, so it sat 24px under its parent where every other row sat at
+  32px; the row numbering restarts on each list, so three items with two children read
+  1, 2, 1; and an indent has to pick a side, while this rail ranges left as a drawer and
+  right in the desktop gutter.
 
 = 0.1.2 =
 Five findings from the WordPress.org theme review, ticket 288845. Four were code; the
