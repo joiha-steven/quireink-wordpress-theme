@@ -25,32 +25,12 @@ if ( is_active_sidebar( 'rail' ) ) {
 }
 
 // ----- menu -------------------------------------------------------------------------
+//
+// No heading: here the menu is the first thing in the column and a label over it would be a
+// word saying what the next three words already say. The article's gutter prints the same
+// block WITH one, under the table of contents, where it needs to be told apart.
 
-if ( has_nav_menu( 'primary' ) ) {
-	?>
-	<nav aria-label="<?php esc_attr_e( 'Menu', 'quire-ink' ); ?>">
-	<?php
-	wp_nav_menu(
-		array(
-			'theme_location' => 'primary',
-			'container'      => false,
-			// EVERY level, not just the first. A menu with children used to render as its
-			// top level alone: the child pages an owner had put under About were in the
-			// database, on the Menus screen, and nowhere on the site. A child is indented
-			// by `bridge.css`, on the rail's own padding token and on both sides of it,
-			// because the rail ranges left in the drawer and right in the gutter.
-			'depth'          => 0,
-			'items_wrap'     => '<ul>%3$s</ul>',
-			// The row's text is wrapped so the chrome can range it against the divider; a bare
-			// text node has nothing to align.
-			'link_before'    => '<span>',
-			'link_after'     => '</span>',
-		)
-	);
-	?>
-	</nav>
-	<?php
-}
+quireink_rail_menu();
 
 // ----- featured ---------------------------------------------------------------------
 //
@@ -94,26 +74,48 @@ quireink_rail_terms( 'category', __( 'Categories', 'quire-ink' ), true, '' );
 
 // ----- archive --------------------------------------------------------------------------
 //
-// Years, newest first, with a count each. `get_year_link()` rather than a built path: date
-// archives exist whatever the permalink structure is, and the structure here is `/%postname%/`,
-// which has no date in it - so the URL is WordPress's to say, not ours to assemble.
-
-global $wpdb;
-$years = $wpdb->get_results(
-	"SELECT YEAR(post_date) AS y, COUNT(*) AS n
-	 FROM {$wpdb->posts}
-	 WHERE post_type = 'post' AND post_status = 'publish'
-	 GROUP BY y ORDER BY y DESC"
+// Years, newest first, with a count each, from `wp_get_archives()`.
+//
+// NOT A QUERY OF OUR OWN. This block used to run a `SELECT YEAR(post_date), COUNT(*)` over the
+// posts table by hand, which a WordPress.org reviewer is right to refuse: it reaches past every
+// filter core puts on a post query, it is wrong the moment a plugin changes what "published"
+// means, and it repeats a statement core already keeps warm. `wp_get_archives( type: yearly )`
+// asks the same question through the front door and CACHES the answer in the `post-queries`
+// group against `wp_cache_get_last_changed( 'posts' )`, so on a site with an object cache the
+// second page load does not touch the database at all. The hand-written version never did.
+//
+// The markup is ours through `get_archives_link`, not through a regex over core's output. Core
+// hands the filter the url, the year, and the count inside its own `&nbsp;(N)` suffix; the row
+// is rebuilt from those three, so the theme states its own shape while core states the data.
+// The filter is added and removed around the one call, because it fires for every archive list
+// on the page and a widget's list is not ours to restyle.
+$quireink_archive_row = static function ( $html, $url, $text, $format, $before, $after ) {
+	$count = preg_match( '/\((\d+)\)/', (string) $after, $found ) ? (int) $found[1] : 0;
+	return sprintf(
+		'<a class="link-accent t-small" href="%1$s">%2$s<span class="term-count">%3$s</span></a>',
+		esc_url( $url ),
+		esc_html( $text ),
+		esc_html( number_format_i18n( $count ) )
+	);
+};
+add_filter( 'get_archives_link', $quireink_archive_row, 10, 6 );
+$years = trim(
+	(string) wp_get_archives(
+		array(
+			'type'            => 'yearly',
+			'format'          => 'custom',
+			'show_post_count' => true,
+			'echo'            => 0,
+		)
+	)
 );
-if ( $years ) {
+remove_filter( 'get_archives_link', $quireink_archive_row, 10 );
+
+if ( '' !== $years ) {
 	?>
 	<div>
 		<h2><?php esc_html_e( 'Archive', 'quire-ink' ); ?></h2>
-		<div class="rail-tags">
-		<?php foreach ( $years as $year ) : ?>
-			<a class="link-accent t-small" href="<?php echo esc_url( get_year_link( (int) $year->y ) ); ?>"><?php echo esc_html( $year->y ); ?><span class="term-count"><?php echo esc_html( number_format_i18n( $year->n ) ); ?></span></a>
-		<?php endforeach; ?>
-		</div>
+		<div class="rail-tags"><?php echo wp_kses_post( $years ); ?></div>
 	</div>
 	<?php
 }

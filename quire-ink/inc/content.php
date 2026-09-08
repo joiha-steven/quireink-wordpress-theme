@@ -109,6 +109,66 @@ function quireink_slug( $text ) {
 }
 
 /**
+ * Does the article own the gutter on this request?
+ *
+ * ONE answer for the two places that have to agree. `parts/rail.php` stands down on a single
+ * post so the article's own table of contents can take the gutter; `quireink_toc()` has to
+ * know the same thing, because it is what adds the site's menu to that gutter and must NOT
+ * add it anywhere the site rail is already printed. Written out twice, the second copy would
+ * survive the first being changed - and it did, for one commit: a page carries the site rail
+ * AND calls `quireink_toc()`, so a menu-only gutter put two rails on it, which is the column
+ * of links over a column of links this whole arrangement exists to avoid.
+ *
+ * @return bool
+ */
+function quireink_article_owns_gutter() {
+	return is_singular( 'post' );
+}
+
+/**
+ * The site's menu, as a rail block.
+ *
+ * ONE renderer for two callers. The listing's rail prints it from `parts/rail-blocks.php`
+ * with no heading, because there it is the first thing in the column and needs no label; the
+ * article's gutter prints it under the table of contents, where it does. Written twice it
+ * would have to be corrected twice, and the last correction — every level of a nested menu
+ * instead of only the first — is exactly the kind that gets made in one copy.
+ *
+ * @param string $heading Optional visible heading, in the rail's own `<h2>` style.
+ */
+function quireink_rail_menu( $heading = '' ) {
+	if ( ! has_nav_menu( 'primary' ) ) {
+		return;
+	}
+	?>
+	<nav aria-label="<?php esc_attr_e( 'Menu', 'quire-ink' ); ?>">
+	<?php
+	if ( '' !== $heading ) {
+		printf( '<h2>%s</h2>', esc_html( $heading ) );
+	}
+	wp_nav_menu(
+		array(
+			'theme_location' => 'primary',
+			'container'      => false,
+			// EVERY level, not just the first. A menu with children used to render as its top
+			// level alone: the child pages an owner had put under About were in the database,
+			// on the Menus screen, and nowhere on the site. A child is indented by
+			// `bridge.css`, on the rail's own padding token and on both sides of it, because
+			// the rail ranges left in the drawer and right in the gutter.
+			'depth'          => 0,
+			'items_wrap'     => '<ul>%3$s</ul>',
+			// The row's text is wrapped so the chrome can range it against the divider; a bare
+			// text node has nothing to align.
+			'link_before'    => '<span>',
+			'link_after'     => '</span>',
+		)
+	);
+	?>
+	</nav>
+	<?php
+}
+
+/**
  * The rail's table of contents, printed from what the pass above collected.
  *
  * TWO-LEVEL ONLY WHEN THE ARTICLE IS. `rail-lead` and `rail-sub` are not "h2" and "h3" - they
@@ -122,16 +182,44 @@ function quireink_slug( $text ) {
  */
 function quireink_toc() {
 	$items = isset( $GLOBALS['quireink_toc'] ) ? $GLOBALS['quireink_toc'] : array();
-	if ( count( $items ) < 2 ) {
-		// One heading is a title, not a table of contents. The blog engine applies the same floor.
+	// One heading is a title, not a table of contents. The blog engine applies the same floor.
+	$contents = count( $items ) >= 2;
+
+	/*
+	 * THE ARTICLE'S GUTTER CARRIES THE SITE MENU TOO, and that is a bug report rather than a
+	 * flourish. `parts/rail.php` stands down on a single post so the gutter can hold the
+	 * article's own contents - but the contents only exist above that floor, so a post with
+	 * one heading or none had no rail at all. And with no `.rail` in the document, `core.js`
+	 * HIDES the header's menu button:
+	 *
+	 *     if (!document.querySelector(".rail")) { z.hidden = true; return; }
+	 *
+	 * so on such a post the site's menu was not in the gutter, not in the drawer, and had no
+	 * control to open it, at any width. Measured on a stock WordPress with a menu assigned to
+	 * the Rail menu location: railInDom false, siteMenuInDom false, the toggle display:none.
+	 *
+	 * Both blocks live in one rail because the sheet lays out for one; two would be a column
+	 * of links over a column of links.
+	 */
+	$menu = quireink_article_owns_gutter() && has_nav_menu( 'primary' );
+	if ( ! $contents && ! $menu ) {
 		return;
 	}
 
 	$levels   = array_unique( wp_list_pluck( $items, 'level' ) );
 	$outlined = count( $levels ) > 1;
+	/*
+	 * `toc` STAYS ON even when there is nothing to index, and it is not decoration. The print
+	 * sheet hides the article's gutter by that name (`.toc{display:none!important}`), and the
+	 * IDE chrome sizes the number gutter by it. Dropped on a menu-only rail, the menu would
+	 * print at the foot of every article. A `<div>` rather than a `<nav>` because it now holds
+	 * two navigations, each with its own label.
+	 */
 	?>
-	<nav class="toc rail" aria-label="<?php esc_attr_e( 'Table of contents', 'quire-ink' ); ?>">
+	<div class="toc rail">
 	<div class="rail-inner">
+	<?php if ( $contents ) : ?>
+	<nav aria-label="<?php esc_attr_e( 'Table of contents', 'quire-ink' ); ?>">
 	<h2><?php esc_html_e( 'Table of contents', 'quire-ink' ); ?></h2>
 	<ul>
 		<li><a class="rail-row link-accent t-small is-active" href="#top"><?php echo esc_html( get_the_title() ); ?></a></li>
@@ -167,7 +255,10 @@ function quireink_toc() {
 		}
 		?>
 	</ul>
-	</div>
 	</nav>
+	<?php endif; ?>
+	<?php if ( $menu ) { quireink_rail_menu( __( 'Menu', 'quire-ink' ) ); } ?>
+	</div>
+	</div>
 	<?php
 }

@@ -17,7 +17,10 @@
  * @package QuireInk
  */
 
-if ( is_singular( 'post' ) ) {
+// `quireink_article_owns_gutter()` rather than the test spelled out here: `quireink_toc()`
+// has to agree with this exactly, because it is what puts the site's menu in the gutter the
+// article takes over, and a second copy of a condition is a second copy to forget.
+if ( quireink_article_owns_gutter() ) {
 	return;
 }
 
