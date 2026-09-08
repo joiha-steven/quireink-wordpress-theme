@@ -9,6 +9,7 @@ The reading surface of the [Quire Ink](https://quireink.com) blog engine, genera
 engine's own stylesheet rather than copied by hand.
 No Google Fonts, no CDN, no analytics, no request off your own domain.
 
+[![In the WordPress theme directory](https://img.shields.io/badge/Theme%20directory-quire--ink-21759b?logo=wordpress&logoColor=white)](https://wordpress.org/themes/quire-ink/)
 ![WordPress 6.5+](https://img.shields.io/badge/WordPress-6.5%2B-21759b?logo=wordpress&logoColor=white)
 ![PHP 7.4+](https://img.shields.io/badge/PHP-7.4%2B-777bb4?logo=php&logoColor=white)
 ![Classic theme](https://img.shields.io/badge/Classic%20theme-Customizer-555555)
