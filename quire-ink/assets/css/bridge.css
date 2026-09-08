@@ -301,28 +301,32 @@
 	padding-inline: var(--rail-pad);
 }
 
-/* ---------- the article's gutter now holds two lists -------------------------------------
+/* ---------- the article's gutter holds two lists, and only one of them counts -----------
  * `quireink_toc()` prints the site's menu under the table of contents, so a post whose own
- * contents are too short to index still has a way back to the site. That puts a second `<ul>`
- * inside `.toc`, and one rule of the IDE chrome was written when there could only be one:
+ * contents are too short to index still has a way back to the site. That is a second `<ul>`
+ * inside `.toc`, and it does NOT want the furniture the first one has.
  *
- *     .toc li:first-child { counter-increment: none }   ::before { content: none }
+ * NO NUMBERS ON THE MENU. The IDE chrome numbers rail rows like lines of source, which earns
+ * its keep on a table of contents: the numbers are the outline. On four navigation links they
+ * are decoration standing where information should be, and worse, they collide with the rule
+ * that unnumbers the row repeating the article's title - that exception is written
+ * `.toc li:first-child`, so inside the menu it landed on the first link, and a two-level menu
+ * read 1, 2, 1 with the stray ring 22px out of the column. Gone, so the question does not
+ * arise. The contents keep theirs; the listing rail keeps its own, which is a different
+ * column on a different page.
  *
- * It exists to drop the number from the row that repeats the article's title, which is the
- * first row of the CONTENTS. Inside the menu it lands on the first link instead, so the menu
- * began "(no number), 1, 2" — which reads as the numbering having lost its place. WordPress
- * marks every one of its own rows `menu-item`, so that is where the exception ends. */
-.toc .rail-inner ul li.menu-item:first-child {
-	counter-increment: ln;
-}
-.toc .rail-inner ul li.menu-item:first-child::before {
-	content: counter(ln);
-}
-.rail nav ul ul.sub-menu li {
-	counter-increment: none;
-}
-.rail nav ul ul.sub-menu li::before {
+ * NO INDENT EITHER. In the gutter the rail ranges right, so an indent moves a child AWAY from
+ * the edge everything else is ranged to - four rows, three left edges, and nothing telling a
+ * reader which raggedness means what. The drawer and the listing rail keep the indent, where
+ * the column is longer and ranged left.
+ *
+ * `li.menu-item` is WordPress's own mark on its own rows, so neither rule can reach a row of
+ * the contents. The child combinators keep them off a sub-menu's rows as well. */
+.toc .rail-inner nav > ul li.menu-item::before {
 	content: none;
+}
+.toc .rail-inner nav ul ul.sub-menu {
+	padding-inline: 0;
 }
 
 /* ---------- the admin bar, and what it sits on top of ---------------------------------
