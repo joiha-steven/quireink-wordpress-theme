@@ -1,5 +1,11 @@
 # Before this goes public
 
+**It went public on 8 September 2026, at 0.1.3**, after two rounds of review on
+[ticket #288845](https://themes.trac.wordpress.org/ticket/288845): five findings on 0.1.1 and
+two more on 0.1.2. The listing is [wordpress.org/themes/quire-ink](https://wordpress.org/themes/quire-ink/).
+What follows is the list that got it there, kept because the next release goes through the
+same gate — and one line of it goes stale on its own, which is the point of saying so here.
+
 Measured, not remembered. `dev/check-theme.sh` runs the gate WordPress.org actually uses; as
 of the last run it reports **0 REQUIRED, 0 WARNING, 3 RECOMMENDED**, and the three are answered
 in [`decisions/0007-four-recommendations-declined.md`](decisions/0007-four-recommendations-declined.md).

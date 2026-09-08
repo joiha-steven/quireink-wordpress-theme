@@ -2,7 +2,7 @@
 
 # Quire Ink for WordPress
 
-`0.1.0`
+`0.1.3`
 
 **A WordPress theme for people who write long things and want them read.**
 The reading surface of the [Quire Ink](https://quireink.com) blog engine, generated from that
@@ -19,7 +19,7 @@ No Google Fonts, no CDN, no analytics, no request off your own domain.
 [**Quire Ink**](https://quireink.com) ·
 [**the engine**](https://github.com/joiha-steven/quireink) ·
 [**demo.quireink.com**](https://demo.quireink.com) ·
-[**directory ticket**](https://themes.trac.wordpress.org/ticket/288845) ·
+[**WordPress.org**](https://wordpress.org/themes/quire-ink/) ·
 [**what it costs**](#what-it-costs-a-reader) ·
 [**why not something else**](#why-not-something-else) ·
 [**install**](#install)
@@ -123,16 +123,24 @@ header blocks agreeing, and the generated CSS still matching the engine it came 
 
 ## Install
 
-From the WordPress admin, Appearance → Themes → Add New → Upload Theme, then Activate. Or:
+It is in the [WordPress theme directory](https://wordpress.org/themes/quire-ink/), so the
+short way is Appearance → Themes → Add New, search **Quire Ink**, Install, Activate. That
+route also brings updates with everything else on the site.
+
+To run a build of your own instead, Appearance → Themes → Add New → Upload Theme with a zip
+from this repository:
 
 ```bash
 git archive --format=zip --prefix=quire-ink/ -o quire-ink.zip HEAD:quire-ink
 ```
 
 No build step, no compilation, no bundler: the repository is laid out the way the directory
-wants it. Then Appearance → Customize for the palette and the shape, and Appearance → Menus
-to put a menu in the **Rail menu** location, which is the sidebar, or in **Footer menu** for
-a flat row of links above the credit.
+wants it, and that one command is the whole release. It builds from `HEAD` rather than the
+working tree, so an uncommitted edit cannot ship by accident.
+
+Then Appearance → Customize for the palette and the shape, and Appearance → Menus to put a
+menu in the **Rail menu** location, which is the sidebar, or in **Footer menu** for a flat
+row of links above the credit.
 
 ## The idea
 
