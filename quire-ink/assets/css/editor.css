@@ -67,13 +67,13 @@
 .editor-styles-wrapper.editor-styles-wrapper math{color:var(--c-text)}
 .editor-styles-wrapper.editor-styles-wrapper .fn-rule{margin-top:2.5em}
 .editor-styles-wrapper.editor-styles-wrapper h2,.editor-styles-wrapper.editor-styles-wrapper h3,.editor-styles-wrapper.editor-styles-wrapper .fn-rule{clear:both}
+.editor-styles-wrapper.editor-styles-wrapper pre{position:relative}
+.editor-styles-wrapper.editor-styles-wrapper pre:hover .code-copy{opacity:1}
+.editor-styles-wrapper.editor-styles-wrapper [data-reader]{cursor:pointer}
 @media (min-width:1272px){
   .editor-styles-wrapper.editor-styles-wrapper figure.img-wide,.editor-styles-wrapper.editor-styles-wrapper .video-wide{width:calc(100% + var(--rail-w) + var(--rail-gap));max-width:none;margin-left:0;margin-right:calc(-1 * (var(--rail-w) + var(--rail-gap)))}
   .editor-styles-wrapper.editor-styles-wrapper > :is(figure.img-wide,.video-wide):nth-child(-n+2){width:100%;margin-right:0}
 }
-.editor-styles-wrapper.editor-styles-wrapper pre{position:relative}
-.editor-styles-wrapper.editor-styles-wrapper pre:hover .code-copy{opacity:1}
-.editor-styles-wrapper.editor-styles-wrapper [data-reader]{cursor:pointer}
 @media print{
   .editor-styles-wrapper.editor-styles-wrapper{hyphens:auto}
   .editor-styles-wrapper.editor-styles-wrapper a{text-decoration:underline}

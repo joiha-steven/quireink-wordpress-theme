@@ -525,13 +525,13 @@ article + .subscribe-card,article + #comments{margin-top:2.5rem}
 .clip-line{margin:.5rem 0}
 .clip-form{display:flex;flex-direction:column;gap:.9rem;max-width:34rem;margin-top:1.25rem}
 .clip-form label{display:flex;flex-direction:column;gap:.35rem;color:var(--c-meta)}
-.clip-form input[type=text],.clip-form textarea{padding:.5rem .75rem;border:1px solid var(--c-rule);
+.clip-form input[type=text],.clip-form textarea{padding:.5rem .75rem;border:1px solid var(--c-field-edge);
   border-radius:var(--radius,.5rem);background:var(--c-bg);color:var(--c-text);font:inherit;
   resize:vertical}
 .clip-form input:focus,.clip-form textarea:focus{border-color:var(--c-heading);outline:none}
 .clip-status{display:flex;gap:1.25rem}
 .clip-status label{flex-direction:row;align-items:center}
-.clip-form button{align-self:flex-start;padding:.5rem 1.1rem;border:1px solid var(--c-rule);
+.clip-form button{align-self:flex-start;padding:.5rem 1.1rem;border:1px solid var(--c-field-edge);
   border-radius:var(--radius,.5rem);background:var(--c-heading);color:var(--c-bg);font:inherit;cursor:pointer}
 .clip-tool{display:inline-block;padding:.45rem 1rem;border:1px solid var(--c-rule);
   border-radius:999px;background:var(--c-bg);color:var(--c-heading);cursor:grab;text-decoration:none}
@@ -656,11 +656,11 @@ form.search{display:flex;gap:.5rem;margin:0 0 2rem}
    default, so at 390px the pair measured wider than the column and the button's right
    border sat off-screen: the page scrolled sideways. form.subscribe already carried this
    rule; the search form was written from the same shape and lost it. */
-form.search input{min-width:0;flex:1;padding:.5rem .75rem;border:1px solid var(--c-rule);
+form.search input{min-width:0;flex:1;padding:.5rem .75rem;border:1px solid var(--c-field-edge);
   border-radius:var(--radius,.5rem);background:var(--c-bg);color:var(--c-text);font:inherit;box-shadow:var(--well)}
 /* nowrap because the label is what pushed the row wide: "Tìm kiếm" broke over two lines and
    took the whole control to 78px tall to make room for itself. */
-form.search button{padding:.5rem 1rem;border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);
+form.search button{padding:.5rem 1rem;border:1px solid var(--c-field-edge);border-radius:var(--radius,.5rem);
   background:var(--c-bg);color:var(--c-heading);font:inherit;cursor:pointer;white-space:nowrap}
 /* Stacked on a phone, exactly as the sign-up form stacks and at the same width. */
 @media (max-width:639px){form.search{flex-direction:column}}
@@ -925,7 +925,6 @@ html[data-rail=open],html[data-rail=open] body{overflow:hidden}
 .toc summary{display:block;pointer-events:none;cursor:default}
 .toc summary::-webkit-details-marker{display:none}
 .toc summary h2{margin-bottom:.75rem}
-@media (min-width:60rem) and (max-width:1271px){.rail{position:static;width:auto;height:auto;margin:1.5rem 0 2.5rem;padding:0 0 1.25rem;border:0;border-bottom:1px solid var(--c-rule);background:none;transform:none;visibility:visible;overflow:visible;transition:none}.rail-inner{position:static;max-height:none;overflow:visible}.rail-inner > * + *{margin-top:1rem}.rail h2{margin:0;padding-left:0}.rail-inner > nav:not(.toc)::before{content:attr(aria-label);display:block;margin-bottom:.5rem;font-weight:var(--fw-heading,600);color:var(--c-heading);font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small)}.rail ul{display:flex;flex-wrap:wrap;gap:.4rem 1.5rem}.rail li,.toc li{margin-top:0}.toc ul{display:block}.toc li{width:max-content;max-width:100%;margin-top:.45rem}.toc li:first-child{margin-top:0}.rail-row{padding-left:0}.rail-row[aria-current]::after{left:0;right:0;top:auto;bottom:-4px;width:auto;height:2px}.toc-end{margin-top:0}.toc summary{pointer-events:auto;cursor:pointer;display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem}.toc summary h2{margin:0}.toc summary::before{content:"";width:.4em;height:.4em;flex:none;border-right:1.5px solid var(--c-meta);border-bottom:1.5px solid var(--c-meta);transform:rotate(-45deg);transition:transform var(--dur-base) ease}.toc details[open] > summary::before{transform:rotate(45deg)}.rail-toggle,.rail-scrim{display:none}}@media (min-width:1272px){.rail{position:absolute;inset:auto auto auto auto;top:var(--rail-top);width:var(--rail-w);height:calc(100% - var(--rail-top));padding:0;background:none;border:0;overflow:visible;transform:none;display:block;visibility:visible;right:calc(100% + var(--rail-gap));left:auto;text-align:right}.rail::after{content:"";position:absolute;top:0;bottom:0;right:-13px;width:1px;background:var(--c-rule);z-index:-1}.rail-inner{max-height:calc(100dvh - 2.5rem - 1.5rem);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}.rail h2,.rail .rail-tags{padding-left:0;padding-right:var(--rail-pad)}.rail .rail-tags{justify-content:flex-end}.rail li a{justify-content:flex-end}.rail-row{padding-left:0;padding-right:var(--rail-pad)}.rail-row[aria-current]::after{left:auto;right:0}.rail-toggle,.rail-scrim{display:none}.post-info{position:absolute;inset:auto auto auto auto;top:var(--rail-top);width:var(--rail-w);height:calc(100% - var(--rail-top));padding:0;background:none;border:0;overflow:visible;transform:none;display:block;visibility:visible;left:calc(100% + var(--rail-gap));right:auto;text-align:left;padding-left:var(--rail-pad);height:auto}.post-info::after{content:"";position:absolute;top:0;bottom:0;left:-13px;width:1px;background:var(--c-rule);z-index:-1}.post-info::before{content:"";position:absolute;left:-16px;top:.5em;width:7px;height:7px;border-radius:50%;background:var(--c-meta)}.post-info .info-action{position:relative}.post-info .info-action::after{content:"";position:absolute;left:calc(-16px - var(--rail-pad));top:.5em;width:7px;height:7px;border-radius:50%;background:var(--c-meta)}.post-meta,.taxo-rule,.post-taxo{display:none}article > header .mt-2{margin-top:0}.prose figure.img-wide,.prose .video-wide{width:calc(100% + var(--rail-w) + var(--rail-gap));max-width:none;margin-left:0;margin-right:calc(-1 * (var(--rail-w) + var(--rail-gap)))}.prose > :is(figure.img-wide,.video-wide):nth-child(-n+2){width:100%;margin-right:0}}
 /* --- islands -------------------------------------------------------------------
    Every rule below styles an element the browser bundle CREATES. None of it applies
    to the server-rendered page, so a reader with JavaScript off sees no gaps: the
@@ -1012,7 +1011,7 @@ html[data-rail=open],html[data-rail=open] body{overflow:hidden}
   font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small)}
 .pen-pop[hidden]{display:none}
 .pen-pop textarea{display:block;width:100%;min-height:3.2em;padding:.4rem .5rem;
-  border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);background:var(--c-bg);
+  border:1px solid var(--c-field-edge);border-radius:var(--radius,.5rem);background:var(--c-bg);
   color:inherit;font:inherit;resize:vertical}
 .pen-del,.pen-send{margin-top:.45rem;padding:0;border:0;background:none;color:var(--c-meta);
   font:inherit;cursor:pointer}
@@ -1023,7 +1022,7 @@ html[data-rail=open],html[data-rail=open] body{overflow:hidden}
   padding-top:.5rem;border-top:1px solid var(--c-rule)}
 .pen-ask[hidden]{display:none}
 .pen-ask span{flex:1 0 100%;color:var(--c-meta)}
-.pen-ask input{flex:1;min-width:0;padding:.3rem .5rem;border:1px solid var(--c-rule);
+.pen-ask input{flex:1;min-width:0;padding:.3rem .5rem;border:1px solid var(--c-field-edge);
   border-radius:var(--radius,.5rem);background:var(--c-bg);color:inherit;font:inherit}
 .pen-go{padding:.3rem .7rem;border:1px solid var(--c-rule);border-radius:999px;
   background:var(--c-heading);color:var(--c-bg);font:inherit;cursor:pointer}
@@ -1035,7 +1034,7 @@ html[data-rail=open],html[data-rail=open] body{overflow:hidden}
   margin-right:.9rem}
 .pen-keep button:hover{text-decoration:underline}
 .pen-keep a{color:var(--c-heading);margin-right:.9rem}
-.pen-keep input{width:100%;margin:.35rem 0;padding:.3rem .5rem;border:1px solid var(--c-rule);
+.pen-keep input{width:100%;margin:.35rem 0;padding:.3rem .5rem;border:1px solid var(--c-field-edge);
   border-radius:var(--radius,.5rem);background:var(--c-bg);color:inherit;font:inherit}
 .pen-keep code{display:block;margin:.35rem 0;padding:.3rem .5rem;border:1px dashed var(--c-rule);
   border-radius:var(--radius,.5rem);font-family:var(--font-mono);font-size:var(--fs-code);
@@ -1530,7 +1529,7 @@ body:has(.book-overlay[open]){overflow:hidden}
 .comment-field{margin:0}
 .comment-field label{display:block;color:var(--c-meta);margin-bottom:.375rem}
 .comment-body-field{margin-top:1rem}
-.comment-form input,.comment-form textarea{width:100%;padding:.5rem .75rem;border:1px solid var(--c-rule);
+.comment-form input,.comment-form textarea{width:100%;padding:.5rem .75rem;border:1px solid var(--c-field-edge);
   border-radius:var(--radius,.5rem);background:var(--c-bg);color:var(--c-text);font:inherit;
   box-shadow:var(--well)}
 /* The focus treatment the newsletter field already had, applied to the same-looking field. */
@@ -1541,7 +1540,7 @@ body:has(.book-overlay[open]){overflow:hidden}
 .comment-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem;margin-top:1rem}
 .comment-form .comment-actions button{margin:0 0 0 auto}
 @media (max-width:639px){.comment-form .comment-actions button{margin-left:0}}
-.comment-form button{padding:.5rem 1rem;border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);
+.comment-form button{padding:.5rem 1rem;border:1px solid var(--c-field-edge);border-radius:var(--radius,.5rem);
   background:var(--c-bg);color:var(--c-heading);font:inherit;font-weight:500;cursor:pointer}
 .comment-form button:hover{background:var(--c-rule)}
 .comment-status:empty{display:none}
@@ -1702,7 +1701,7 @@ html.book-reading body>*:not(.book-reader){display:none}
   border:0;border-radius:999px;background:none;color:var(--c-meta);font-size:1.125rem;line-height:1;cursor:pointer}
 .overlay-close:hover{color:var(--c-heading);background:var(--c-rule)}
 .overlay h2{font-size:inherit;font-weight:var(--fw-heading,600);color:var(--c-heading);margin:0 2rem .75rem 0}
-.search-input{width:100%;padding:.5rem .75rem;border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);background:var(--c-bg);color:var(--c-text);font:inherit;box-shadow:var(--well)}
+.search-input{width:100%;padding:.5rem .75rem;border:1px solid var(--c-field-edge);border-radius:var(--radius,.5rem);background:var(--c-bg);color:var(--c-text);font:inherit;box-shadow:var(--well)}
 .search-input:focus{border-color:var(--c-heading)}
 .search-results{list-style:none;padding:0;margin:.85rem 0 0;overflow-y:auto}
 .search-results li{margin:0 0 .6rem}
@@ -1742,13 +1741,13 @@ html.book-reading body>*:not(.book-reader){display:none}
 form.subscribe{display:flex;gap:.5rem;margin:0}
 /* The honeypot: parked, not display:none — some form fillers skip boxless fields. */
 form.subscribe .hp{position:absolute;left:-9999px;width:1px;height:1px;flex:none;border:0;padding:0;opacity:0;pointer-events:none}
-form.subscribe input{min-width:0;flex:1;padding:.5rem .75rem;border:1px solid var(--c-rule);
+form.subscribe input{min-width:0;flex:1;padding:.5rem .75rem;border:1px solid var(--c-field-edge);
   border-radius:var(--radius,.5rem);background:var(--c-bg);color:var(--c-text);font:inherit;
   box-shadow:var(--well)}
 /* The border darkening stays, the outline:none does not: it was cancelling the site's one
    focus ring on the only field in the header, so keyboard focus vanished here alone. */
 form.subscribe input:focus{border-color:var(--c-heading)}
-form.subscribe button{padding:.5rem 1rem;border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);
+form.subscribe button{padding:.5rem 1rem;border:1px solid var(--c-field-edge);border-radius:var(--radius,.5rem);
   background:var(--c-bg);color:var(--c-heading);font:inherit;font-weight:500;cursor:pointer}
 form.subscribe button:hover{background:var(--c-rule)}
 form.subscribe button:disabled{opacity:.5}
@@ -2135,6 +2134,7 @@ footer.site a{display:inline-block;padding-block:.35rem}
    is why the fallback is in the env() rather than in a second rule. */
 .to-top{bottom:calc(1.25rem + env(safe-area-inset-bottom,0px))}
 .rail{padding-left:calc(1.25rem + env(safe-area-inset-left,0px))}
+@media (min-width:60rem) and (max-width:1271px){.rail{position:static;width:auto;height:auto;margin:1.5rem 0 2.5rem;padding:0 0 1.25rem;border:0;border-bottom:1px solid var(--c-rule);background:none;transform:none;visibility:visible;overflow:visible;transition:none}.rail-inner{position:static;max-height:none;overflow:visible}.rail-inner > * + *{margin-top:1rem}.rail h2{margin:0;padding-left:0}.rail-inner > nav:not(.toc)::before{content:attr(aria-label);display:block;margin-bottom:.5rem;font-weight:var(--fw-heading,600);color:var(--c-heading);font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small)}.rail ul{display:flex;flex-wrap:wrap;gap:.4rem 1.5rem}.rail li,.toc li{margin-top:0}.toc ul{display:block}.toc li{width:max-content;max-width:100%;margin-top:.45rem}.toc li:first-child{margin-top:0}.rail-row{padding-left:0}.rail-row[aria-current]::after{left:0;right:0;top:auto;bottom:-4px;width:auto;height:2px}.toc-end{margin-top:0}.toc summary{pointer-events:auto;cursor:pointer;display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem}.toc summary h2{margin:0}.toc summary::before{content:"";width:.4em;height:.4em;flex:none;border-right:1.5px solid var(--c-meta);border-bottom:1.5px solid var(--c-meta);transform:rotate(-45deg);transition:transform var(--dur-base) ease}.toc details[open] > summary::before{transform:rotate(45deg)}.rail-toggle,.rail-scrim{display:none}}@media (min-width:1272px){.rail{position:absolute;inset:auto auto auto auto;top:var(--rail-top);width:var(--rail-w);height:calc(100% - var(--rail-top));padding:0;background:none;border:0;overflow:visible;transform:none;display:block;visibility:visible;right:calc(100% + var(--rail-gap));left:auto;text-align:right}.rail::after{content:"";position:absolute;top:0;bottom:0;right:-13px;width:1px;background:var(--c-rule);z-index:-1}.rail-inner{max-height:calc(100dvh - 2.5rem - 1.5rem);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}.rail h2,.rail .rail-tags{padding-left:0;padding-right:var(--rail-pad)}.rail .rail-tags{justify-content:flex-end}.rail li a{justify-content:flex-end}.rail-row{padding-left:0;padding-right:var(--rail-pad)}.rail-row[aria-current]::after{left:auto;right:0}.rail-toggle,.rail-scrim{display:none}.post-info{position:absolute;inset:auto auto auto auto;top:var(--rail-top);width:var(--rail-w);height:calc(100% - var(--rail-top));padding:0;background:none;border:0;overflow:visible;transform:none;display:block;visibility:visible;left:calc(100% + var(--rail-gap));right:auto;text-align:left;padding-left:var(--rail-pad);height:auto}.post-info::after{content:"";position:absolute;top:0;bottom:0;left:-13px;width:1px;background:var(--c-rule);z-index:-1}.post-info::before{content:"";position:absolute;left:-16px;top:.5em;width:7px;height:7px;border-radius:50%;background:var(--c-meta)}.post-info .info-action{position:relative}.post-info .info-action::after{content:"";position:absolute;left:calc(-16px - var(--rail-pad));top:.5em;width:7px;height:7px;border-radius:50%;background:var(--c-meta)}.post-meta,.taxo-rule,.post-taxo{display:none}article > header .mt-2{margin-top:0}.prose figure.img-wide,.prose .video-wide{width:calc(100% + var(--rail-w) + var(--rail-gap));max-width:none;margin-left:0;margin-right:calc(-1 * (var(--rail-w) + var(--rail-gap)))}.prose > :is(figure.img-wide,.video-wide):nth-child(-n+2){width:100%;margin-right:0}}
 
 @media print{
 /* ── 1. The furniture ─────────────────────────────────────────────────────────────────

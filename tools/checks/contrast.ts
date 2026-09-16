@@ -9,8 +9,15 @@
 // palettes in both schemes - the sheet only carries the one the owner picked.
 //
 // The floors are WCAG 2.1 AA: 4.5:1 for text, 3:1 for non-text that carries meaning. `--c-rule`
-// is deliberately NOT checked as a UI boundary; see docs/accessibility.md for the one place
-// that is a real failure and why it is not answered here.
+// is deliberately NOT checked as a UI boundary: it draws hairlines between cards, which are
+// decorative, and it is 1.26 to 1.35:1 by design.
+//
+// ⚠️ A CONTROL'S EDGE IS CHECKED, AND IT IS THE REASON THIS THEME MAY SAY `accessibility-ready`.
+// Until 2026-09-16 a text input's only boundary WAS `--c-rule` and SC 1.4.11 wants 3:1, which
+// is the one criterion that kept the tag off. The blog engine answered it with a token of its
+// own, `--c-field-edge`, and the tag went on. A tag is a claim a reviewer checks with a colour
+// picker in a minute, so it is held here by arithmetic rather than by anyone's memory: the
+// engine computes the mix, this recomputes it from what the theme actually SHIPS.
 import { readFileSync } from 'node:fs'
 
 const SRC = 'quire-ink/inc/generated-appearance.php'
@@ -59,6 +66,32 @@ for (let i = 1; i < palettes.length; i += 2) {
     const bg = vars.get('--c-bg')
     if (bg === undefined) { problems.push(`${id}/${scheme}: no --c-bg`); continue }
 
+        // `--c-field-edge` ships as a `color-mix()` rather than a hex, because it follows the
+    // palette. In sRGB that is a plain per-channel interpolation, so it can be computed here
+    // exactly as a browser computes it, from the two hexes sitting in the same block.
+    const mix = /--c-field-edge:color-mix\(in srgb, *var\(--c-text\) *(\d+)%, *var\(--c-bg\)\)/.exec(block)
+    const text = vars.get('--c-text')
+    if (mix === undefined || text === undefined) {
+      problems.push(`${id}/${scheme}: no --c-field-edge to check, and the tag claims one`)
+    } else {
+      const p = Number(mix[1]) / 100
+      const edge = '#' + [0, 2, 4].map((k) => {
+        const a = parseInt(text.slice(k + 1, k + 3), 16)
+        const b = parseInt(bg.slice(k + 1, k + 3), 16)
+        return Math.round(a * p + b * (1 - p)).toString(16).padStart(2, '0')
+      }).join('')
+      const ratio = contrast(edge, bg)
+      checked++
+      if (ratio < worst.ratio) worst = { ratio, where: `${id}/${scheme} --c-field-edge` }
+      if (ratio < 3) {
+        problems.push(
+          `${id}/${scheme} --c-field-edge ${edge} on ${bg} = ${ratio.toFixed(2)}:1, needs 3:1.\n`
+          + '    This is the criterion accessibility-ready rests on. Answer it in the blog\n'
+          + '    engine and re-extract; do not patch it in bridge.css.',
+        )
+      }
+    }
+
     for (const [role, floor] of FLOORS) {
       const colour = vars.get(role)
       if (colour === undefined) { problems.push(`${id}/${scheme}: no ${role}`); continue }
@@ -69,6 +102,25 @@ for (let i = 1; i < palettes.length; i += 2) {
         problems.push(`${id}/${scheme} ${role} ${colour} on ${bg} = ${ratio.toFixed(2)}:1, needs ${floor}:1`)
       }
     }
+  }
+}
+
+// And the ratio is worth nothing if a control stops ASKING for the token. A re-extract that
+// pointed a field's border back at `--c-rule` would leave every number above still true and
+// the tag still declared, with the boundary back at 1.26:1 on the screen. So the sheets are
+// read for it: anything a reader types into takes `--c-field-edge` or this says which one did
+// not.
+const TYPED_INTO = /([^{};`\n]*(?:input|textarea|select)[^{};`\n]*)\{([^}]*border:[^}]*)\}/g
+for (const sheet of ['quireink-base.css', 'quireink-look-code.css']) {
+  const css = readFileSync(`quire-ink/assets/css/${sheet}`, 'utf8')
+  for (const m of css.matchAll(TYPED_INTO)) {
+    const [, sel, body] = m
+    if (!body!.includes('var(--c-rule)')) continue
+    if (!/border(-[a-z]+)?:[^;]*var\(--c-rule\)/.test(body!)) continue
+    problems.push(
+      `${sheet}: \`${sel!.trim().slice(0, 56)}\` borders on --c-rule, not --c-field-edge.\n`
+      + '    That is 1.26:1 and the theme declares accessibility-ready.',
+    )
   }
 }
 

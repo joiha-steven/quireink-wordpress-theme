@@ -97,21 +97,37 @@ belong to the comment island, which never mounts here, and to offline reading, w
 ported — those stay unsupplied on purpose, and the file says so. Thirteen were real, and seven
 of the thirteen are inside book mode, where nothing is visible until the overlay is open.
 
-**Form field borders are 1.16:1 against the page.** `--c-rule` is `#ebebeb` on `#fcfcfc`. WCAG
-2.1 SC 1.4.11 asks for 3:1 on anything needed to identify a control, and a text input whose
-only boundary is that hairline does not meet it. It is 1.16–1.33:1 in every palette.
+**Form field borders were 1.16:1 against the page, and are 3.55:1 now.** `--c-rule` is the
+hairline between two cards, and a text input whose only boundary is that hairline did not meet
+WCAG 2.1 SC 1.4.11, which asks for 3:1 on anything needed to identify a control. It measured
+1.26 to 1.35:1 in every palette and both schemes.
 
-This is the one that blocks the tag, and it is **not fixable here**. `--c-rule` is the blog
-engine's value, the engine's own comment form draws its fields the same way, and overriding it
-in `bridge.css` would be this theme deciding a colour — which is the thing
-[`conventions/css.md`](conventions/css.md) exists to prevent. It belongs upstream, alongside
-the OFL file noted in [`release-checklist.md`](release-checklist.md).
+**Answered upstream on 2026-09-16**, where it belonged: the blog engine's own comment form drew
+its fields the same way, so this was never only a theme problem. `--c-field-edge` is a separate
+promised variable there, mixed from `--c-text` and `--c-bg` at 58%, which is the first mix that
+clears 3:1 on all twelve combinations while staying lighter than `--c-meta`. Worst case 3.55:1,
+best 5.10. Extracted here like everything else, and read back off the rendered page in a
+browser rather than off the source.
 
-## So the tag stays off
+It was never fixable here. `--c-rule` is the blog engine's value and overriding it in
+`bridge.css` would have been this theme deciding a colour, which is the thing
+[`conventions/css.md`](conventions/css.md) exists to prevent. Waiting for upstream was the
+right answer and upstream answered it.
 
-`style.css` declares `rtl-language-support` because that is now true and tested. It does not
-declare `accessibility-ready`, because one measured criterion fails. Declaring it would be a
-claim a reviewer can disprove in a minute with a colour picker.
+## So the tag goes on
 
-Everything else on the checklist is met. When the hairline is answered upstream and re-extracted,
-this is a one-word change.
+`style.css` and `readme.txt` declare **`accessibility-ready`** from 2026-09-16, alongside
+`rtl-language-support`. Every criterion on the checklist is met and measured; the one that was
+not is the section above, and it was answered in the blog engine and extracted rather than
+patched here.
+
+⚠️ **It is a claim a reviewer checks with a colour picker**, which is why it waited, and why it
+is held by arithmetic rather than by anyone's memory. `check:contrast` asks two things of every
+re-extract, and both were watched failing before they were trusted:
+
+1. **The ratio.** It recomputes `--c-field-edge` from the two hexes the theme actually ships,
+   the way a browser computes a `color-mix()`, and fails under 3:1. Tightest today is 3.55:1 on
+   Mono light.
+2. **That a control still asks for it.** A re-extract pointing a field's border back at
+   `--c-rule` would leave every ratio above still true and the tag still declared, with the
+   boundary back at 1.26:1 on the screen. Anything a reader types into is read for it by name.
