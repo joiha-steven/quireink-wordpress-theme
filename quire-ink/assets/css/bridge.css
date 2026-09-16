@@ -331,3 +331,31 @@
 .wrap {
 	overflow-wrap: break-word;
 }
+
+/* ---------------------------------------------------------------- a control's own edge
+ *
+ * THE ONE PLACE THIS SHEET OVERRIDES A COLOUR RATHER THAN TRANSLATING A NAME, and it is
+ * written down as [ADR 0009](../../../docs/decisions/0009-a-control-may-take-a-louder-token.md).
+ *
+ * `--c-rule` is the hairline between two cards: decorative, and quiet on purpose at 1.26 to
+ * 1.35:1 against its own paper in all twelve palette-and-scheme combinations. The blog engine
+ * gives a text input that same hairline as its only boundary, and WCAG 2.1 SC 1.4.11 asks for
+ * 3:1 on anything a reader needs in order to identify a control. That one criterion is what
+ * kept `accessibility-ready` off this theme.
+ *
+ * `--c-meta` is the next token up, 5.05 to 5.34:1 on the same papers: the LIGHTEST variable
+ * that already exists and already clears the floor. No value is invented here, and the colour
+ * still follows the palette and the reader's light or dark choice.
+ *
+ * Focus is untouched: the base sheet already moves it to `--c-heading` at 16.9:1.
+ */
+.comment-form input,
+.comment-form textarea,
+.comment-form button,
+.search-input,
+form.search input,
+form.search button,
+.wp-block-search__input,
+.wp-block-search__button,
+.wp-block-post-comments-form input,
+.wp-block-post-comments-form textarea { border-color: var(--c-meta); }

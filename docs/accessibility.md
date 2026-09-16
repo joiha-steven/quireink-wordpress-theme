@@ -97,23 +97,38 @@ belong to the comment island, which never mounts here, and to offline reading, w
 ported — those stay unsupplied on purpose, and the file says so. Thirteen were real, and seven
 of the thirteen are inside book mode, where nothing is visible until the overlay is open.
 
-**Form field borders are 1.26:1 against the page.** WCAG 2.1 SC 1.4.11 asks for 3:1 on anything
-needed to identify a control, and a text input whose only boundary is `--c-rule` does not meet
-it. Remeasured from `inc/generated-appearance.php` on 2026-09-16, after the blog engine
-rebalanced all six palettes: **1.26 to 1.35:1**, every palette and both schemes, tightest at
-`#dcdfe1` on `#f6f8f7`. It read 1.16 to 1.33 against the palettes that shipped before that.
+**Form field borders were 1.26:1 against the page, and are 5.10:1 now.** WCAG 2.1 SC 1.4.11
+asks for 3:1 on anything needed to identify a control, and a text input whose only boundary is
+`--c-rule` did not come close: measured from `inc/generated-appearance.php`, **1.26 to 1.35:1**
+across all six palettes and both schemes, tightest at `#dcdfe1` on `#f6f8f7`.
 
-This is the one that blocks the tag, and it is **not fixable here**. `--c-rule` is the blog
-engine's value, the engine's own comment form draws its fields the same way, and overriding it
-in `bridge.css` would be this theme deciding a colour — which is the thing
-[`conventions/css.md`](conventions/css.md) exists to prevent. It belongs upstream, alongside
-the OFL file noted in [`release-checklist.md`](release-checklist.md).
+`--c-rule` is the hairline between two cards. It is decorative and quiet on purpose, and it was
+doing a second job it is the wrong weight for.
 
-## So the tag stays off
+**Answered in `bridge.css` on 2026-09-16** by moving a control's edge to `--c-meta`, the next
+token up and the lightest one that already clears the floor: 5.05 to 5.34:1 on the same papers.
+No colour is invented, it follows the palette and the reader's light or dark choice, and the
+card hairline is untouched. Why it is answered here rather than upstream, where
+[`conventions/css.md`](conventions/css.md) would normally send it, is
+[ADR 0009](decisions/0009-a-control-may-take-a-louder-token.md): Quire Ink is a different
+project with production instances, and a defect there is worth fixing on that product's
+evidence and timing, not because a theme wants a tag.
 
-`style.css` declares `rtl-language-support` because that is now true and tested. It does not
-declare `accessibility-ready`, because one measured criterion fails. Declaring it would be a
-claim a reviewer can disprove in a minute with a colour picker.
+Read off the rendered page in a real WordPress rather than off the source, with the stylesheets
+cache-busted first: the name, email, website and comment fields and the submit button all come
+back `#6d6c6c` on `#fcfcfc`, **5.10:1**.
 
-Everything else on the checklist is met. When the hairline is answered upstream and re-extracted,
-this is a one-word change.
+## So the tag goes on
+
+`style.css` and `readme.txt` declare **`accessibility-ready`** from 0.1.4, alongside
+`rtl-language-support`. Every criterion on the checklist is met and every one of them measured.
+
+⚠️ **It is a claim a reviewer checks with a colour picker in a minute**, which is why it waited
+eight days, and why it is held by a guard rather than by anyone's memory. `check:contrast` asks
+two things of every change, and both were watched failing before they were trusted:
+
+1. **The ratio.** `--c-meta` is already in this file's table at a 4.5:1 floor, so a re-extract
+   that walked it under would fail there first.
+2. **That a control still asks for it.** A tidy-up that dropped the `bridge.css` block would
+   leave every ratio still true and the tag still declared, with the boundary back at 1.26:1 on
+   the screen. The block is read for by name, selector by selector.

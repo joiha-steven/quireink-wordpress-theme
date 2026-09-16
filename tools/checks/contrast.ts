@@ -9,8 +9,18 @@
 // palettes in both schemes - the sheet only carries the one the owner picked.
 //
 // The floors are WCAG 2.1 AA: 4.5:1 for text, 3:1 for non-text that carries meaning. `--c-rule`
-// is deliberately NOT checked as a UI boundary; see docs/accessibility.md for the one place
-// that is a real failure and why it is not answered here.
+// is deliberately NOT checked as a UI boundary: it draws the hairline between two cards, it is
+// decorative, and it is 1.26 to 1.35:1 by design.
+//
+// ⚠️ A CONTROL DOES NOT USE IT, AND THAT IS WHAT LETS THIS THEME SAY `accessibility-ready`.
+// SC 1.4.11 wants 3:1 on anything a reader needs in order to identify a control, and a text
+// input bordered on the card hairline fails it by a wide margin. `bridge.css` borders controls
+// on `--c-meta` instead ([ADR 0009]), which this file already holds to 4.5:1 as a text colour,
+// so the ratio is covered by the table below.
+//
+// What is NOT covered by a ratio is the override going missing. A re-extract or a tidy-up that
+// dropped that block would leave every number here still true and the tag still declared, with
+// the boundary back at 1.26:1 on the screen. So the block is read for, at the bottom.
 import { readFileSync } from 'node:fs'
 
 const SRC = 'quire-ink/inc/generated-appearance.php'
@@ -68,6 +78,31 @@ for (let i = 1; i < palettes.length; i += 2) {
       if (ratio < floor) {
         problems.push(`${id}/${scheme} ${role} ${colour} on ${bg} = ${ratio.toFixed(2)}:1, needs ${floor}:1`)
       }
+    }
+  }
+}
+
+// The override ADR 0009 rests on, read rather than remembered. Not a ratio: the ratio for
+// `--c-meta` is in the table above. This asks only whether a control still asks for it.
+const bridge = readFileSync('quire-ink/assets/css/bridge.css', 'utf8')
+const MUST_BORDER_ON_META = [
+  '.comment-form input', '.comment-form textarea', '.comment-form button',
+  '.search-input', 'form.search input', 'form.search button',
+]
+const overrideBlock = /\{[^}]*border-color:\s*var\(--c-meta\)[^}]*\}/.exec(bridge)
+if (overrideBlock === null) {
+  problems.push(
+    'bridge.css no longer borders any control on --c-meta.\n'
+    + '    That block is what ADR 0009 and the accessibility-ready tag rest on; without it a\n'
+    + '    form field is back to the card hairline at 1.26:1.',
+  )
+} else {
+  const selectors = bridge.slice(0, overrideBlock.index)
+  for (const sel of MUST_BORDER_ON_META) {
+    // the selector list runs right up to the brace this block opens with
+    const list = selectors.slice(selectors.lastIndexOf('*/'))
+    if (!list.includes(sel)) {
+      problems.push(`bridge.css: \`${sel}\` is no longer in the block that borders on --c-meta`)
     }
   }
 }

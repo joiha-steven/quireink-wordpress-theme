@@ -6,7 +6,7 @@ Requires PHP: 7.4
 Stable tag: 0.1.3
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Tags: blog, one-column, two-columns, left-sidebar, custom-colors, custom-logo, custom-menu, featured-images, sticky-post, threaded-comments, theme-options, translation-ready, rtl-language-support, block-patterns, block-styles, editor-style, wide-blocks
+Tags: accessibility-ready, blog, one-column, two-columns, left-sidebar, custom-colors, custom-logo, custom-menu, featured-images, sticky-post, threaded-comments, theme-options, translation-ready, rtl-language-support, block-patterns, block-styles, editor-style, wide-blocks
 
 A theme for people who write long things and want them read.
 
@@ -89,10 +89,11 @@ palettes and both schemes, the tightest measuring 5.05:1 against a floor of 4.5:
 skip link, one focus treatment for the whole site, no heading level skipped, a label on every
 field, and links in running text are underlined rather than distinguished by colour alone.
 
-The `accessibility-ready` tag is **not** declared, for one measured reason: the hairline
-around a form field is 1.26:1 against the page, where WCAG 2.1 asks 3:1 for a control's
-boundary. That colour belongs to the blog engine this theme is generated from, so it is
-answered there rather than overridden here.
+The `accessibility-ready` tag **is** declared, as of 0.1.4. The one criterion that had kept it
+off was the hairline around a form field: 1.26:1 against the page, where WCAG 2.1 asks 3:1 for
+a control's boundary. Anything you type into or press now takes the same colour as a date or a
+caption, 5.10:1 on the default palette and never under 5.05 on any of the six. The hairline
+between two cards is unchanged, because a divider is decorative and a control's edge is not.
 
 = Right to left =
 

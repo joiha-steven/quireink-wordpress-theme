@@ -13,3 +13,4 @@ supersedes it; read this index before going against any of them.
 | [0006](0006-one-footer-credit.md) | One footer credit, switchable off | in force |
 | [0007](0007-four-recommendations-declined.md) | Four Theme Check recommendations, declined | in force, **widget clause superseded by 0008** |
 | [0008](0008-the-rail-is-a-widget-area.md) | The rail is a widget area | in force |
+| [0009](0009-a-control-may-take-a-louder-token.md) | A control's edge may take a louder token that already exists | in force |
