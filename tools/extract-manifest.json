@@ -1,15 +1,15 @@
 {
   "takenFrom": {
     "repo": "quireink",
-    "commit": "d46e1fb0ae3f6c43880270d0740c6523b4a877e8",
+    "commit": "27aa6842d1fcd8c9e844903783a67b4549f49739",
     "workingTreeDirty": false
   },
   "emitted": {
-    "quire-ink/assets/css/quireink-base.css": 119466,
-    "quire-ink/assets/css/quireink-ide.css": 17705,
-    "quire-ink/assets/css/quireink-tokens.css": 18134,
-    "quire-ink/rtl.css": 13833,
-    "quire-ink/assets/fonts": 21,
+    "quire-ink/assets/css/quireink-base.css": 166569,
+    "quire-ink/assets/css/quireink-look-code.css": 22468,
+    "quire-ink/assets/css/quireink-tokens.css": 20146,
+    "quire-ink/rtl.css": 19480,
+    "quire-ink/assets/fonts": 22,
     "quire-ink/assets/js": [
       "core.js",
       "post.js"
@@ -35,5 +35,5 @@
     "code"
   ],
   "fontPreset": "literata",
-  "chromeFont": "jetbrains-mono"
+  "chromeFont": "inter"
 }

@@ -38,11 +38,16 @@ was listing tokens BEFORE base — the exact inversion the check exists to preve
 above the calls it was checking. The editor has no rail, so it was not the same bug; it was
 the same mistake. The guard reads both now.
 
-One sheet is deliberately **off the chain**: `quireink-ide` is enqueued only when the
+One sheet is deliberately **off the chain**: `quireink-look-code` is enqueued only when the
 Customizer switch is on, and a conditional link cannot be a link in a chain. Where it lands
-does not matter, and that is a property rather than a hope — every selector in it carries
-`html[data-ide-chrome=on]`, so it cannot tie with anything else the theme loads. The guard
+does not matter, and that is a property rather than a hope: every selector in it carries
+`html[data-look=code]`, so it cannot tie with anything else the theme loads. The guard
 still requires it to depend on the base sheet, so WordPress can never emit it first.
+
+It was called `quireink-ide` until 2026-09-16, when Quire Ink 2.2.10 turned the treatment into
+one of four named LOOKS and gave each its own stylesheet. The Customizer setting behind it is
+still keyed `quireink_ide_chrome`, deliberately: blogs have that key stored and renaming it
+would quietly reset their choice.
 
 ## Why 5 has no guard
 

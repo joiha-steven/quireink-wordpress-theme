@@ -1,21 +1,8 @@
-/* Copied from Quire Ink src/web/*.css.ts by tools/extract.ts, less the IDE chrome,
-   which is lifted whole into quireink-ide.css. */
-/* MOTION TOKENS. Three durations, and no easing token. docs/conventions/motion.md promised these
-   since the frozen tree and 2.0 had none, so every duration in islands.css.ts was a literal.
-   Counted before deciding: twelve motion declarations across three files, and FOUR values for
-   three intents — .13s and .15s are the same idea written twice, which is exactly the drift a
-   token set exists to stop. So the tiers are named and .13s becomes .15s.
-
-   --ease is DELIBERATELY not here. Its value would have been the keyword ease, which is
-   indirection with no payload; and the three scroll-driven animations must stay linear, since
-   easing a timeline a reader is scrubbing with their thumb is wrong rather than slower.
-   Introduce one when a real curve is chosen, not to complete a set.
-
-   Static, so they live in the immutable sheet rather than the per-page inline half: they are
-   not derived from any setting. data-motion=off and prefers-reduced-motion still switch all of
-   it off in one rule each, at the foot of islands.css.ts. NOTE the sign-in page does not get
-   this sheet — see the comment in login.css.ts. */
-:root{--dur-fast:.15s;--dur-base:.2s;--dur-slow:.5s}
+/* Copied from Quire Ink src/web/*.css.ts by tools/extract.ts. */
+/* The motion tokens are in motion.css.ts, assembled below with the rest of the engine
+   (the floor, the click, the entrances and the two gates). Static, so they live in the
+   immutable sheet rather than the per-page inline half. The sign-in page takes the same
+   tokens through MOTION_TOKENS - see login.css.ts. */
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 /* The hidden ATTRIBUTE means hidden, and it takes an !important to say so.
@@ -115,6 +102,9 @@ main{flex:1;padding:3rem 0 1rem}
   text-decoration:none}
 
 header.site{padding:1.75rem 0}
+/* The site's name is sometimes the page's h1, decided in the listing shell. The wrapper
+   gives up the three things a heading brings, so the header looks the same either way. */
+.site-h1{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit}
 header.site .title{font-family:var(--font-sans);font-weight:var(--fw-heading,600);color:var(--c-heading);
   text-decoration:none;font-size:var(--fs-h4);line-height:var(--lh-h4);
   letter-spacing:var(--ls-h4)}
@@ -143,6 +133,11 @@ header.site .tagline{color:var(--c-meta);font-size:var(--fs-small);
    come from the type-role classes. */
 article > header h1{color:var(--c-heading);margin:0}
 article > header .t-small{margin:0}
+/* The section and the facts are two elements in one line, so a dialect can put the first
+   over the headline and the second under it (web/article.ts says why). Here they stay one
+   sentence, which is what the middot is doing in the sheet rather than in the markup: the
+   newspaper dialect takes it away in the same rule that separates the two. */
+.post-cat::after{content:" · "}
 /* Standfirst: the excerpt, so a long read opens on a sentence rather than a wall.
    It is the AUTHOR'S words — the same string a list card prints — so it is set in the
    reading face. It was not: with no family of its own it fell to --font-sans, so the same
@@ -166,10 +161,10 @@ article > header .t-small{margin:0}
 .post-info{display:none}
 .post-info p{margin:0}
 .post-info p + p{margin-top:.35rem}
-/* One even rhythm through the facts — the tags and categories used to be set apart and the
-   owner asked for them level with the rest. The ACTION is the only thing set apart, because
-   it is the one row that is not a fact: it does something. */
-.post-info .info-action{margin-top:1.25rem;color:var(--c-heading);font-weight:500}
+/* One even rhythm through the facts — the tags and categories used to be set apart, which
+   made two of five facts look like a second panel. The ACTION is the only thing set apart,
+   because it is the one row that is not a fact: it does something. */
+.post-info .info-action{margin-top:1.25rem}
 /* The VALUES are a step darker than the words around them, the same ink the contents list
    uses for the row you are on. The panel is the only place a desktop reader sees the date
    and the length, so it carries the whole hierarchy on its own. */
@@ -179,7 +174,7 @@ article > header .t-small{margin:0}
    page (a list of "you might also read") was set as large as the writing, and in the chrome
    face, which on a monospace setting is visibly wider again. h5 is the title role that sits
    below body. The whole block is now ONE size: at h5 the titles still read as headings under
-   a chrome font that is monospace on this site, and the owner asked for them smaller again.
+   a chrome font that is monospace on this site, and still competed with the article's end.
    So the label, the titles and the dates are all --fs-small and nothing here competes with
    the article; weight and colour do the separating, which is how a book sets its back
    matter. */
@@ -218,6 +213,34 @@ article + .subscribe-card,article + #comments{margin-top:2.5rem}
    enhancement is allowed to do. It inherits, and a code block is the one place it would
    be wrong — a line starting with a quoted string would slip its indent — so pre opts out. */
 .prose pre{hanging-punctuation:none}
+/* OLD-STYLE FIGURES, which is how a book sets a number inside a sentence: 1979 takes an
+   ascender and two descenders and reads as writing rather than as data. Book mode has asked
+   for them since the subsets were rebuilt to carry them, and the scrolling article did not —
+   so the same paragraph was set two ways depending on which way it was being read.
+   Only the serifs have the feature (measured: the shipped Literata and Source Serif latin
+   subsets carry the onum feature, Inter's does not), so a sans blog is unchanged and the browser simply
+   ignores it. A TABLE is the exception a book makes too — a column of figures has to line up,
+   which is what tabular lining figures are for — and a mono face has neither. */
+.prose{font-variant-numeric:oldstyle-nums}
+.prose table{font-variant-numeric:tabular-nums}
+.prose :is(code,pre,kbd,samp){font-variant-numeric:normal}
+/* A BOOK HYPHENATES WHETHER OR NOT IT JUSTIFIES, and this sheet only did it inside the
+   justified path — so the setting every blog starts on, and every phone at any setting,
+   never hyphenated at all. That is where the rag is worst: measured on a 608px column of
+   English, the ninth-decile line ended 59px short of the edge and the worst 68px; with
+   hyphens on the same paragraphs, 35 and 59. On a 327px phone column, the worst line went
+   from 65px short to 51. The line COUNT did not move in either, so the page is no longer
+   and nothing below it shifted.
+   The limits are what keep it from reading like a ransom note: no word under six letters is
+   broken, never fewer than three letters either side of the hyphen. Vietnamese pays nothing
+   — its syllables do not hyphenate and no browser ships a dictionary for it — and English,
+   German, French and Spanish are where it earns its keep.
+   Paragraphs and list items only: a broken word in a HEADING is a different thing, and a
+   line of code is not prose. */
+.prose p,.prose li{hyphens:auto;-webkit-hyphens:auto;
+  hyphenate-limit-chars:6 3 3;
+  -webkit-hyphenate-limit-before:3;-webkit-hyphenate-limit-after:3}
+.prose :is(h1,h2,h3,h4,h5),.prose pre,.prose code{hyphens:manual;-webkit-hyphens:manual}
 .prose > * + *{margin-top:1.4em}
 .prose h1,.prose h2,.prose h3,.prose h4,.prose h5{color:var(--c-heading);font-weight:var(--fw-heading,600);
   scroll-margin-top:2rem}
@@ -261,18 +284,61 @@ article + .subscribe-card,article + #comments{margin-top:2.5rem}
   background-repeat:repeat-x;background-size:4.6em .3em;background-position:0 1.22em;
   -webkit-box-decoration-break:clone;box-decoration-break:clone;
   padding-bottom:.42em;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 16' preserveAspectRatio='none'%3E%3Cpath d='M1.3,8.8 C4.5,8.7 7.8,9.7 11,9.6 C14.3,10.2 17.5,9.5 20.8,10.1 L20.8,12.8 C17.5,12.4 14.3,13 11,12.4 C7.8,12.7 4.5,11.9 1.3,12.2 Z' fill='%235b574f' opacity='.73'/%3E%3Cpath d='M35.1,7.7 C39.3,7.1 43.4,8 47.6,7.7 C51.8,8.2 56,7 60.2,7.7 L60.2,9.9 C56,9.8 51.8,10.6 47.6,10.5 C43.4,10.9 39.3,10.3 35.1,10.9 Z' fill='%235b574f' opacity='.89'/%3E%3Cpath d='M88.3,6.4 C91.8,5.9 95.3,6.8 98.9,6.2 C102.4,6.9 105.9,5.9 109.5,6.3 L109.5,8.8 C105.9,8.6 102.4,9.4 98.9,8.7 C95.3,9.1 91.8,8.6 88.3,8.9 Z' fill='%235b574f' opacity='.89'/%3E%3Cpath d='M121.8,6.8 C126.4,6.5 131,7.5 135.6,7.7 C140.2,8 144.8,7.7 149.4,8.3 L149.4,10.5 C144.8,10.1 140.2,10.6 135.6,10.2 C131,10.5 126.4,9.6 121.8,10 Z' fill='%235b574f' opacity='.9'/%3E%3Cpath d='M180.1,7.7 C183.3,7.5 186.5,8.5 189.7,8.6 C193,9.1 196.2,8.2 199.4,9 L199.4,11.3 C196.2,10.7 193,11 189.7,10.5 C186.5,10.6 183.3,9.7 180.1,9.7 Z' fill='%235b574f' opacity='.93'/%3E%3Cpath d='M215.6,6.3 C219.3,5.6 223,6.5 226.8,6 C230.5,5.9 234.3,5 238,5.5 L238,7.9 C234.3,7.7 230.5,8.5 226.8,8.3 C223,8.7 219.3,8.2 215.6,8.5 Z' fill='%235b574f' opacity='.77'/%3E%3C/svg%3E")}
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 16' preserveAspectRatio='none'%3E%3Cpath id='p0' d='M1.3,8.8 C4.5,8.7 7.8,9.7 11,9.6 C14.3,10.2 17.5,9.5 20.8,10.1 L20.8,12.8 C17.5,12.4 14.3,13 11,12.4 C7.8,12.7 4.5,11.9 1.3,12.2 Z' fill='%235b574f' opacity='.73'/%3E%3Cpath id='p1' d='M35.1,7.7 C39.3,7.1 43.4,8 47.6,7.7 C51.8,8.2 56,7 60.2,7.7 L60.2,9.9 C56,9.8 51.8,10.6 47.6,10.5 C43.4,10.9 39.3,10.3 35.1,10.9 Z' fill='%235b574f' opacity='.89'/%3E%3Cpath id='p2' d='M88.3,6.4 C91.8,5.9 95.3,6.8 98.9,6.2 C102.4,6.9 105.9,5.9 109.5,6.3 L109.5,8.8 C105.9,8.6 102.4,9.4 98.9,8.7 C95.3,9.1 91.8,8.6 88.3,8.9 Z' fill='%235b574f' opacity='.89'/%3E%3Cpath id='p3' d='M121.8,6.8 C126.4,6.5 131,7.5 135.6,7.7 C140.2,8 144.8,7.7 149.4,8.3 L149.4,10.5 C144.8,10.1 140.2,10.6 135.6,10.2 C131,10.5 126.4,9.6 121.8,10 Z' fill='%235b574f' opacity='.9'/%3E%3Cpath id='p4' d='M180.1,7.7 C183.3,7.5 186.5,8.5 189.7,8.6 C193,9.1 196.2,8.2 199.4,9 L199.4,11.3 C196.2,10.7 193,11 189.7,10.5 C186.5,10.6 183.3,9.7 180.1,9.7 Z' fill='%235b574f' opacity='.93'/%3E%3Cpath id='p5' d='M215.6,6.3 C219.3,5.6 223,6.5 226.8,6 C230.5,5.9 234.3,5 238,5.5 L238,7.9 C234.3,7.7 230.5,8.5 226.8,8.3 C223,8.7 219.3,8.2 215.6,8.5 Z' fill='%235b574f' opacity='.77'/%3E%3C/svg%3E")}
 /* Under the cursor the hand presses down and the run closes up. Same ink, same box, so the
    line does not move by a pixel between the two states. */
-.prose a:hover,.prose a:focus-visible{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 16' preserveAspectRatio='none'%3E%3Cpath d='M0,7.3 C16,6.9 32,7.8 48,7.5 C64,8.1 80,7.1 96,7.6 C112,7.1 128,8.4 144,8 C160,8 176,7.2 192,7.6 C208,7.2 224,8.2 240,7.5 L240,10.2 C224,9.6 208,11 192,10.5 C176,10.8 160,10.2 144,10.6 C128,9.8 112,10.8 96,10.3 C80,10.7 64,9.6 48,10.1 C32,9.7 16,10.6 0,10 Z' fill='%235b574f' opacity='.86'/%3E%3C/svg%3E")}
-.dark .prose a{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 16' preserveAspectRatio='none'%3E%3Cpath d='M1.3,8.8 C4.5,8.7 7.8,9.7 11,9.6 C14.3,10.2 17.5,9.5 20.8,10.1 L20.8,12.8 C17.5,12.4 14.3,13 11,12.4 C7.8,12.7 4.5,11.9 1.3,12.2 Z' fill='%238f8a80' opacity='.73'/%3E%3Cpath d='M35.1,7.7 C39.3,7.1 43.4,8 47.6,7.7 C51.8,8.2 56,7 60.2,7.7 L60.2,9.9 C56,9.8 51.8,10.6 47.6,10.5 C43.4,10.9 39.3,10.3 35.1,10.9 Z' fill='%238f8a80' opacity='.89'/%3E%3Cpath d='M88.3,6.4 C91.8,5.9 95.3,6.8 98.9,6.2 C102.4,6.9 105.9,5.9 109.5,6.3 L109.5,8.8 C105.9,8.6 102.4,9.4 98.9,8.7 C95.3,9.1 91.8,8.6 88.3,8.9 Z' fill='%238f8a80' opacity='.89'/%3E%3Cpath d='M121.8,6.8 C126.4,6.5 131,7.5 135.6,7.7 C140.2,8 144.8,7.7 149.4,8.3 L149.4,10.5 C144.8,10.1 140.2,10.6 135.6,10.2 C131,10.5 126.4,9.6 121.8,10 Z' fill='%238f8a80' opacity='.9'/%3E%3Cpath d='M180.1,7.7 C183.3,7.5 186.5,8.5 189.7,8.6 C193,9.1 196.2,8.2 199.4,9 L199.4,11.3 C196.2,10.7 193,11 189.7,10.5 C186.5,10.6 183.3,9.7 180.1,9.7 Z' fill='%238f8a80' opacity='.93'/%3E%3Cpath d='M215.6,6.3 C219.3,5.6 223,6.5 226.8,6 C230.5,5.9 234.3,5 238,5.5 L238,7.9 C234.3,7.7 230.5,8.5 226.8,8.3 C223,8.7 219.3,8.2 215.6,8.5 Z' fill='%238f8a80' opacity='.77'/%3E%3C/svg%3E")}
-.dark .prose a:hover,.dark .prose a:focus-visible{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 16' preserveAspectRatio='none'%3E%3Cpath d='M0,7.3 C16,6.9 32,7.8 48,7.5 C64,8.1 80,7.1 96,7.6 C112,7.1 128,8.4 144,8 C160,8 176,7.2 192,7.6 C208,7.2 224,8.2 240,7.5 L240,10.2 C224,9.6 208,11 192,10.5 C176,10.8 160,10.2 144,10.6 C128,9.8 112,10.8 96,10.3 C80,10.7 64,9.6 48,10.1 C32,9.7 16,10.6 0,10 Z' fill='%238f8a80' opacity='.86'/%3E%3C/svg%3E")}
+.prose a:hover,.prose a:focus-visible{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 16' preserveAspectRatio='none'%3E%3Cpath id='p0' d='M0,7.3 C16,6.9 32,7.8 48,7.5 C64,8.1 80,7.1 96,7.6 C112,7.1 128,8.4 144,8 C160,8 176,7.2 192,7.6 C208,7.2 224,8.2 240,7.5 L240,10.2 C224,9.6 208,11 192,10.5 C176,10.8 160,10.2 144,10.6 C128,9.8 112,10.8 96,10.3 C80,10.7 64,9.6 48,10.1 C32,9.7 16,10.6 0,10 Z' fill='%235b574f' opacity='.86'/%3E%3C/svg%3E")}
+.dark .prose a{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 16' preserveAspectRatio='none'%3E%3Cpath id='p0' d='M1.3,8.8 C4.5,8.7 7.8,9.7 11,9.6 C14.3,10.2 17.5,9.5 20.8,10.1 L20.8,12.8 C17.5,12.4 14.3,13 11,12.4 C7.8,12.7 4.5,11.9 1.3,12.2 Z' fill='%238f8a80' opacity='.73'/%3E%3Cpath id='p1' d='M35.1,7.7 C39.3,7.1 43.4,8 47.6,7.7 C51.8,8.2 56,7 60.2,7.7 L60.2,9.9 C56,9.8 51.8,10.6 47.6,10.5 C43.4,10.9 39.3,10.3 35.1,10.9 Z' fill='%238f8a80' opacity='.89'/%3E%3Cpath id='p2' d='M88.3,6.4 C91.8,5.9 95.3,6.8 98.9,6.2 C102.4,6.9 105.9,5.9 109.5,6.3 L109.5,8.8 C105.9,8.6 102.4,9.4 98.9,8.7 C95.3,9.1 91.8,8.6 88.3,8.9 Z' fill='%238f8a80' opacity='.89'/%3E%3Cpath id='p3' d='M121.8,6.8 C126.4,6.5 131,7.5 135.6,7.7 C140.2,8 144.8,7.7 149.4,8.3 L149.4,10.5 C144.8,10.1 140.2,10.6 135.6,10.2 C131,10.5 126.4,9.6 121.8,10 Z' fill='%238f8a80' opacity='.9'/%3E%3Cpath id='p4' d='M180.1,7.7 C183.3,7.5 186.5,8.5 189.7,8.6 C193,9.1 196.2,8.2 199.4,9 L199.4,11.3 C196.2,10.7 193,11 189.7,10.5 C186.5,10.6 183.3,9.7 180.1,9.7 Z' fill='%238f8a80' opacity='.93'/%3E%3Cpath id='p5' d='M215.6,6.3 C219.3,5.6 223,6.5 226.8,6 C230.5,5.9 234.3,5 238,5.5 L238,7.9 C234.3,7.7 230.5,8.5 226.8,8.3 C223,8.7 219.3,8.2 215.6,8.5 Z' fill='%238f8a80' opacity='.77'/%3E%3C/svg%3E")}
+.dark .prose a:hover,.dark .prose a:focus-visible{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 16' preserveAspectRatio='none'%3E%3Cpath id='p0' d='M0,7.3 C16,6.9 32,7.8 48,7.5 C64,8.1 80,7.1 96,7.6 C112,7.1 128,8.4 144,8 C160,8 176,7.2 192,7.6 C208,7.2 224,8.2 240,7.5 L240,10.2 C224,9.6 208,11 192,10.5 C176,10.8 160,10.2 144,10.6 C128,9.8 112,10.8 96,10.3 C80,10.7 64,9.6 48,10.1 C32,9.7 16,10.6 0,10 Z' fill='%238f8a80' opacity='.86'/%3E%3C/svg%3E")}
 /* A footnote marker and a heading anchor are not prose links and must not be underlined:
    the first is a superscript numeral, the second is the heading itself. */
 .prose a.fn-ref,.prose sup a,.prose h1 a,.prose h2 a,.prose h3 a,.prose h4 a,.prose h5 a{
   background-image:none;padding-bottom:0}
-.prose ul{list-style:disc;padding-left:1.4em}
-.prose ol{list-style:decimal;padding-left:1.4em}
+/* The list markers are the pen's (dots, dashes, numerals in a hand): pen/lists.css.ts. */
+/* The numerals: ten digits and a full stop of Kalam, self-hosted like every other face,
+   and declared here so that it is fetched only when a numbered list puts a glyph on the page. */
+@font-face{font-family:'Kalam Digits';src:url(../fonts/kalam-digits.woff2) format('woff2');
+  font-weight:400;font-style:normal;font-display:swap;unicode-range:U+0030-0039,U+002E}
+/* A list keeps the browser's marker OFF and draws its own before each item. The mark is a
+   mask painted in the text colour, so one shape serves every palette in both modes. */
+.prose ul{list-style:none;padding-left:1.5em}
+.prose ol{list-style:none;padding-left:1.7em;counter-reset:pen-n}
+.prose li{position:relative}
+.prose ul>li::before{content:'';position:absolute;left:-1.38em;top:.5em;width:.6em;height:.6em;
+  background:currentColor;
+  -webkit-mask:var(--pen-mark) center/contain no-repeat;mask:var(--pen-mark) center/contain no-repeat}
+.prose ul>li:nth-child(6n+1)::before{--pen-mark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M5.5,8.8 L4.1,8.1 L3.5,6.5 L3.7,4.7 L4.9,3.6 L6.5,3 L7.8,4 L8.6,5.5 L8.2,7.3 L7.1,8.6 Z' stroke='%23000' stroke-width='.9' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.prose ul>li:nth-child(6n+2)::before{--pen-mark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M8.5,6.8 L7.6,8.1 L6,8.6 L4.3,8.2 L3.3,6.8 L3.4,5.1 L4.4,3.8 L6,3.5 L7.6,3.9 L8.5,5.3 Z' stroke='%23000' stroke-width='.9' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.prose ul>li:nth-child(6n+3)::before{--pen-mark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3.6,7.5 L3.2,5.8 L4.1,4.4 L5.4,3.5 L7.1,3.6 L8.4,4.6 L8.7,6.2 L8,7.6 L6.6,8.7 L4.9,8.4 Z' stroke='%23000' stroke-width='.9' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.prose ul>li:nth-child(6n+4)::before{--pen-mark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3.9,7.8 L3.2,6.3 L3.6,4.6 L5,3.5 L6.7,3.6 L8.1,4.2 L8.6,5.7 L8.4,7.4 L6.9,8.3 L5.3,8.5 Z' stroke='%23000' stroke-width='.9' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.prose ul>li:nth-child(6n+5)::before{--pen-mark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M4.1,8.2 L3.3,6.7 L3.5,5 L4.8,3.7 L6.4,3.5 L8,3.8 L8.7,5.3 L8.3,6.9 L7.2,8.3 L5.6,8.5 Z' stroke='%23000' stroke-width='.9' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.prose ul>li:nth-child(6n+6)::before{--pen-mark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6.2,8.9 L4.5,8.5 L3.6,7 L3.4,5.4 L4.3,4 L5.8,3.1 L7.4,3.8 L8.7,4.9 L8.5,6.6 L7.7,8 Z' stroke='%23000' stroke-width='.9' stroke-linejoin='round'/%3E%3C/svg%3E")}
+/* A level down, a short dash — as a person writes a sub-point. */
+.prose ul ul>li::before{width:.7em;height:.6em;left:-1.42em}
+.prose ul ul>li:nth-child(4n+1)::before{--pen-mark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12'%3E%3Cpath d='M1.5,6 Q7,5.8 12.5,6' stroke='%23000' stroke-width='2.1' stroke-linecap='round' fill='none'/%3E%3C/svg%3E")}
+.prose ul ul>li:nth-child(4n+2)::before{--pen-mark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12'%3E%3Cpath d='M1.5,6 Q7,6.2 12.5,6' stroke='%23000' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3C/svg%3E")}
+.prose ul ul>li:nth-child(4n+3)::before{--pen-mark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12'%3E%3Cpath d='M1.5,5.7 Q7,5.8 12.5,6.3' stroke='%23000' stroke-width='1.7' stroke-linecap='round' fill='none'/%3E%3C/svg%3E")}
+.prose ul ul>li:nth-child(4n+4)::before{--pen-mark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12'%3E%3Cpath d='M1.5,5.9 Q7,5.7 12.5,6.1' stroke='%23000' stroke-width='2.1' stroke-linecap='round' fill='none'/%3E%3C/svg%3E")}
+/* The numbered list counts in the hand's numerals, each with its own small lean. The face
+   takes the reading size as it is: a literal here would cut the numeral loose from the
+   owner's type setting. */
+.prose ol>li{counter-increment:pen-n}
+.prose ol>li::before{content:counter(pen-n) '.';position:absolute;left:-1.75em;top:0;width:1.4em;
+  text-align:right;font-family:'Kalam Digits',var(--font-reading);font-weight:400;
+  font-style:normal;line-height:inherit;transform-origin:center}
+.prose ol>li:nth-child(8n+1)::before{transform:rotate(-1.2deg) translate(0px,0.6px)}
+.prose ol>li:nth-child(8n+2)::before{transform:rotate(-1.4deg) translate(0.2px,0.3px)}
+.prose ol>li:nth-child(8n+3)::before{transform:rotate(-0.2deg) translate(-0.5px,0px)}
+.prose ol>li:nth-child(8n+4)::before{transform:rotate(3.4deg) translate(-0.4px,-0.2px)}
+.prose ol>li:nth-child(8n+5)::before{transform:rotate(1.2deg) translate(-0.6px,0.2px)}
+.prose ol>li:nth-child(8n+6)::before{transform:rotate(3deg) translate(0.5px,-0.1px)}
+.prose ol>li:nth-child(8n+7)::before{transform:rotate(3.1deg) translate(0.6px,0.6px)}
+.prose ol>li:nth-child(8n+8)::before{transform:rotate(3.3deg) translate(0.3px,0.6px)}
+/* What keeps its own marker: a task item, the editor's task list, and a list that starts
+   past 1. */
+.prose li.task::before,.prose ul[data-type=taskList]>li::before{content:none}
+.prose ol[start]{list-style:decimal;padding-left:1.4em}
+.prose ol[start]>li::before{content:none}
 .prose li{margin:calc(var(--sp) * .25) 0}
 .prose blockquote{border-left:2px solid var(--c-rule);margin-left:0;
   padding-left:var(--sp);color:var(--c-meta)}
@@ -339,19 +405,22 @@ article + .subscribe-card,article + #comments{margin-top:2.5rem}
    document; this is a pause inside it.
    Width in em, so it grows with the reader's type and with book mode's scale. */
 .prose hr:not(.fn-rule){width:6em;margin:2.6em auto;border-top:1px solid var(--c-rule)}
-/* A TABLE THAT WILL NOT FIT SCROLLS THE ARTICLE, NEVER THE PAGE.
+/* A TABLE THAT WILL NOT FIT SCROLLS ITS OWN BOX, NEVER THE ARTICLE AND NEVER THE PAGE.
    Measured at 390px: a five-column table is 484px at its narrowest, and a table cannot be
    squeezed below its own content -- so with visible overflow the DOCUMENT went to 516px and
-   every paragraph in the piece panned sideways with it. A pre has carried overflow-x since
-   it was written and .math-block was given it on purpose; this was the third case, and the
-   only one nothing said out loud.
-   The scroll sits on .prose rather than on the table, and that is forced rather than
-   preferred: overflow is ignored on a display:table box, and switching the table to
-   display:block makes the anonymous table inside it shrink-to-fit -- measured 607px down to
-   345px on a laptop, which would quietly restyle every table on every site in order to fix
-   a phone bug. :has() keeps the scroll container off the articles that have no table, and a
-   browser without :has() is left exactly where it is today. */
-.prose:has(table){overflow-x:auto}
+   every paragraph in the piece panned sideways with it.
+   This rule sat on .prose:has(table) until 2026-09-01, which fixed that and broke the
+   desktop: CSS has no way to scroll one axis alone, so an overflow-x that is not visible
+   computes overflow-y to auto as well, and an article carrying one table became a scroll box
+   as tall as the piece. Measured on a live post, clientHeight 4119 against scrollHeight 4120
+   -- one pixel, and enough for Safari to draw a scrollbar down the side of the reading column
+   and take that width out of the text.
+   It could not sit on the table because overflow is ignored on a display:table box, and
+   display:block shrink-to-fits it (607px down to 345px on a laptop). Both are true of the
+   table and neither is true of a plain block around it, so render/post-content.ts wraps each
+   table in one. The wrapper is the direct child of .prose, so it inherits the block rhythm
+   the table used to get. */
+.prose .table-scroll{overflow-x:auto}
 /* EVERY NUMBER BELOW COMES FROM A VARIABLE, and the fallback in each var() is this file's
    own default — the same arrangement settings-css.ts uses, so the sheet renders correctly
    before any settings CSS is injected and a saved choice still wins when it is. The selectors
@@ -389,7 +458,7 @@ article + .subscribe-card,article + #comments{margin-top:2.5rem}
    there is nothing to continue from. */
 .book-text .prose p{margin-top:.65em;text-indent:1.6em}
 .book-text .prose > p:first-child{text-indent:0}
-.book-text .prose :is(blockquote,figure,pre,ul,ol,hr,table,.gallery,.video-embed) + p{
+.book-text .prose :is(blockquote,figure,pre,ul,ol,hr,table,.table-scroll,.gallery,.video-embed) + p{
   text-indent:0;margin-top:1.4em}
 /* A heading keeps the tighter lead the rhythm rules give it: restating 1.4em here would
    undo, in book mode only, the one thing that binds a heading to its own section. */
@@ -451,6 +520,22 @@ article + .subscribe-card,article + #comments{margin-top:2.5rem}
 .listing-head h1{font-size:var(--fs-h1);line-height:var(--lh-h1);
   letter-spacing:var(--ls-h1);color:var(--c-heading);margin:0;font-weight:var(--fw-title,700)}
 .lower{text-transform:lowercase}
+/* The notebook's receiving door (/notes/clip): one form, no script, the same fields the
+   subscribe card wears. And the bookmarklet, drawn as a thing to be dragged. */
+.clip-line{margin:.5rem 0}
+.clip-form{display:flex;flex-direction:column;gap:.9rem;max-width:34rem;margin-top:1.25rem}
+.clip-form label{display:flex;flex-direction:column;gap:.35rem;color:var(--c-meta)}
+.clip-form input[type=text],.clip-form textarea{padding:.5rem .75rem;border:1px solid var(--c-rule);
+  border-radius:var(--radius,.5rem);background:var(--c-bg);color:var(--c-text);font:inherit;
+  resize:vertical}
+.clip-form input:focus,.clip-form textarea:focus{border-color:var(--c-heading);outline:none}
+.clip-status{display:flex;gap:1.25rem}
+.clip-status label{flex-direction:row;align-items:center}
+.clip-form button{align-self:flex-start;padding:.5rem 1.1rem;border:1px solid var(--c-rule);
+  border-radius:var(--radius,.5rem);background:var(--c-heading);color:var(--c-bg);font:inherit;cursor:pointer}
+.clip-tool{display:inline-block;padding:.45rem 1rem;border:1px solid var(--c-rule);
+  border-radius:999px;background:var(--c-bg);color:var(--c-heading);cursor:grab;text-decoration:none}
+
 /* Type ROLES, ported from the frozen tree. A card composes these rather than declaring
    its own sizes, which is why the listing and the article agree without anyone keeping
    two numbers in step. Every size is the owner's --fs-* setting times --type-scale, so
@@ -477,31 +562,20 @@ article + .subscribe-card,article + #comments{margin-top:2.5rem}
 .link-accent:hover{text-decoration:underline;text-decoration-color:var(--c-accent);
   text-decoration-thickness:1px;text-underline-offset:4px}
 
-/* THE CLICK, for everything on the reading site a finger can press. Pressing lands at
-   once - the 1px of travel and the carved-in shadow arrive with transition-duration:0 -
-   and only the release is sprung, on whatever transition the control already carries.
-   The shadow is the palette's own heading ink diluted (an engine without color-mix just
-   loses the shading, never the button), so every palette carves with its own ink. The
-   book arrows keep their translateY centring (colour only, no travel) and the resume
-   pill composes its centring with the dip. data-motion=off and reduced-motion keep the
-   shadow and drop the travel, like every press in this product. */
-.icon-btn:active,.code-copy:active,form.subscribe button:active,.theme-menu button:active,
-.lightbox button:active,.to-top:active,.book-x:active,.comment-form button:active{
-  transform:translateY(1px);transition-duration:0s;
-  box-shadow:inset 0 1.5px 2.5px color-mix(in srgb,var(--c-heading) 22%,transparent)}
-.resume-pill:active{transform:translateX(-50%) translateY(1px);transition-duration:0s;
-  box-shadow:inset 0 1.5px 2.5px color-mix(in srgb,var(--c-heading) 22%,transparent)}
-.book-arrow:active{color:var(--c-heading)}
-html[data-motion=off] .icon-btn:active,html[data-motion=off] .code-copy:active,
-html[data-motion=off] form.subscribe button:active,html[data-motion=off] .theme-menu button:active,
-html[data-motion=off] .lightbox button:active,html[data-motion=off] .to-top:active,
-html[data-motion=off] .book-x:active,html[data-motion=off] .comment-form button:active{transform:none}
-html[data-motion=off] .resume-pill:active{transform:translateX(-50%)}
-@media (prefers-reduced-motion:reduce){
-  .icon-btn:active,.code-copy:active,form.subscribe button:active,.theme-menu button:active,
-  .lightbox button:active,.to-top:active,.book-x:active,.comment-form button:active{transform:none}
-  .resume-pill:active{transform:translateX(-50%)}
-}
+/* The two shapes a surface is made of, beside the third one below. --lift is what FLOATS:
+   two steps, the contact under the near edge and the spread the sheet casts on the paper.
+   Three things floated on this site and each had its own opinion — the sign-up modal on a
+   25/50 drop, the theme menu on a 10/15 (and no radius at all), the search and book dialogs
+   on nothing. --well is what HOLDS: the inset a field wears so the box is findable before it
+   is typed in; four fields here were flat outlines while their own buttons carved on press.
+   Black rather than a palette token, and deliberately unlike the press below: a shadow is
+   dark in EVERY palette, so a token would LIGHT the inside of a field on the dark ones. */
+:root{--lift:0 16px 32px -12px rgba(0,0,0,.22),0 3px 8px -4px rgba(0,0,0,.12);
+  --well:inset 0 1px 1.5px rgba(0,0,0,.07)}
+/* The pen's loop round a word is INK_LOOP_SVG in icons.ts, a real path, since 2026-09-06. */
+
+
+/* THE CLICK - the press every control shares - is in motion.css.ts with the rest of the engine. */
 
 /* Cards are separated by SPACE, not by a rule. The border-bottom here was mine, not the
    frozen tree's, and it turned a quiet feed into a table. The gap has to be wide enough to
@@ -533,10 +607,16 @@ html[data-motion=off] .resume-pill:active{transform:translateX(-50%)}
 .tl-dot{flex:0 0 auto;width:8px;height:8px;border-radius:50%;background:var(--c-meta)}
 .empty{color:var(--c-meta)}
 
-/* The year archive. Rows, not cards: this page exists to be scanned, and 200 excerpts is
-   the listing page the reader came here to skip. Sizes are roles, so it follows the owner's
-   typography like everything else. */
-.arc-jump{display:flex;flex-wrap:wrap;gap:.75rem 1.25rem;margin:0 0 2.5rem;
+/* The heading row: the page's name, and its own contents at the far edge. An auto left
+   margin rather than a spacer, so the years stay at the edge and drop to their own line —
+   still at the edge — when the title runs out of room. */
+.arc-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem 1.5rem}
+.arc-head .arc-jump{margin:0 0 0 auto}
+
+/* Rows, not cards: this page exists to be scanned, and 200 excerpts is the listing page the
+   reader came here to skip. Sizes are roles, so it follows the owner's typography like
+   everything else. */
+.arc-jump{display:flex;flex-wrap:wrap;gap:.5rem 1rem;margin:0 0 2.5rem;
   font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small);
   font-variant-numeric:tabular-nums}
 .arc-yr + .arc-yr{margin-top:3rem}
@@ -549,21 +629,27 @@ html[data-motion=off] .resume-pill:active{transform:translateX(-50%)}
 .arc-count{color:var(--c-meta);font-weight:400;
   font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small)}
 .arc-yr ul{list-style:none;padding:0;margin:0}
-.arc-yr li{display:flex;gap:1rem;align-items:baseline;padding:.35rem 0}
+/* ONE SIZE ON THE ROW, set here rather than on the parts, so the date and the title cannot
+   drift apart again: the title used to inherit the body size while the date was small. */
+.arc-yr li{display:flex;gap:1rem;align-items:baseline;padding:.35rem 0;
+  font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small)}
 /* 5ch is exactly "MM-DD" in tabular figures, so every title starts on the same column
    without a table and without a fixed px width that a larger type setting would break. */
-.arc-yr time{flex:0 0 5ch;color:var(--c-meta);font-variant-numeric:tabular-nums;
-  font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small)}
+.arc-yr time{flex:0 0 5ch;color:var(--c-meta);font-variant-numeric:tabular-nums}
 /* On a phone the fixed date column costs a fifth of the line and a wrapped title ranges
    under it, so the date goes above its title instead. */
 @media (max-width:34rem){
   .arc-yr li{display:block;padding:.5rem 0}
   .arc-yr time{display:block}
 }
-.pager{display:flex;justify-content:space-between;align-items:center;gap:1rem;
+.pager,.feed-more{display:flex;justify-content:space-between;align-items:center;gap:1rem;
   border-top:1px solid var(--c-rule);padding-top:1rem;margin-top:1rem;
   font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small)}
 .pager-count{color:var(--c-meta)}
+/* One link, so it hangs on the right where the pager's "older" already sits. Only a reader
+   with no JavaScript sees it: the island reads its address, hides it, and puts it back if
+   the fetch fails. */
+.feed-more{justify-content:flex-end}
 form.search{display:flex;gap:.5rem;margin:0 0 2rem}
 /* min-width:0 is what stops this row leaving the viewport. An <input> carries an intrinsic
    width from its size attribute, a flex item will not shrink below its own min-content by
@@ -571,7 +657,7 @@ form.search{display:flex;gap:.5rem;margin:0 0 2rem}
    border sat off-screen: the page scrolled sideways. form.subscribe already carried this
    rule; the search form was written from the same shape and lost it. */
 form.search input{min-width:0;flex:1;padding:.5rem .75rem;border:1px solid var(--c-rule);
-  border-radius:var(--radius,.5rem);background:var(--c-bg);color:var(--c-text);font:inherit}
+  border-radius:var(--radius,.5rem);background:var(--c-bg);color:var(--c-text);font:inherit;box-shadow:var(--well)}
 /* nowrap because the label is what pushed the row wide: "Tìm kiếm" broke over two lines and
    took the whole control to 78px tall to make room for itself. */
 form.search button{padding:.5rem 1rem;border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);
@@ -631,6 +717,12 @@ footer.site a:hover{color:var(--c-text)}
    now, so all six palettes own their code block in both modes. */
 .dark .shiki,.dark .shiki span{color:var(--shiki-dark)!important}
 
+/* SYMMETRIC AGAIN, 2026-09-14. The asymmetry above was measured under type settings whose
+   paragraphs sit 55px apart, where 63px under a caption is 15% more and reads as belonging to
+   the plate. A blog set like a book separates paragraphs by an INDENT instead: measured on the
+   live site, two paragraphs sit 12px apart and the extra --sp put the text 49px under the
+   caption, four times the body rhythm, which reads as a hole rather than as a plate. Spent in
+   --sp either way, which is the claim typography.test.ts makes about this line. */
 figure{margin:calc(var(--sp) * 2) 0}
 figure img{display:block;margin:0 auto;border-radius:.5rem}
 figcaption{color:var(--c-meta);font-size:var(--fs-caption);line-height:var(--lh-caption);
@@ -725,10 +817,10 @@ figure img{padding:var(--fig-pad,var(--fig-default-pad,0));
    or without JavaScript; only the aria-current highlight and the mobile drawer come from
    the bundle.
 
-   BELOW the rail breakpoint it sits above the article, in normal flow, exactly as written
-   here. ABOVE it, the rules generated by singleRailCss move it into the left gutter. The
-   frozen tree also had a slide-out drawer and a toggle island for narrow screens; a list
-   that simply sits above the article needs neither, so that island is not ported. */
+   BELOW the rail breakpoint it is a slide-out drawer, opened from the header button and
+   closed by Escape or a tap outside; the island that drives it is rail() in theme.ts. ABOVE
+   the breakpoint the rules generated by singleRailCss move it into the left gutter and the
+   toggle disappears. One piece of DOM serves both. */
 :root{--rail-w:250px;--rail-gap:40px;
   /* Gap between a rail row's text and the accent marker beside it. */
   --rail-pad:14px;
@@ -746,8 +838,24 @@ figure img{padding:var(--fig-pad,var(--fig-default-pad,0));
 .rail{position:fixed;top:0;bottom:0;left:0;z-index:40;width:min(300px,84vw);
   overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding:4.5rem 1.25rem 2rem;
   background:var(--c-bg);border-right:1px solid var(--c-rule);
-  transform:translateX(-100%);transition:transform var(--dur-base) ease}
-html[data-rail=open] .rail{transform:none}
+  transform:translateX(-100%);visibility:hidden;
+  transition:transform var(--dur-base) ease,visibility 0s linear var(--dur-base)}
+/* visibility, and not only the transform. A drawer slid off-screen is still in the document:
+   every link in it stayed in the Tab order and in the screen reader's list, so a keyboard
+   reader on a phone tabbed through the whole sidebar (44 links on a listing page, measured
+   2026-08-29) before reaching the first post, with nothing on screen to show for it. Hidden
+   visibility takes the closed drawer out of both. The delay is what keeps the slide-out
+   animation: visibility flips only after the transform has finished; opening flips it at
+   once (the delay is reset below) so the links are focusable the moment the drawer moves.
+   The gutter geometry (render/rail-css.ts) sets it back to visible above the breakpoint. */
+html[data-rail=open] .rail{transform:none;visibility:visible;transition-delay:0s}
+/* The page behind an open drawer does not scroll. Reaching the end of the drawer's own
+   scroll used to carry on scrolling the article under it, which on a phone reads as the
+   drawer sliding away from under the finger. Containing the overscroll alone does not do
+   it: the drawer is often shorter than the viewport and then has no scroll of its own to
+   contain. */
+html[data-rail=open],html[data-rail=open] body{overflow:hidden}
+.rail{overscroll-behavior:contain}
 /* Two-rail listings only: on mobile there is no gutter, so the LEFT rail is hidden and its
    blocks appear in the right rail's drawer through .drawer-only. */
 .rail-left{display:none}
@@ -810,6 +918,14 @@ html[data-rail=open] .rail{transform:none}
 /* Below the rail breakpoint the ToC is the drawer, and a post with a long index needs the
    whole column: the listing rail is not on this page to share it with. */
 .toc li{margin-top:.5rem}
+/* The index's heading is a summary, but only the BAND (rail-css.ts, 60rem to the rail
+   breakpoint) lets it fold. Everywhere else it is a heading: display:block drops the
+   disclosure marker, and pointer-events:none keeps a stray click in the gutter or the
+   drawer from putting the whole index away. The details stays open, so nothing is hidden. */
+.toc summary{display:block;pointer-events:none;cursor:default}
+.toc summary::-webkit-details-marker{display:none}
+.toc summary h2{margin-bottom:.75rem}
+@media (min-width:60rem) and (max-width:1271px){.rail{position:static;width:auto;height:auto;margin:1.5rem 0 2.5rem;padding:0 0 1.25rem;border:0;border-bottom:1px solid var(--c-rule);background:none;transform:none;visibility:visible;overflow:visible;transition:none}.rail-inner{position:static;max-height:none;overflow:visible}.rail-inner > * + *{margin-top:1rem}.rail h2{margin:0;padding-left:0}.rail-inner > nav:not(.toc)::before{content:attr(aria-label);display:block;margin-bottom:.5rem;font-weight:var(--fw-heading,600);color:var(--c-heading);font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small)}.rail ul{display:flex;flex-wrap:wrap;gap:.4rem 1.5rem}.rail li,.toc li{margin-top:0}.toc ul{display:block}.toc li{width:max-content;max-width:100%;margin-top:.45rem}.toc li:first-child{margin-top:0}.rail-row{padding-left:0}.rail-row[aria-current]::after{left:0;right:0;top:auto;bottom:-4px;width:auto;height:2px}.toc-end{margin-top:0}.toc summary{pointer-events:auto;cursor:pointer;display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem}.toc summary h2{margin:0}.toc summary::before{content:"";width:.4em;height:.4em;flex:none;border-right:1.5px solid var(--c-meta);border-bottom:1.5px solid var(--c-meta);transform:rotate(-45deg);transition:transform var(--dur-base) ease}.toc details[open] > summary::before{transform:rotate(45deg)}.rail-toggle,.rail-scrim{display:none}}@media (min-width:1272px){.rail{position:absolute;inset:auto auto auto auto;top:var(--rail-top);width:var(--rail-w);height:calc(100% - var(--rail-top));padding:0;background:none;border:0;overflow:visible;transform:none;display:block;visibility:visible;right:calc(100% + var(--rail-gap));left:auto;text-align:right}.rail::after{content:"";position:absolute;top:0;bottom:0;right:-13px;width:1px;background:var(--c-rule);z-index:-1}.rail-inner{max-height:calc(100dvh - 2.5rem - 1.5rem);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}.rail h2,.rail .rail-tags{padding-left:0;padding-right:var(--rail-pad)}.rail .rail-tags{justify-content:flex-end}.rail li a{justify-content:flex-end}.rail-row{padding-left:0;padding-right:var(--rail-pad)}.rail-row[aria-current]::after{left:auto;right:0}.rail-toggle,.rail-scrim{display:none}.post-info{position:absolute;inset:auto auto auto auto;top:var(--rail-top);width:var(--rail-w);height:calc(100% - var(--rail-top));padding:0;background:none;border:0;overflow:visible;transform:none;display:block;visibility:visible;left:calc(100% + var(--rail-gap));right:auto;text-align:left;padding-left:var(--rail-pad);height:auto}.post-info::after{content:"";position:absolute;top:0;bottom:0;left:-13px;width:1px;background:var(--c-rule);z-index:-1}.post-info::before{content:"";position:absolute;left:-16px;top:.5em;width:7px;height:7px;border-radius:50%;background:var(--c-meta)}.post-info .info-action{position:relative}.post-info .info-action::after{content:"";position:absolute;left:calc(-16px - var(--rail-pad));top:.5em;width:7px;height:7px;border-radius:50%;background:var(--c-meta)}.post-meta,.taxo-rule,.post-taxo{display:none}article > header .mt-2{margin-top:0}.prose figure.img-wide,.prose .video-wide{width:calc(100% + var(--rail-w) + var(--rail-gap));max-width:none;margin-left:0;margin-right:calc(-1 * (var(--rail-w) + var(--rail-gap)))}.prose > :is(figure.img-wide,.video-wide):nth-child(-n+2){width:100%;margin-right:0}}
 /* --- islands -------------------------------------------------------------------
    Every rule below styles an element the browser bundle CREATES. None of it applies
    to the server-rendered page, so a reader with JavaScript off sees no gaps: the
@@ -873,6 +989,63 @@ html[data-rail=open] .rail{transform:none}
 .quote-copy:hover{opacity:.85}
 .quote-copy[hidden]{display:none}
 
+/* The reader's pen (reader-pen.ts): the bar over a selection, the card over a mark, and
+   the note under a paragraph. Same footing as the quote pill — the heading colour on the
+   paper's, so it reads as a control and not as part of the text. The five swatches take
+   the pen's own pigments inline: a highlighter is not UI (ADR 0018). */
+.pen-bar{position:absolute;z-index:40;display:flex;align-items:center;gap:.2rem;
+  padding:.3rem .5rem;border-radius:999px;background:var(--c-heading);color:var(--c-bg);
+  font-family:var(--font-sans);font-size:var(--fs-small);line-height:var(--lh-small);
+  letter-spacing:var(--ls-small);white-space:nowrap}
+.pen-bar[hidden]{display:none}
+.pen-bar button{border:0;background:none;color:inherit;font:inherit;cursor:pointer;
+  padding:.15rem .5rem;border-radius:999px}
+.pen-bar button:hover{background:color-mix(in srgb,var(--c-bg) 16%,transparent)}
+.pen-swatch{width:1.05rem;height:1.05rem;padding:0!important;border-radius:50%;
+  box-shadow:inset 0 0 0 2px var(--c-heading);opacity:.92}
+.pen-swatch:hover{opacity:1}
+.pen-sep{width:1px;height:1em;margin:0 .2rem;background:var(--c-bg);opacity:.35}
+.prose [data-reader]{cursor:pointer}
+.pen-pop{position:absolute;z-index:41;width:min(20rem,calc(100vw - 2rem));padding:.6rem .7rem;
+  border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);background:var(--c-bg);
+  color:var(--c-text);box-shadow:var(--well);font-family:var(--font-sans);
+  font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small)}
+.pen-pop[hidden]{display:none}
+.pen-pop textarea{display:block;width:100%;min-height:3.2em;padding:.4rem .5rem;
+  border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);background:var(--c-bg);
+  color:inherit;font:inherit;resize:vertical}
+.pen-del,.pen-send{margin-top:.45rem;padding:0;border:0;background:none;color:var(--c-meta);
+  font:inherit;cursor:pointer}
+.pen-del:hover,.pen-send:hover{color:var(--c-heading)}
+.pen-send{margin-right:.9rem;color:var(--c-heading)}
+/* The one-time question: where the reader's own notebook is. */
+.pen-ask{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin-top:.5rem;
+  padding-top:.5rem;border-top:1px solid var(--c-rule)}
+.pen-ask[hidden]{display:none}
+.pen-ask span{flex:1 0 100%;color:var(--c-meta)}
+.pen-ask input{flex:1;min-width:0;padding:.3rem .5rem;border:1px solid var(--c-rule);
+  border-radius:var(--radius,.5rem);background:var(--c-bg);color:inherit;font:inherit}
+.pen-go{padding:.3rem .7rem;border:1px solid var(--c-rule);border-radius:999px;
+  background:var(--c-heading);color:var(--c-bg);font:inherit;cursor:pointer}
+/* Tier two (ADR 0047): the line under a mark's card that says where its marks live, and the
+   small panel that lets the reader keep them everywhere. Same footing as the ask above. */
+.pen-keep{margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--c-rule);color:var(--c-meta)}
+.pen-keep>span{margin-right:.9rem}
+.pen-keep button{padding:0;border:0;background:none;color:var(--c-heading);font:inherit;cursor:pointer;
+  margin-right:.9rem}
+.pen-keep button:hover{text-decoration:underline}
+.pen-keep a{color:var(--c-heading);margin-right:.9rem}
+.pen-keep input{width:100%;margin:.35rem 0;padding:.3rem .5rem;border:1px solid var(--c-rule);
+  border-radius:var(--radius,.5rem);background:var(--c-bg);color:inherit;font:inherit}
+.pen-keep code{display:block;margin:.35rem 0;padding:.3rem .5rem;border:1px dashed var(--c-rule);
+  border-radius:var(--radius,.5rem);font-family:var(--font-mono);font-size:var(--fs-code);
+  line-height:var(--lh-code);letter-spacing:var(--ls-code);color:var(--c-heading);user-select:all}
+.pen-keep p{margin:.25rem 0 0}
+.pen-keep [hidden]{display:none}
+.pen-note{margin:.35em 0 1em;padding:.15em 0 .15em .85em;border-left:2px solid var(--c-rule);
+  color:var(--c-meta);font-family:var(--font-sans);font-size:var(--fs-small);
+  line-height:var(--lh-small);letter-spacing:var(--ls-small);white-space:pre-wrap}
+
 /* A <dialog>, so Escape, focus trapping and the inert background come from the browser.
    The viewer is deliberately NOT themed: a light backdrop behind a photograph is a worse
    reading of the photograph, and readers expect a lightbox to be dark. */
@@ -900,18 +1073,37 @@ html[data-rail=open] .rail{transform:none}
    by the fade at the foot of the feed going missing - the markup has carried a .reveal
    class since M2 and NO rule ever matched it, so the cards simply appeared.
 
-   GUARDED three ways, exactly as the frozen tree guards it: it may only ever HIDE content
-   where it can also reveal it. Needs view() timelines, motion on, and no reduced-motion
-   preference; anything else leaves .reveal a normal, fully visible element. There is no
-   blank-page failure mode. */
+   GUARDED FOUR ways, and it may only ever HIDE content where it can also reveal it: the
+   owner's switch (data-scroll-fade), view() timelines, motion on, and no reduced-motion
+   preference. Anything else leaves .reveal a normal, fully visible element, so there is no
+   blank-page failure mode.
+
+   ⚠️ entry 0% -> entry 100%, and the range is the whole fix. It was cover 20%, and cover is
+   measured against the card's OWN height plus the window: on a feed of long posts that is a
+   long way further up the page, so cards sat half faded in the MIDDLE of the window while
+   shorter cards beside them were solid. entry 100% is one instant with one meaning at any
+   height — the card is inside the window — so a card you can read is never still arriving.
+
+   A fixed distance (entry 320px) was tried and is worse: inside an entry range a length is measured
+   along a range that is only as long as the card, so on a short card the animation never
+   reaches its end at all and the card stays permanently dimmed. */
 @supports (animation-timeline:view()){
   @media (prefers-reduced-motion:no-preference){
-    html[data-motion=on] .reveal{animation:reveal-in linear both;animation-timeline:view();
-      /* Finishes in the lower third, where the eye is - not at the very bottom edge. */
-      animation-range:entry 0% cover 20%}
+    html[data-scroll-fade=on][data-motion=on] .reveal{animation:reveal-in linear both;animation-timeline:view();
+      animation-range:entry 0% entry 100%}
   }
 }
 @keyframes reveal-in{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+/* THE BACKSTOP (listing.ts). A card that is fully inside the window has finished arriving,
+   and this says so in the one place a stale view() range cannot argue with. On an engine that
+   resolved the range correctly the class lands at the same instant entry 100% ends the
+   animation, so nothing anyone can see changes; where it did not, this is the difference
+   between a card you can read and a card that stays grey. Reported on Safari 2026-09-13 and
+   not reproducible in Chrome, which is itself the evidence that the declaration is not what
+   differs between them. */
+@supports (animation-timeline:view()){
+  html[data-scroll-fade=on][data-motion=on] .reveal.is-set{animation:none;opacity:1;transform:none}
+}
 /* The same reveal for engines with no view() timeline (Firefox today). Armed by the island
    ONLY on those engines, and only for cards that are not already on screen, so nothing
    above the fold can flash. */
@@ -920,27 +1112,136 @@ html[data-rail=open] .rail{transform:none}
   html[data-reveal-js=on] .reveal{transition:opacity var(--dur-slow) ease,transform var(--dur-slow) ease}
 }
 
-/* Chunked feed. The server renders every card, so a reader with no JavaScript gets the
-   whole archive and a crawler sees all of it; the island hides what is past the first page
-   and hands it back a chunk at a time on scroll. The <noscript> counterpart is emitted with
-   the list, so the hiding only ever applies where something can undo it. */
-html[data-chunked] .post-list article[data-more]{display:none}
+/* THE SAME EFFECT ON AN ARTICLE, which is the other half of the owner's one switch: the
+   running text dims as it reaches the top and the bottom of the window and is solid in
+   between, so the paragraph being read is the brightest thing on the screen.
+
+   Per BLOCK rather than as one gradient over the column: a fixed overlay would have to know
+   the column's width, its background and the theme, and would sit over the sidebar on the
+   way. A block that is taller than the window never dims — cover cannot reach its ends —
+   which is the correct behaviour: a long code listing is not "arriving" while you read it.
+
+   Only direct children of .prose, and never the figures: an image dimming at the edges
+   reads as a rendering fault rather than as an effect.
+
+   ⚠️ NOT IN THE SPREAD. The desktop book's flow IS a .prose, and it is laid out in columns
+   that run sideways — so a view() timeline, which only knows the document's vertical scroll,
+   dimmed whichever paragraphs happened to sit outside the window in a direction the reader
+   is not scrolling. On a phone that put a wash of grey across the top of every page turned.
+
+   The PHONE reader is the opposite case and gets the effect: it scrolls the document like
+   any other page, and the fade is what stops a line being sliced in half by the top of the
+   glass — which is what the edge of a scrolling window does to a line of type, and what a
+   paginated reader never has to answer for. */
+@supports (animation-timeline:view()){
+  @media (prefers-reduced-motion:no-preference){
+    html[data-scroll-fade=on][data-motion=on] .prose:not(.book-flow)>p,
+    html[data-scroll-fade=on][data-motion=on] .prose:not(.book-flow)>h2,
+    html[data-scroll-fade=on][data-motion=on] .prose:not(.book-flow)>h3,
+    html[data-scroll-fade=on][data-motion=on] .prose:not(.book-flow)>ul,
+    html[data-scroll-fade=on][data-motion=on] .prose:not(.book-flow)>ol,
+    html[data-scroll-fade=on][data-motion=on] .prose:not(.book-flow)>blockquote,
+    html[data-scroll-fade=on][data-motion=on] .book-reader .book-flow>p,
+    html[data-scroll-fade=on][data-motion=on] .book-reader .book-flow>h2,
+    html[data-scroll-fade=on][data-motion=on] .book-reader .book-flow>h3,
+    html[data-scroll-fade=on][data-motion=on] .book-reader .book-flow>ul,
+    html[data-scroll-fade=on][data-motion=on] .book-reader .book-flow>ol,
+    html[data-scroll-fade=on][data-motion=on] .book-reader .book-flow>blockquote{
+      animation:edge-fade linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+  }
+}
+/* Never to nothing: 0.35 keeps the line legible for anyone who reads at the edge of the
+   window, and the point is where the eye rests, not a curtain. */
+@keyframes edge-fade{
+  0%{opacity:.35}
+  18%{opacity:1}
+  82%{opacity:1}
+  100%{opacity:.35}
+}
+/* SHALLOWER ON A PHONE, and it is arithmetic rather than taste. 18% of a 900px window is
+   one line at the top and one at the bottom; 18% of an 844px phone in portrait is three,
+   because the type is the same size and the window is the same height while the measure is
+   a third as wide. So the reader met the next three lines of what they were about to read
+   at well under half opacity. Owner's call, 2026-09-07: keep the effect, narrow the band. */
+@media (max-width:639px){
+  @keyframes edge-fade{
+    0%{opacity:.6}
+    8%{opacity:1}
+    92%{opacity:1}
+    100%{opacity:.6}
+  }
+}
 
 .preview-note{border:1px solid var(--c-rule);background:var(--c-rule);color:var(--c-meta);
   border-radius:.5rem;padding:.5rem 1rem;font-size:var(--fs-small);
   line-height:var(--lh-small);letter-spacing:var(--ls-small);margin:0 0 1.5rem}
 
-/* Two ways to the same place: the reader's system preference, and the owner's Motion
-   switch in Settings. The switch had no effect at all until this rule existed. */
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-html[data-motion=off] *{animation:none!important;transition:none!important}
+/* The thread is fetched when the reader nears it, so the mount is empty until then and the
+   page is that much shorter. Reserving the space it is about to need is what stops the
+   footer sliding up under a reader who has just arrived at it.
+   MEASURED on the demo, heading plus the form with no thread in it: 474px at 1440 and 573px
+   at 390, where the fields stop sitting side by side. The thread's own height cannot be
+   reserved and is not: what this buys is the common case, a post with no comments yet.
+   The :empty test ends the reservation the moment the island fills it, and a <noscript>
+   beside the mount zeroes it where nothing ever will. */
+#comments:empty{min-height:30rem}
+@media (max-width:639px){#comments:empty{min-height:36rem}}
+
+/* The two motion gates (the owner's switch, the OS preference) are in motion.css.ts. */
 /* Book mode. Its OWN standard rather than the site theme: paper and ink, not the reader's
    palette, and the same on a dark site as a light one. Carried over from the frozen tree.
    The columns come from column-width, so the BROWSER paginates and turning a page is one
    transform on the flow rather than a measurement loop fighting the layout engine. */
-.book-mode-toggle{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;
-  text-underline-offset:3px}
-.book-mode-toggle:hover{color:var(--c-heading);text-decoration:underline}
+/* Still WORDS, on a page made of words — a bordered box in the gutter of an article is
+   furniture, and this panel is the quietest thing on the page. What it gains is a TARGET:
+   the row is padded to a hand's height and pulled back out with a negative margin, so the
+   hit area is 36px tall while the layout is exactly where it was. The icon says it does
+   something; the ink says it is not another fact; the press comes from the shared click. */
+.book-mode-toggle{position:relative;display:inline-flex;align-items:center;gap:.4rem;font:inherit;
+  font-weight:500;color:var(--c-heading);background:none;border:0;cursor:pointer;
+  /* Vertical padding ONLY. It used to pad and negative-margin on all four sides, which put
+     the hover box 8px to the LEFT of where the words start: under the IDE chrome, where the
+     row opens with a // marker, the box ran straight into it with no air between the two.
+     Height is what a thumb needs; the width is the words, and they were already wide enough. */
+  padding:.5rem 0;margin:-.5rem 0}
+/* THE BOOK GLYPH, and not the pen loop beside it. The loop became a real <svg> in the
+   document on 2026-09-06 and walked straight into this descendant selector, which outranks
+   the loop's own opacity:0 by one element name. So the mark that is meant to arrive with the
+   pointer was inked at .75 on every article, on the meta line and in the panel alike. */
+.book-mode-toggle svg:not(.book-loop){flex-shrink:0;opacity:.75}
+.book-mode-toggle:hover svg:not(.book-loop){opacity:1}
+/* CIRCLED, not boxed. A grey rounded rectangle behind a line of type is interface furniture,
+   and this panel is the quietest thing on the page — it was also the only rectangle in a
+   column of writing. A pen goes round a word instead, so the mark is the one this whole
+   product is named after.
+   It is drawn as a MASK rather than as a background image, because a data URI cannot say
+   currentColor: the loop is cut out of a fill that already is the palette's heading ink, so
+   every palette circles in its own colour and nothing here names one. The path overshoots
+   its own start, the way a real one does. */
+/* A REAL SVG (INK_LOOP_SVG, icons.ts), placed over the words. It was a data-URI mask on a
+   pseudo-element until 2026-09-06, and Safari drew a faint dotted rectangle round the mask's
+   box on every hover - WebKit rasterises a scaled SVG mask and shows its edges; Chrome does
+   not, which is why it shipped. A path in the document has no edges to show. */
+.book-loop{position:absolute;pointer-events:none;
+  /* Asymmetric: the loop closes with a tail on the RIGHT, so that side needs the room,
+     and the left has a // marker sitting beside it under the IDE chrome. */
+  inset:.26rem -.52rem .26rem -.36rem;width:auto;height:auto;opacity:0;
+  transition:opacity var(--dur-fast)}
+.book-mode-toggle:hover .book-loop,.book-mode-toggle:focus-visible .book-loop{opacity:.85}
+/* AND THE PRESS IS THE SAME MARK, PRESSED HARDER. This control took the shared carved
+   shadow off the key vocabulary until 2026-09-01, and the two did not belong together: the
+   hover draws a round pen loop and the carve is a rectangle across the padded row, so one
+   control answered a pointer with a circle and a click with a square. The loop going to
+   full ink is the surface change the click convention asks for, in the vocabulary this
+   control already speaks. */
+.book-mode-toggle:active .book-loop{opacity:1;transition-duration:0s}
+/* The travel stays, because it is the shared click and it has no shape of its own: 1px down,
+   instantly, sprung back on the release. Outside the @supports block on purpose — an engine
+   that cannot mask gets no loop, and taking its press away as well would leave the click
+   with nothing at all. */
+.book-mode-toggle:active{transform:translateY(1px);transition-duration:0s}
+html[data-motion=off] .book-mode-toggle:active{transform:none}
+@media (prefers-reduced-motion:reduce){.book-mode-toggle:active{transform:none}}
 @media (max-width:767px){.meta-book,.book-mode-toggle{display:none}}
 
 /* The phone's doorway into the reader. The desktop entries (the meta line, the info
@@ -1030,27 +1331,28 @@ body:has(.book-overlay[open]){overflow:hidden}
   background:none;border:0;cursor:pointer;color:var(--c-meta);font-size:1rem;
   line-height:1;width:34px;height:34px;padding:0;border-radius:999px;
   display:flex;align-items:center;justify-content:center;
-  transition:background-color .12s ease,color .12s ease}
+  transition:background-color var(--dur-fast),color var(--dur-fast)}
 .book-x:hover{color:var(--c-heading);background:color-mix(in srgb,var(--c-rule) 55%,transparent)}
-@media (prefers-reduced-motion:reduce){.book-x{transition:none}}
 /* The reader's own hand on the type: a small a and a large A, plain glyphs on the paper.
    The pill-with-a-rule cut before this one drew a segmented control, and the owner read
    it as exactly that — buttons, with a dark seam between them on first paint. The size
    difference IS the label, so nothing else is drawn.
-   The two font sizes would misalign under flex centering, and an earlier cut shipped that
-   — so both glyphs sit on the SAME baseline instead: line-height 1,
-   both buttons bottom-aligned with one shared padding, and neither glyph has a descender,
-   which makes the bottoms the baseline. */
-.book-sizes{display:flex;align-items:flex-end}
+
+   EVERY GLYPH ON THE ROW'S OWN CENTRE LINE. The three boxes were centred and the glyphs
+   inside them were not: the pair shared a BASELINE, which is right for two letters read as
+   one control and wrong against the rest of the row, and it put the small a 2.9px below the
+   middle while the count and the close button sat on it. Four marks, three heights. Centred
+   instead, and the size difference still says which is which — it is the only thing that
+   ever said so. */
+.book-sizes{display:flex;align-items:center;gap:2px}
 .book-size{background:none;border:0;cursor:pointer;color:var(--c-meta);line-height:1;
-  font-family:var(--font-reading);height:34px;min-width:32px;padding:0 7px 9px;
-  display:flex;align-items:flex-end;justify-content:center;
-  transition:color .12s ease}
+  font-family:var(--font-reading);min-width:32px;padding:6px 7px;
+  display:flex;align-items:center;justify-content:center;
+  transition:color var(--dur-fast)}
 .book-smaller{font-size:.8em}
 .book-larger{font-size:1.2em}
 .book-size:hover:not([disabled]){color:var(--c-heading)}
 .book-size[disabled]{opacity:.4;cursor:default}
-@media (prefers-reduced-motion:reduce){.book-size{transition:none}}
 .book-count{font-size:var(--fs-caption);line-height:var(--lh-caption);
   letter-spacing:var(--ls-caption);color:var(--c-meta);font-variant-numeric:tabular-nums}
 /* Holds the dialog's initial focus (see book.ts) — a reading surface, not a control,
@@ -1062,11 +1364,12 @@ body:has(.book-overlay[open]){overflow:hidden}
 /* A flex:1 here silently beat the measured width — a flex item with a basis of 0 and
    grow 1 fills the stage no matter what the inline style says, so the spread ran the
    full viewport and the two facing pages became four. */
-/* The crossfade between spreads: dim, jump, come back. Without it the turn is a hard cut,
-   which is what "not smooth any more" meant. 200ms, matching the frozen tree, and the
-   motion switch above zeroes it like everything else. */
+/* The crossfade between spreads - dim, jump, come back - is fadeSwap() in motion.ts, on
+   the Web Animations API, so it reads --dur-fast and asks the gate itself: a CSS transition
+   here plus a timer in script flashed a blank spread for the timer's length whenever the
+   switch was off, because the timer did not know. */
 .book-viewport{position:relative;height:100%;flex:0 0 auto;max-width:100%;overflow:hidden;
-  padding:clamp(4px,2vh,24px) 0;transition:opacity var(--dur-fast) ease}
+  padding:clamp(4px,2vh,24px) 0}
 .book-flow{height:100%;column-gap:56px;column-width:var(--book-col-w,340px);column-fill:auto;
   max-width:none;
   /* Oldstyle figures and discretionary ligatures. Both were missing from every subset
@@ -1083,6 +1386,7 @@ body:has(.book-overlay[open]){overflow:hidden}
   width:100%;max-width:100%;margin-left:auto;margin-right:auto}
 /* The first column opens flush with the top of the page. */
 .book-flow.prose > :first-child{margin-top:0}
+
 /* Drop cap: the first paragraph opens with a large raised initial spanning about three
    lines, which is the classic chapter opening. The line beside it is not also indented. */
 .book-flow.prose > p:first-child::first-letter{float:left;margin:.02em .09em 0 0;
@@ -1122,29 +1426,41 @@ body:has(.book-overlay[open]){overflow:hidden}
 [data-list="grid"] .post-list .t-body{display:none}
 .listing-sentinel{height:1px}
 
-/* Cards ease in as they enter the viewport, in CSS. The frozen tree shipped an
-   IntersectionObserver fallback for engines without scroll-driven animations; 04-frontend.md
-   called for deleting it, and this is that deletion. An engine without support simply shows
-   the cards, which is the correct end state anyway. Motion is skipped entirely when the
-   reader has asked for less of it. */
-@supports (animation-timeline:view()){
-  @media (prefers-reduced-motion:no-preference){
-    .post-list > article{animation:card-in linear both;animation-timeline:view();animation-range:entry 0% entry 40%}
-  }
-}
-@keyframes card-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* A card's entrance is .reveal in islands.css.ts, and ONLY that. A second view() animation
+   on .post-list > article lived here until 2026-09-06, outside the owner's scroll-fade
+   switch, so a feed with the fade OFF still rose 10px on the way in - two entrances for
+   one card, in two files, and the switch was not one switch. */
 
-.site-bar{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+/* WRAPS, at every width and not only on a phone: the bar lives inside the reading column,
+   672px by default, and a title plus a menu of any length plus five controls do not fit.
+   Measured on an article at 1648px with four links: the menu wanted 403px and had 321, and
+   the last link was drawn through the search control. The row gives way, not the words. */
+.site-bar{display:flex;flex-wrap:wrap;row-gap:.25rem;align-items:center;justify-content:flex-end;gap:1rem}
+/* The auto margin is on the TITLE, and that is what makes the wrap land right. With
+   space-between the controls, once pushed onto a second line, were the only item on it and
+   space-between put them at the LEFT — under the wordmark, at the opposite edge from where
+   they sit when the row fits. End-justified plus one auto margin gives the same answer on
+   both: name at the left edge, everything else against the right, on however many lines.
+
+   BOTH SPELLINGS OF THE NAME. On a page with no heading of its own the site name becomes the
+   page's h1 and the link is wrapped in one — which is every listing, the home page included.
+   A direct-child selector stopped matching there, the auto margin went with it, and the
+   wordmark was drawn 235px in from the left edge of a 608px bar: floating in the middle of
+   the screen on the front door, and flush left on every article. The wrapper was added on the
+   promise that it carried no styling of its own and nothing on screen would move. */
+.site-bar > .title,.site-bar > .site-h1{margin-right:auto}
 /* -0.625rem optically aligns the LAST icon's glyph with the column's right margin: the
    40px button centres a 20px glyph, so the glyph sits 10px inside the button edge. Pulling
    the row right by that 10px lands it flush, matching the logo's flush-left edge. */
 .site-actions{display:flex;align-items:center;gap:.125rem;flex-shrink:0;margin-right:-.625rem}
-/* The owner's menu, in the same cluster as the controls, from 60rem up (narrower than that
-   the row is a title and five controls already). The .5rem past the bar's own 1rem gap holds
-   the first control further off than the next link, so it is not read as one of them. */
+/* The owner's menu, in the same cluster as the controls; the .5rem past the bar's own 1rem
+   gap holds the first control off further than the next link, so it is not read as one.
+   display:none under 60rem: the bar wraps now, so the words WOULD fit on a line of their
+   own, and letting them measured 254px of header on a 375px screen before the article
+   title. Every layout but this one hands that width to the rail's drawer instead. */
 .site-menu{display:none}
 @media (min-width:60rem){
-  .site-menu{display:flex;align-items:center;gap:1.25rem;margin-left:auto;min-width:0;padding-right:.5rem}
+  .site-menu{display:flex;flex-wrap:wrap;row-gap:.35rem;align-items:center;gap:1.25rem;margin-left:auto;min-width:0;padding-right:.5rem}
   .site-menu a{color:var(--c-meta);text-decoration:none;white-space:nowrap}.site-menu a:hover{color:var(--c-heading)}
 }
 .icon-btn{display:flex;align-items:center;justify-content:center;width:2.5rem;height:2.5rem;
@@ -1155,19 +1471,7 @@ body:has(.book-overlay[open]){overflow:hidden}
 .btn-token{display:none;font-size:var(--fs-caption);line-height:var(--lh-caption);
   letter-spacing:var(--ls-caption)}
 
-/* The overlays. Both are dialogs, so Escape and the inert background are the browser's. */
-.overlay[open]{display:flex}
-.overlay{flex-direction:column;border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);padding:1.25rem;
-  width:min(36rem,92vw);max-height:70vh;background:var(--c-bg);color:var(--c-text);margin-top:8vh}
-.overlay::backdrop{background:rgba(0,0,0,.4)}
-.search-close{position:absolute;top:.5rem;right:.5rem;border:0;background:none;color:var(--c-meta);
-  font-size:1.25rem;line-height:1;cursor:pointer}
-.search-input{padding:.6rem .75rem;border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);
-  background:var(--c-bg);color:var(--c-text);font:inherit;margin-right:2rem}
-.search-results{list-style:none;padding:0;margin:1rem 0 0;overflow-y:auto}
-.search-results li{margin:0 0 .6rem}
-.search-results a{color:var(--c-heading);text-decoration:none}
-.search-results a:hover{text-decoration:underline}
+/* The header overlays (search, sign-up) and their one panel are in subscribe.css.ts. */
 
 
 /* The thread runs at --fs-small throughout, which is the frozen tree's setting and the
@@ -1227,7 +1531,8 @@ body:has(.book-overlay[open]){overflow:hidden}
 .comment-field label{display:block;color:var(--c-meta);margin-bottom:.375rem}
 .comment-body-field{margin-top:1rem}
 .comment-form input,.comment-form textarea{width:100%;padding:.5rem .75rem;border:1px solid var(--c-rule);
-  border-radius:var(--radius,.5rem);background:var(--c-bg);color:var(--c-text);font:inherit}
+  border-radius:var(--radius,.5rem);background:var(--c-bg);color:var(--c-text);font:inherit;
+  box-shadow:var(--well)}
 /* The focus treatment the newsletter field already had, applied to the same-looking field. */
 .comment-form input:focus,.comment-form textarea:focus{border-color:var(--c-heading)}
 .comment-form textarea{display:block;resize:vertical}
@@ -1256,21 +1561,169 @@ body:has(.book-overlay[open]){overflow:hidden}
 .comment-form .comment-signout{margin:0;border:0;background:none;padding:0;
   color:var(--c-meta);font:inherit;cursor:pointer;text-decoration:underline}
 .comment-form .comment-signout:hover{color:var(--c-heading)}
+
+/* THE OVERLAY SETS ITS OWN TEXT, and this is the half that was missing.
+   This sheet opens by saying book mode keeps its OWN standard rather than the site's, and
+   it kept it for paper, ink, the drop cap, the asterism and the spine. The WORDS were left
+   to features.bookText, which is a setting about the scrolling article and is off on a
+   fresh install. Measured on a blog that had not turned it on: a spread with a drop cap, a
+   centre spine and an asterism, setting its paragraphs ragged, unindented and unhyphenated,
+   which is a web page cut into pages. The indent is what tells a reader a paragraph
+   CONTINUES when there is no blank line to say so, and on a paged column there is none. */
+/* TWO EMS, up from 1.6 on 2026-09-14. A paragraph break on a paged column is the indent
+   and nothing else — there is no blank line to add and no room for one on a baseline grid —
+   so the indent is the ONLY thing saying a new paragraph has started, and at 1.6em over a
+   57-character justified measure it was saying it under its breath. Two ems is the top of
+   the range a printed book uses and about four characters here. */
+.book-flow.prose p{text-indent:2em}
+.book-flow.prose :is(h1,h2,h3,h4,h5,blockquote,figure,pre,ul,ol,hr,table,.table-scroll,.gallery,.video-embed) + p{text-indent:0}
+.book-flow.prose li p,.book-flow.prose blockquote p{text-indent:0}
+@media (min-width:600px){
+  /* The viewport, not the column: below this the overlay is one narrow page and justifying
+     it opens rivers no hyphen can close. The limits are the article's own, and their
+     reasoning is in prose.css.ts. */
+  .book-flow.prose p,.book-flow.prose li{text-align:justify;hyphens:auto;
+    hyphenate-limit-chars:6 3 3;
+    -webkit-hyphenate-limit-before:3;-webkit-hyphenate-limit-after:3}
+}
+
+/* A CODE LINE HAS NOWHERE TO SCROLL ON A PAGE, so it wraps instead of being cut off.
+   The scrolling article gives a wide block overflow-x:auto and the reader pans it, which is
+   fine on a page that already moves under the finger. A paged column does not move: measured
+   on 2026-09-12, one block hid 126px of a 690px line at 1440 and 294px at 949, and the only
+   thing on screen saying so was a 2px overlay scrollbar in a reading surface where every
+   other gesture turns the page. Wrapping shows every character; break-word is for the one
+   long unbroken token (a path, a URL) that no space can fold. */
+.book-flow.prose pre{white-space:pre-wrap;overflow-wrap:break-word;overflow-x:visible}
+
+/* THE BASELINE GRID, which is the thing a printed book has and a column of HTML does not.
+   Two columns of a spread only read as one page if their lines sit at the same heights, and
+   that holds only while every gap between blocks is a whole number of lines. Measured at
+   1440 before this rule: the line is 31.32px, a paragraph gap was 58px (1.85 lines), and
+   heading gaps were 67 and 42 (2.14 and 1.34). So the left column and the right column went
+   out of phase at the first paragraph break and drifted from there.
+
+   A paragraph therefore leads with NOTHING but its indent, which is what a book does and
+   what leaves the gap at exactly one line. A heading's own line box is set to whole lines of
+   the body: a heading whose leading is not a multiple of the text's leading knocks
+   everything under it off the grid, however tidy its own margins are.
+
+   ⚠️ THE HEADING'S AIR IS INSIDE ITS LINE BOX, not all in its margins, and that is what
+   makes the section breaks stop shouting. It used to be two lines of margin above, a
+   one-line box, and one line below: four line-slots, and 81px of white above the words
+   against 34px below, on a page whose paragraphs are separated by an indent and nothing
+   else. Reported from a published spread, 2026-09-14 — the gaps between sections read as
+   the loudest thing on the page.
+
+   One line of margin and a TWO-line box now: the face sits in the middle of its own air, so
+   the reader gets about a line and a half above the words and half a line below, in three
+   slots rather than four. Above still beats below, which is this admin's rule about what a
+   heading belongs to, and every gap is still a whole number of lines — which is the only
+   thing keeping the two columns of a spread in phase. h1 already took a two-line box,
+   because 2em of face does not fit in one. */
+.book-flow.prose{--book-line:calc(var(--fs-body) * var(--lh-body))}
+.book-flow.prose > p{margin-top:0}
+.book-flow.prose > :is(h1,h2,h3,h4,h5){margin-top:var(--book-line);
+  line-height:calc(2 * var(--book-line))}
+.book-flow.prose > :is(h1,h2,h3,h4,h5) + *{margin-top:0}
+/* Everything that is not a paragraph or a heading — a list, a quote, a figure, a rule —
+   takes one blank line above and one below, so it occupies whole lines too. */
+.book-flow.prose > :is(ul,ol,blockquote,pre,table,.table-scroll,hr){
+  margin-top:var(--book-line);margin-bottom:0}
+.book-flow.prose > :is(ul,ol,blockquote,pre,table,.table-scroll,hr) + *{
+  margin-top:var(--book-line)}
+/* A PICTURE IS A PLATE, AND ITS CAPTION BELONGS TO IT. The caption sits 8px under the
+   picture and the text resumed ONE line after the caption — which, now that a paragraph
+   break costs nothing but an indent, is the same distance as the gap between two ordinary
+   paragraphs. So the caption glued itself to the words underneath and read as their opening
+   line. Two lines each side, so the plate stands clear and still lands on whole lines.
+   ⚠️ Its own rule rather than a name in the list above: :is() takes the specificity of its
+   most specific argument, so that list carries the CLASS in .table-scroll and outranks a
+   plain figure element — which is why two lines here looked like one until it was measured. */
+.book-flow.prose > figure{margin-top:calc(2 * var(--book-line));margin-bottom:0}
+.book-flow.prose > figure + *{margin-top:calc(2 * var(--book-line))}
+
+/* THE PHONE'S READER: the same paper, scrolled instead of turned (book-scroll.ts).
+   It is not a dialog, so the DOCUMENT scrolls — which is the whole point, because iOS only
+   retracts its address bar and toolbar while the page itself is moving. Measured on an
+   iPhone at 844px: Safari kept 190px and the reader's own bar another 56, so the words had
+   under 600 and a nineteen-page article turned a page every four sentences.
+   The page's own content is hidden by one rule rather than by touching every element, so
+   closing the reader restores the page with nothing to remember. */
+/* THE GROUND BEHIND SAFARI'S OWN BARS IS THE PAPER, and that is the whole of this rule.
+   iOS paints the status bar's strip, and the area its address bar retracts from, with the
+   document's background - the site's page colour, white on the default palette - not with
+   whatever element happens to be under it. So the reader had a white band above its paper
+   on an iPhone, exactly where an ordinary page shows none, because an ordinary page IS
+   white there. The reader is paper to the top of the glass only if the document is. The
+   island also sets theme-color to the same stock while the reader is open (book-scroll.ts),
+   which is what Safari reads first when it is present. */
+html.book-reading,html.book-reading body{background:#faf8f3}
+html.book-reading{overflow-x:hidden}
+html.book-reading body>*:not(.book-reader){display:none}
+.book-reader{min-height:100dvh;font-family:var(--font-reading);letter-spacing:var(--ls-body);
+  --book-paper:#faf8f3;--c-bg:var(--book-paper);--type-scale:1.05;
+  --c-text:#211f1a;--c-heading:#16130d;--c-meta:#6f6a5c;--c-link:#2f2c25;
+  --c-accent:#2f2c25;--c-rule:#e2ddd2;color:var(--c-text);
+  background-color:var(--book-paper);background-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.24'/%3E%3C/svg%3E")}
+/* FIXED, not sticky: Safari resizes the visual viewport as its own bars collapse, and a
+   sticky bar rides that resize in steps while the thumb is still moving. Fixed, plus the
+   direction rule in the island, is what makes it feel like a reading app rather than like
+   a header being dragged. */
+.book-reader .book-chrome{position:fixed;inset-inline:0;top:0;z-index:2;
+  padding-top:env(safe-area-inset-top,0px);background:var(--book-paper);
+  transition:transform var(--dur-fast) ease}
+.book-reader.chrome-away .book-chrome{transform:translateY(-100%)}
+/* NO STRIP UNDER THE STATUS BAR when the chrome is away. There was one - a fixed band of
+   paper the height of the safe-area inset, kept after the bar left so a line scrolling past
+   the clock had paper behind it. The owner read it as a band that blocks the words: on an
+   ordinary page the text runs under the status bar while you read down, and the chrome only
+   comes back when you scroll up. So the reader does the same. The bar's own padding-top
+   (above) still covers the inset while the bar is showing. */
+/* The inset, the bar and its rule, so the first line clears all three when the bar shows. */
+.book-page{padding:calc(env(safe-area-inset-top,0px) + 56px + 1.5rem) 20px calc(3rem + env(safe-area-inset-bottom,0px))}
+.book-reader .book-flow{max-width:38rem;margin:0 auto;columns:auto;column-width:auto;width:auto}
+/* Motion off is the engine gate in motion.css.ts, not a rule here. */
+/* The overlays. Both are dialogs, so Escape and the inert background are the browser's. */
+.overlay[open]{display:flex}
+.overlay{flex-direction:column;border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);padding:1rem;
+  width:min(32rem,92vw);max-height:70vh;background:var(--c-bg);color:var(--c-text);margin-top:8vh;
+  /* Chrome size, not reading size: it inherited the body, so a long-form blog drew a search
+     box with 20px placeholder in an 80px field. */
+  box-shadow:var(--lift);font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small)}
+.overlay::backdrop{background:rgba(0,0,0,.4)}
+/* ONE panel for both header overlays. Search and the sign-up used to be two designs: a
+   framed 32rem box 8vh down with a close glyph, and a frameless 28rem card 12vh down with
+   none. Same frame, same width, same top, same heading, same close - the card inside the
+   sign-up overlay drops its own border and padding (subscribe.css.ts) so the panel is the
+   only frame. The glyph is named for the panel, not for search, because both carry it. */
+.overlay-close{position:absolute;top:.75rem;right:.75rem;width:2rem;height:2rem;display:flex;align-items:center;justify-content:center;
+  border:0;border-radius:999px;background:none;color:var(--c-meta);font-size:1.125rem;line-height:1;cursor:pointer}
+.overlay-close:hover{color:var(--c-heading);background:var(--c-rule)}
+.overlay h2{font-size:inherit;font-weight:var(--fw-heading,600);color:var(--c-heading);margin:0 2rem .75rem 0}
+.search-input{width:100%;padding:.5rem .75rem;border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);background:var(--c-bg);color:var(--c-text);font:inherit;box-shadow:var(--well)}
+.search-input:focus{border-color:var(--c-heading)}
+.search-results{list-style:none;padding:0;margin:.85rem 0 0;overflow-y:auto}
+.search-results li{margin:0 0 .6rem}
+.search-results a{color:var(--c-heading);text-decoration:none}
+.search-results a:hover{text-decoration:underline}
+
 /* The sign-up card: a bordered panel at the end of an article, and the same markup the
    header's mail button opens as an overlay. It was a bare form with a top rule, which read
    as another section of the article rather than as an invitation. */
-/* The sign-up card IS the modal panel: it is already a bordered card on theme tokens, so
-   the overlay strips its own frame rather than drawing a second one around it. */
-.subscribe-overlay{border:0;padding:0;background:none;width:min(28rem,92vw);margin-top:12vh}
-.subscribe-overlay .subscribe-card{background:var(--c-bg);
-  box-shadow:0 25px 50px -12px rgba(0,0,0,.25)}
+/* Inside the header overlay the PANEL is the frame (.overlay, book.css.ts, shared with
+   search): the card drops its own border and padding so there is one box, not one inside
+   another. The card's heading keeps the room the panel's close glyph needs. */
+.overlay .subscribe-card{border:0;border-radius:0;padding:0;box-shadow:none}
 
 /* The theme menu. The island builds these two elements and nothing styled them, so the
    rows rendered as unstyled blocks that pushed the header apart instead of a dropdown. */
 .theme-wrap{position:relative;display:inline-flex}
 .theme-menu{position:absolute;right:0;top:100%;margin-top:.5rem;z-index:50;width:11rem;
   overflow:hidden;border:1px solid var(--c-rule);background:var(--c-bg);padding:.25rem 0;
-  box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1)}
+  /* It had none, so the site's one square corner was the menu that opens off the header. */
+  border-radius:var(--radius,.5rem);box-shadow:var(--lift)}
 .theme-menu[hidden]{display:none}
 .theme-menu button{display:flex;width:100%;align-items:center;justify-content:space-between;
   padding:.5rem .75rem;border:0;background:none;cursor:pointer;text-align:left;font:inherit;
@@ -1285,11 +1738,13 @@ body:has(.book-overlay[open]){overflow:hidden}
 .subscribe-card{border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);padding:1.25rem;
   font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small)}
 .subscribe-card h2{font-size:inherit;font-weight:var(--fw-heading,600);color:var(--c-heading);margin:0 0 .75rem}
+.overlay .subscribe-card h2{margin-right:2rem}
 form.subscribe{display:flex;gap:.5rem;margin:0}
 /* The honeypot: parked, not display:none — some form fillers skip boxless fields. */
 form.subscribe .hp{position:absolute;left:-9999px;width:1px;height:1px;flex:none;border:0;padding:0;opacity:0;pointer-events:none}
 form.subscribe input{min-width:0;flex:1;padding:.5rem .75rem;border:1px solid var(--c-rule);
-  border-radius:var(--radius,.5rem);background:var(--c-bg);color:var(--c-text);font:inherit}
+  border-radius:var(--radius,.5rem);background:var(--c-bg);color:var(--c-text);font:inherit;
+  box-shadow:var(--well)}
 /* The border darkening stays, the outline:none does not: it was cancelling the site's one
    focus ring on the only field in the header, so keyboard focus vanished here alone. */
 form.subscribe input:focus{border-color:var(--c-heading)}
@@ -1325,7 +1780,12 @@ form.subscribe button:disabled{opacity:.5}
    is what the rest of this page already does with the label on the related-posts block. */
 .front-label{font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small);
   font-weight:var(--fw-heading,600);color:var(--c-heading);margin:0}
-.front-label a{color:inherit;text-decoration:none}
+.front-label a{color:inherit;text-decoration:none;
+  /* A BIGGER TARGET THAN IT LOOKS. The row heading is set at the small size, so its link
+     measured 84x21 and 92x21 on the front page, under the 24px a fingertip is judged by.
+     Vertical padding on an INLINE box does not grow the line, so this is four more pixels
+     of touchable area above and below the words and nothing at all moves. */
+  padding-block:.25rem}
 /* The topic links, one step quieter again so the label reads first. Wrapped, never scrolled:
    a row that scrolls sideways on a phone hides half of itself and nothing says so. */
 .front-topics{display:flex;flex-wrap:wrap;gap:.25rem .75rem;margin:0;color:var(--c-meta);
@@ -1385,6 +1845,20 @@ form.subscribe button:disabled{opacity:.5}
 }
 @media (min-width:901px){
   .front-grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+/* THE ORPHAN. A three-column row on a two-column screen (641 to 900, an iPad upright) puts
+   its third card alone on a second line beside an empty cell, and the row ends on a hole.
+   The card that STARTS a line alone at the end of the row takes the whole line instead:
+   with a picture it turns sideways, the thumbnail a third and the words two thirds, so the
+   row closes on a full line; without one the words are capped at a reading measure rather
+   than run across 800px. The odd/last pair is what says "alone on its line" in two columns;
+   a single-card row is excluded because it is not an orphan, it is the row. */
+@media (min-width:641px) and (max-width:900px){
+  .front-grid.cols-3 > .fc:nth-child(odd):last-child:not(:first-child){grid-column:1 / -1}
+  .front-grid.cols-3 > .fc.has-media:nth-child(odd):last-child:not(:first-child){display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:1.5rem;align-items:start}
+  .front-grid.cols-3 > .fc.has-media:nth-child(odd):last-child:not(:first-child) .fc-media{margin:0}
+  .front-grid.cols-3 > .fc:not(.has-media):nth-child(odd):last-child:not(:first-child) .fc-text{max-width:42rem}
 }
 @media (max-width:640px){
   .front{gap:2rem}
@@ -1466,6 +1940,16 @@ form.subscribe button:disabled{opacity:.5}
 .post-list article[data-thumb=side] .card-thumb{float:left;width:96px;
   margin:.2rem calc(var(--sp) * 1.1) calc(var(--sp) * .45) 0}
 
+/* THE STANDFIRST STARTS UNDER THE PICTURE, not beside it, and this is the half the rule above
+   got wrong. It assumed four lines would run past the picture and close up; what actually sits
+   beside a 96px square is the kind line and the headline, and the standfirst gets one or two
+   lines before the float ends. Measured at 1440 on 2026-09-12: one card ran two lines at 529.6
+   and then dropped to 416, another ran a SINGLE line at 529.6 before dropping — a paragraph
+   whose left edge steps 113.6px in the middle of itself, which reads as a mistake rather than
+   as a wrap. Clearing it costs the white beside a one-line headline and buys every line of
+   every standfirst on the front page one left edge. */
+.post-list article[data-thumb=side] > :is(h2,h3) + p{clear:left}
+
 /* A phone has ~230px left beside a 96px picture, which is not a column for a headline.
    Smaller picture, tighter gutter: the words still wrap under it, just sooner. */
 @media (max-width:559px){
@@ -1487,6 +1971,62 @@ form.subscribe button:disabled{opacity:.5}
   font-size:var(--fs-small);line-height:var(--lh-small);letter-spacing:var(--ls-small)}
 .author-bio{margin:.35rem 0 0}
 
+/* --- motion engine ------------------------------------------------------------------ */
+:root{--dur-fast:.15s;--dur-base:.2s;--dur-slow:.5s;--ease-out:cubic-bezier(.2,.7,.3,1)}
+
+/* THE FLOOR. Every control answers a pointer at the same speed. :where() on purpose: it
+   makes this selector specificity ZERO, so any rule a component states for itself wins
+   outright - the to-top button keeps its opacity fade, the rail its slide. Only the
+   properties a hover or a focus actually changes, never all: transitioning layout is how a
+   list starts sliding about when a row is added. */
+:where(a,button,summary,input,select,textarea,[role=button]){
+  transition-property:color,background-color,border-color,text-decoration-color,outline-color,fill,stroke,opacity,box-shadow;
+  transition-duration:var(--dur-fast);transition-timing-function:ease}
+
+/* THE CLICK, for everything a finger can press. Pressing lands at once - the 1px of travel
+   and the carved-in shadow arrive with transition-duration:0 - and only the release is
+   sprung, on whatever transition the control already carries (the floor, for most). A
+   control that eases both ways feels like a screen; a key that drops now and springs back
+   is what a hand expects of a pressed thing. The shadow is the palette's own heading ink
+   diluted (an engine without color-mix loses the shading, never the button), so every
+   palette carves with its own ink. The book arrows keep their translateY centring (colour
+   only, no travel) and the resume pill composes its centring with the dip. With motion off
+   and under reduced motion the shadow stays and the travel goes: the state must still be
+   legible without the movement, so relief is never the only cue. */
+.icon-btn:active,.code-copy:active,form.subscribe button:active,.theme-menu button:active,
+.lightbox button:active,.to-top:active,.book-x:active,.comment-form button:active{
+  transform:translateY(1px);transition-duration:0s;
+  box-shadow:inset 0 1.5px 2.5px color-mix(in srgb,var(--c-heading) 22%,transparent)}
+.resume-pill:active{transform:translateX(-50%) translateY(1px);transition-duration:0s;
+  box-shadow:inset 0 1.5px 2.5px color-mix(in srgb,var(--c-heading) 22%,transparent)}
+.book-arrow:active{color:var(--c-heading)}
+html[data-motion=off] :is(.icon-btn,.code-copy,form.subscribe button,.theme-menu button,.lightbox button,.to-top,.book-x,.comment-form button):active{transform:none}
+html[data-motion=off] .resume-pill:active{transform:translateX(-50%)}
+@media (prefers-reduced-motion:reduce){
+  :is(.icon-btn,.code-copy,form.subscribe button,.theme-menu button,.lightbox button,.to-top,.book-x,.comment-form button):active{transform:none}
+  .resume-pill:active{transform:translateX(-50%)}
+}
+
+/* THE ENTRANCES. A menu or a dialog ARRIVES: it starts a shade transparent and a few pixels
+   short of its place and settles on the one curve. Pure CSS, from the @starting-style the
+   browser applies on the frame an element first appears, so the islands stay as they are -
+   hidden = true and showModal() are still the whole of the script. An engine without
+   @starting-style or allow-discrete simply shows and hides instantly, which is the state
+   every rule below starts from, so nothing can be left invisible.
+
+   Opacity ONLY on a dialog. A transform on it would make the dialog the containing block
+   for anything fixed inside it during the entrance, and the element would jump when the
+   transform came off. The menu is small and owns no fixed child, so it may also travel. */
+dialog{transition:opacity var(--dur-base) var(--ease-out),overlay var(--dur-base) allow-discrete,display var(--dur-base) allow-discrete}
+dialog::backdrop{transition:opacity var(--dur-base) var(--ease-out),overlay var(--dur-base) allow-discrete,display var(--dur-base) allow-discrete}
+dialog:not([open]),dialog:not([open])::backdrop{opacity:0}
+@starting-style{dialog[open],dialog[open]::backdrop{opacity:0}}
+.theme-menu{transition:opacity var(--dur-fast) var(--ease-out),translate var(--dur-fast) var(--ease-out),display var(--dur-fast) allow-discrete}
+.theme-menu[hidden]{opacity:0;translate:0 -4px}
+@starting-style{.theme-menu:not([hidden]){opacity:0;translate:0 -4px}}
+
+@media (prefers-reduced-motion:reduce){*,::before,::after,::backdrop{animation:none!important;transition:none!important}}
+html[data-motion=off] *,html[data-motion=off] ::before,html[data-motion=off] ::after,html[data-motion=off] ::backdrop{animation:none!important;transition:none!important}
 @media (max-width:639px){
 /* iOS Safari zooms the whole page when a focused control is set below 16px, and --fs-small
    measures 14px on this site: tapping the sign-up field shifted the layout sideways and left
@@ -1495,6 +2035,12 @@ form.subscribe button:disabled{opacity:.5}
    specificity as a bare element selector would. */
 form.search input,form.subscribe input,.search-input,
 .comment-form input,.comment-form textarea{font-size:max(16px,1em)}
+
+/* The grid button does nothing a phone can see: measured at 390, pressing it dropped the
+   excerpts and kept the one column, so the control promised a layout the screen could not
+   give. A choice made on a laptop still travels (the island keeps it), and lands as the same
+   one column; the button simply is not offered where it cannot answer. */
+[data-grid-toggle]{display:none}
 
 /* THE GUTTER IS THE MEASURE, on a phone and nowhere else.
    The shell has always taken 2rem a side. Above the phone breakpoint that padding is dead
@@ -1569,6 +2115,15 @@ footer.site a{display:inline-block;padding-block:.35rem}
    it. */
 .site-bar{flex-wrap:wrap;row-gap:.25rem}
 .site-actions{margin-left:auto}
+
+/* NO READING-PROGRESS BAR ON A PHONE. The scrollbar is already the answer to how far in you
+   are, and it is the answer the reader's own OS draws; a second one across the top of a
+   320px screen is a 2px line reporting a fact the device reports better. It also stuttered:
+   the bar is a scroll-driven animation, and on a phone it shares the compositor with the
+   address bar collapsing and the rubber-band at both ends, so it moved in steps while the
+   page moved smoothly. This is display, not opacity: the element leaves the page entirely
+   rather than sitting there invisible over the top edge. */
+.progress{display:none}
 }
 
 /* Copy sat behind pre:hover, and a touch screen never hovers: the button existed on a phone
@@ -1595,12 +2150,12 @@ footer.site a{display:inline-block;padding-block:.35rem}
    .site-actions div above, so it is already gone. The test that checks every selector here
    is a selector the site still uses is what said so. */
 .progress,.site-actions,.toc,.to-top,.book-fab,.meta-book,.skip-link,.quote-copy,
-.book-overlay,.lightbox,.subscribe-overlay,.subscribe-card,form.subscribe,
+.book-overlay,.lightbox,.overlay,.subscribe-card,form.subscribe,
 #comments,.related,.read-next,.resume-pill,footer.site{display:none!important}
 /* ...and the rule drawn ABOVE each of them, which would otherwise be left ruling off the
    end of the essay against nothing. The divider belongs to the block it introduces, and
    :has is how a stylesheet says that without the renderer having to know. */
-hr:has(+ .related),hr:has(+ #comments){display:none!important}
+hr:has(+ .related),hr:has(+ #comments),hr:has(+ .read-next){display:none!important}
 
 /* The scroll reveal, undone. A listing card eases in as it crosses the viewport, and the
    progress of a view() timeline on paper is whatever it was on screen - which for every card

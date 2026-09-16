@@ -84,7 +84,7 @@ function quireink_setup() {
 	// while the front end ran base first, which is invariant 1 broken on the side the guard
 	// could not see - `check:order` reads `wp_enqueue_style` calls and this is not one.
 	//
-	// quireink-ide.css is deliberately absent. Not one rule in it touches `.prose`, the post
+	// quireink-look-code.css is deliberately absent. Not one rule in it touches `.prose`, the post
 	// title or a comment body, so in the editor it could only ever have been bytes.
 	//
 	// editor.css is NOT in this list, and that is not an omission - see `quireink_editor_css()`.
@@ -125,12 +125,12 @@ function quireink_assets() {
 	 * compress a little worse in two files, plus one request on an open connection.
 	 *
 	 * Where it lands among the sheets does not matter, and that is a property of the sheet
-	 * rather than luck: every selector in it carries `html[data-ide-chrome=on]`, so it cannot
+	 * rather than luck: every selector in it carries `html[data-look=code]`, so it cannot
 	 * tie with anything else the theme loads. It is put here because this is where it sat
 	 * inside the base sheet, and a reader of this list should not have to wonder.
 	 */
 	if ( 'on' === get_theme_mod( 'quireink_ide_chrome', 'on' ) ) {
-		wp_enqueue_style( 'quireink-ide', $dir . '/assets/css/quireink-ide.css', array( 'quireink-base' ), $v );
+		wp_enqueue_style( 'quireink-look-code', $dir . '/assets/css/quireink-look-code.css', array( 'quireink-base' ), $v );
 	}
 
 	wp_enqueue_style( 'quireink-tokens', $dir . '/assets/css/quireink-tokens.css', array( 'quireink-base' ), $v );
@@ -246,7 +246,10 @@ add_filter( 'script_loader_tag', 'quireink_module_type', 10, 2 );
  * The attributes Quire Ink's islands read off <html>.
  *
  * `data-chrome-font` keys the mono-tracking rules; `data-motion` is the reduced-motion
- * switch; `data-ide-chrome` turns the code-block window frame on. The palette and the
+ * switch; `data-look` chooses the dialect the furniture is set in. The setting behind it is
+ * still called `quireink_ide_chrome`: Quire Ink renamed the treatment to a LOOK in 2.2.10,
+ * but ten blogs have the old key stored and renaming it would quietly reset their choice.
+ * The palette and the
  * light/dark scheme are NOT written here on purpose — core.js writes them from the reader's
  * own stored choice, and a value printed server-side would win the first paint and then be
  * overwritten, which is the flash the attribute exists to avoid.
@@ -255,7 +258,7 @@ function quireink_html_attrs( $output ) {
 	$attrs = array(
 		'data-motion'      => get_theme_mod( 'quireink_motion', 'on' ),
 		'data-chrome-font' => get_theme_mod( 'quireink_chrome_font', 'jetbrains-mono' ),
-		'data-ide-chrome'  => get_theme_mod( 'quireink_ide_chrome', 'on' ),
+		'data-look'        => 'on' === get_theme_mod( 'quireink_ide_chrome', 'on' ) ? 'code' : 'plain',
 	);
 	foreach ( $attrs as $k => $val ) {
 		$output .= sprintf( ' %s="%s"', esc_attr( $k ), esc_attr( $val ) );

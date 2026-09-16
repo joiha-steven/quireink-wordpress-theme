@@ -67,7 +67,7 @@ function rewrite(selector: string): string | null {
     if (rest !== '' && !/^[\s>+~]/.test(rest)) return null
     return (CANVAS + rest).trim()
   }
-  // `.book-text .prose p`, `html[data-ide-chrome=on] .prose ...`: the ancestor is a state the
+  // `.book-text .prose p`, `html[data-look=code] .prose ...`: the ancestor is a state the
   // editor canvas never has, so the rule cannot fire there and has no business being copied.
   return null
 }

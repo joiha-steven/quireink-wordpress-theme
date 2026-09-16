@@ -21,7 +21,7 @@ const ORDER = ['quireink-base', 'quireink-tokens', 'quireink-bridge', 'quireink-
 // Outside the chain, because it is enqueued only when the switch is on and a conditional
 // link cannot be a link in a chain. It still has to hang off the base sheet, or WordPress is
 // free to emit it first.
-const OFF_CHAIN: Record<string, string> = { 'quireink-ide': 'quireink-base' }
+const OFF_CHAIN: Record<string, string> = { 'quireink-look-code': 'quireink-base' }
 
 // THE SAME ORDER HAS TO HOLD IN THE EDITOR. This guard used to read `wp_enqueue_style` only,
 // and on the other side of that blind spot `add_editor_style()` was listing tokens BEFORE
