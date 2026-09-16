@@ -13,7 +13,7 @@ copy of the look is GPL, the blog engine is not.
 bun run check:all
 ```
 
-Nine static guards — `filesize` · `order` · `bridge` · `contrast` · `classes` · `escape` · `generated` · `headers` · `docs`. Seconds.
+Ten static guards — `filesize` · `order` · `bridge` · `contrast` · `classes` · `escape` · `generated` · `headers` · `pair` · `docs`. Seconds.
 `check:generated` skips with a warning when there is no Quire Ink checkout beside this one.
 
 `check:all` proves the seams hold. It cannot tell you the rail is empty, a figure is at the
@@ -57,6 +57,7 @@ picture, and puts your database back afterwards.
 | Touching CSS | [`docs/conventions/css.md`](./docs/conventions/css.md) |
 | Touching a template | [`docs/conventions/php.md`](./docs/conventions/php.md) |
 | Taking something new from the blog engine | [`docs/conventions/extract.md`](./docs/conventions/extract.md) |
+| Anything that touches the plugin, or could | [`docs/pair.md`](./docs/pair.md) — generated; edit the master |
 | Going against a past decision | [`docs/decisions/`](./docs/decisions/README.md) — the in-force index first |
 | Wondering what does not survive the trip | [`docs/gaps.md`](./docs/gaps.md) |
 | Touching a control, a colour or a heading | [`docs/accessibility.md`](./docs/accessibility.md) — the measurements, and the one criterion that fails |
@@ -97,6 +98,9 @@ picture, and puts your database back afterwards.
   fact or the measurement.
 - **No support for markup nobody can author.** [ADR 0003](./docs/decisions/0003-skip-what-gutenberg-cannot-express.md).
   Build the authoring side first, or ship neither.
+- **Never require the Quire Ink Pen plugin, and never ship the pen's ink.** The two are made
+  for each other and neither may need the other ([ADR 0010](./docs/decisions/0010-the-plugin-is-a-companion-not-a-dependency.md)).
+  `docs/pair.md` is GENERATED from a master neither repository owns.
 
 ## Danger zones
 

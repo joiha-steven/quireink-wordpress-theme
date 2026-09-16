@@ -8,6 +8,7 @@
 | Touching CSS | [`conventions/css.md`](conventions/css.md) — which sheet a rule belongs in, and the order they load |
 | Touching a template | [`conventions/php.md`](conventions/php.md) — escaping, prefixes, the file ceiling |
 | Taking something new from the blog engine | [`conventions/extract.md`](conventions/extract.md) — how the generator works and what it refuses to do |
+| Anything that touches the plugin, or could | [`pair.md`](pair.md) — how this theme and the Quire Ink Pen plugin relate without depending on each other. **Generated**; edit the master |
 | Wondering why something is the way it is | [`decisions/`](decisions/README.md) — read the in-force index first |
 | Wondering what does not survive the trip | [`gaps.md`](gaps.md) — measured, not guessed |
 | Touching a control, a colour or a heading | [`accessibility.md`](accessibility.md) — what was measured, and the one criterion that fails |
