@@ -20,7 +20,7 @@
 bun run check:all
 ```
 
-Nine static guards: `filesize` · `order` · `bridge` · `contrast` · `classes` · `escape` · `generated` · `headers` · `docs`. Seconds,
+Ten static guards: `filesize` · `order` · `bridge` · `contrast` · `classes` · `escape` · `generated` · `headers` · `pair` · `docs`. Seconds,
 not minutes. `check:generated` skips with a warning when there is no Quire Ink checkout beside
 this one.
 

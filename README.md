@@ -2,7 +2,7 @@
 
 # Quire Ink for WordPress
 
-`0.1.3`
+`0.1.4`
 
 **A WordPress theme for people who write long things and want them read.**
 The reading surface of the [Quire Ink](https://quireink.com) blog engine, generated from that
@@ -55,16 +55,16 @@ shortcode. Switch away and every post is still a post.
 |:---|:---|
 | 📐&nbsp;**The&nbsp;page** | One column of about seventy characters, the contents of the post in one gutter and its facts in the other. Below the width that holds them, both fold away without a second layout to maintain |
 | 🎨&nbsp;**Colour** | Six palettes, each in light and dark, chosen by the reader and remembered on their device. Every one clears WCAG AA against its own background, and a static check re-measures all sixty colours on every run |
-| 🔤&nbsp;**Type** | Six typefaces in the theme, all OFL, cut to Latin, Latin Extended and Vietnamese. Twenty-one files ship and a browser fetches four, because each face declares the characters it covers |
-| 📖&nbsp;**Book&nbsp;mode** | The article reset in two columns with a drop cap, sized from the window, with the reader's place kept |
+| 🔤&nbsp;**Type** | Six typefaces in the theme, all OFL, cut to Latin, Latin Extended and Vietnamese. Twenty-two files ship and a browser fetches four, because each face declares the characters it covers |
+| 📖&nbsp;**Book&nbsp;mode** | The article reset in two columns with a drop cap, sized from the window, with the reader's place kept. Its own bundle and its own switch: off removes the button and stops the 7.7 KB being fetched |
 | ✒️&nbsp;**Book&nbsp;typography** | Indented paragraphs, justified lines, hyphenation at the break. Off by default, because it is a taste and not an improvement |
 | 🗓️&nbsp;**The&nbsp;listing** | A spine down the gutter with a sticky year and a marker at each new month, positioned against cards that are already there. Nothing measures anything |
 | 🧱&nbsp;**Writing** | The block editor shows the article: same face, same column width, same code styling. Eight patterns in their own category and four styles on the image block, each reaching something the sheet already draws |
 | 🧭&nbsp;**The&nbsp;rail** | Left alone it is the site's own structure: menu, sticky posts as Featured, categories, archive, tags. Put a widget in it and the widgets are the rail. Both are the rail |
 | 🖼️&nbsp;**Pictures** | Featured images in two shapes, off by default, and a frame around every figure on the site in three weights plus an ink variant |
-| 🌍&nbsp;**Languages** | Translation-ready, 160 strings, no translations shipped. An RTL locale gets a mirrored stylesheet WordPress links by itself |
+| 🌍&nbsp;**Languages** | Translation-ready, 215 strings, no translations shipped. An RTL locale gets a mirrored stylesheet WordPress links by itself |
 | 🖨️&nbsp;**Print** | Prints the article and leaves the furniture out |
-| 🔒&nbsp;**Privacy** | Zero third-party requests. No fonts, no scripts, no analytics, no avatars, no update check of its own |
+| 🔒&nbsp;**Privacy** | Zero third-party requests and zero requests of any kind that a reader did not ask for. No font host, no CDN, no analytics beacon, no avatars, no update check of its own |
 
 **Made for** one person writing long pieces on their own WordPress.
 **Not made for** a magazine front page, a shop, or a site whose design is its photographs.
@@ -77,7 +77,7 @@ shortcode. Switch away and every post is still a post.
 
 <img src="docs/shots/demo-colour.png" alt="Six tiles of the same article header, three in light schemes named mono, sepia and forest, three in dark schemes named ocean, scifi and amber" width="1000">
 
-<sub>Six palettes, each carrying light and dark, so a palette that only works in one scheme is not shipped. Every colour comes from the blog engine and none is written into this theme, which is also why they can be checked rather than trusted: <code>check:contrast</code> reads all sixty out of the generated file and measures each against its own background on every run. The tightest is 5.01:1 where WCAG AA asks 4.5:1.</sub>
+<sub>Six palettes, each carrying light and dark, so a palette that only works in one scheme is not shipped. Every colour comes from the blog engine and none is written into this theme, which is also why they can be checked rather than trusted: <code>check:contrast</code> reads all sixty out of the generated file and measures each against its own background on every run. The tightest is 5.05:1 where WCAG AA asks 4.5:1.</sub>
 
 <img src="docs/shots/demo-mobile.png" alt="Three phone screens: the listing, an article, and the listing again with the rail open as a drawer over it" width="1000">
 
@@ -92,16 +92,23 @@ are not counted, because those are your content and not the theme.
 
 | | Over the wire | |
 |:---|---:|:---|
-| **First visit** | **≈ 152 KB** | 146 KB with the source-code furniture switched off |
-| **Every visit after** | **≈ 18 KB** | only the HTML is fetched again |
-| Fonts | 68.2 KB | **4 of the 21 faces that ship**; a browser takes only the character ranges the page uses |
-| CSS | 46.9 KB | 39.0 of it the generated sheet, +6.5 only when the source-code furniture is on |
-| JavaScript | 12.0 KB | the engine's own reader bundles, plus WordPress's 1.4 KB reply script |
-| HTML | 18.3 KB | 63.9 KB before gzip |
+| **First visit** | **≈ 121 KB** | 118 KB with book mode off, 120 KB with the source-code furniture off |
+| **Every visit after** | **≈ 17 KB** | only the HTML is fetched again |
+| Fonts | 66.6 KB | **4 of the 22 faces that ship**; a browser takes only the character ranges the page uses, and the two the first screen needs are preloaded |
+| CSS | 25.7 KB | 13.5 of it the generated sheet, +1.2 only when the source-code furniture is on |
+| JavaScript | 12.0 KB | the engine's own three reader bundles, plus WordPress's 1.3 KB reply script |
+| HTML | 17.2 KB | 62.9 KB before gzip |
 | **Third-party requests** | **0** | no CDN, no font host, no tracker, no avatar service |
 
-The blog engine serves about 114 KB for the same shape of article, so the theme costs about a
-third more, and the difference is WordPress's markup rather than the sheet.
+WordPress's own emoji script and per-block styles are another 8.7 KB. They are core's, not the
+theme's, and no theme can decline them.
+
+*(This table read ≈152 KB through 0.1.3 and was wrong three ways at once. The stylesheet had
+grown with the blog engine and nobody re-measured. The page was quietly fetching a fifth font
+file — 32.5 KB of Inter — because a default the theme compared against had drifted upstream.
+And the sheet shipped as the blog engine's SOURCE rather than as the file that blog serves:
+198 KB of CSS with 280 comment blocks in it, where the blog sends 69 KB minified. The
+extractor runs the engine's own minifier now, which took 46 KB of gzip off every first visit.)*
 
 ## Why not something else
 
@@ -118,7 +125,7 @@ rather than thirty.
 page reaches another host, so there is nothing to disclose, nothing to block and nothing that
 stops working when somebody else's CDN does.
 
-**Instead of writing your own.** The boring half is done and pinned by nine static checks:
+**Instead of writing your own.** The boring half is done and pinned by ten static checks:
 escaping, prefixes, stylesheet order, colour contrast, class names that reach a rule, the two
 header blocks agreeing, and the generated CSS still matching the engine it came from.
 
@@ -157,9 +164,9 @@ Quire Ink itself is **read only** from here.
 quire-ink/      the theme (slug and text domain: quire-ink)
   assets/css/   2 generated + bridge.css, the one written by hand
   assets/js/    Quire Ink's own reader bundles, copied
-  assets/fonts/ 21 self-hosted woff2, all OFL
+  assets/fonts/ 22 self-hosted woff2, all OFL
   inc/          customizer, template tags, the reader JS's strings
-tools/          extract.ts, shot.sh, and nine static guards under checks/
+tools/          extract.ts, shot.sh, and ten static guards under checks/
 dev/            local WordPress in Docker, and a seeder that pulls real articles
 docs/           invariants, conventions, decisions, and what does not carry over
 ```

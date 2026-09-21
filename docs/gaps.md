@@ -428,18 +428,35 @@ than chased.
 One article on the local stack, gzip as served, theme assets only - the post's own pictures
 are content and are not counted, and no plugin is installed.
 
+Re-measured on 2026-09-21, against WordPress 7.1.1, after the re-extract.
+
 | | Over the wire |
 |---|---|
-| HTML | 14.4 KB (65.8 KB before gzip) |
-| `quireink-base.css` · `quireink-look-code.css` | 52.8 + 8.5 KB (the second only when the switch is on) |
-| `quireink-tokens.css` · `bridge.css` · `style.css` | 3.6 + 5.7 + 1.0 KB |
-| `post.js` · `core.js` · WordPress's `comment-reply.js` | 3.1 + 4.3 + 1.3 KB |
-| Fonts | 68.2 KB - **4 faces of the 22 declared.** Literata and JetBrains Mono, latin and vietnamese; the browser fetches a face only if a `unicode-range` it needs is in it |
-| **First visit** | **≈ 163 KB**, or 154 KB with the source-code look off |
-| **Every visit after** | **≈ 14 KB** - everything else is cached |
+| HTML | 17.2 KB (62.9 KB before gzip) |
+| `quireink-base.css` · `quireink-look-code.css` | 13.5 + 1.2 KB (the second only when the switch is on) |
+| `quireink-tokens.css` · `bridge.css` · `style.css` | 3.5 + 6.3 + 1.2 KB |
+| `post.js` · `core.js` · `book-mode.js` · WordPress's `comment-reply.js` | 3.1 + 4.4 + 3.2 + 1.3 KB |
+| Fonts | 66.6 KB - **4 faces of the 22 that ship.** Literata and JetBrains Mono, latin and vietnamese; the browser fetches a face only if a `unicode-range` it needs is in it, and the two the first screen needs are preloaded |
+| **First visit** | **≈ 121 KB**, or 118 KB with book mode off and 120 KB with the source-code look off |
+| **Every visit after** | **≈ 17 KB** - everything else is cached |
 
-Quire Ink itself serves about 114 KB for the same shape of article, so the theme costs about
-a third more, and the difference is WordPress's markup rather than the sheet.
+Not counted, and worth saying so: WordPress's own emoji script and its per-block stylesheets
+are another 8.7 KB on this page. They are core's, not the theme's.
+
+**The stylesheet fell by 46 KB of gzip in one commit and that is not an optimisation.** The
+extractor was taking `PUBLIC_CSS`, which is the blog engine's SOURCE, where the blog itself
+serves `minifyCss(PUBLIC_CSS)`: 198,273 B with 280 comment blocks in it against the 68,942 B
+a reader of that blog downloads. Shipping the comments was never fidelity — nobody reads the
+generated sheets, which is the argument `check:filesize` already exempts them on — and the
+minifier is imported rather than written, so what ships is what the blog ships.
+
+And `book-mode.js` is 3.2 KB that 0.1.3 was not paying because book mode was not working. The
+feature is back, and it is a switch.
+
+Measured against the blog engine on the same day, on an article of its own at
+demo.quireink.com: 95.1 KB, of which 53.8 is the same two preloaded faces and 15.0 the sheet.
+So the theme costs about a quarter more, and the difference is WordPress's markup — 17.2 KB of
+HTML against 8.2 — rather than anything in the stylesheet.
 
 The single largest item is the base sheet, and the biggest thing that could come out of it is
 the IDE chrome — a treatment that is a taste, and one an owner can switch off. It is now its

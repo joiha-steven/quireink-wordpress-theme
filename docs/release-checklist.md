@@ -1,5 +1,12 @@
 # Before this goes public
 
+**0.1.4 is built and not submitted.** Measured on the local stack at WordPress 7.1.1:
+`check:all` green on all ten guards, `dev/check-theme.sh` **0 REQUIRED, 0 WARNING,
+3 RECOMMENDED**, every template answering (index, single, page, category, month, search, 404,
+feed, a password-protected post, a paged post), `kbd-probe` at 1440 and 390 on the listing and
+an article — 22 stops, none off screen, no horizontal overflow, the skip link clear of the
+admin bar — and a clean browser tab making no request the reader did not ask for.
+
 **It went public on 8 September 2026, at 0.1.3**, after two rounds of review on
 [ticket #288845](https://themes.trac.wordpress.org/ticket/288845): five findings on 0.1.1 and
 two more on 0.1.2. The listing is [wordpress.org/themes/quire-ink](https://wordpress.org/themes/quire-ink/).
@@ -43,6 +50,14 @@ the review handbook asks of a free theme. Both verbatim texts are fetched and in
   theme was opened in. It goes stale on its own, so re-read it before a release rather than
   trusting this line.
 
+  **Re-reading it for 0.1.4 caught it lying.** The install reported 6.8.3, not 7.1: the 7.1
+  that was measured for 0.1.3 was an in-place `wp core update`, `dev/down.sh` threw that volume
+  away, and the next `up.sh` quietly built a 6.8 back from the image pin. The header was
+  claiming a version no current checkout could reproduce. The install was updated to 7.1.1,
+  every template and every measurement re-run on it, and **the compose pin moved to
+  `wordpress:7.1-php8.3-apache`** — a header read off an install is only honest while the
+  install is the one the pin builds.
+
 Checking the last of them turned up a fourth thing nobody had listed. `style.css` declared
 17 tags and `readme.txt` 10, missing every tag added after it was first typed —
 `rtl-language-support`, `block-patterns`, `editor-style`, `two-columns`, `left-sidebar`,
@@ -58,24 +73,33 @@ a stale value hands a returning reader last release's cache of a sheet that has 
 at `0.1.0` through the whole of 0.1.1 while `style.css` and `readme.txt` agreed with each other
 and both disagreed with what the browser was asked to fetch. The guard reads all three now.
 
-## Measured, and one of them says no
+## Measured, and the one that said no has been answered
 
 **Accessibility.** [`accessibility.md`](accessibility.md) has the numbers. Colour clears WCAG
 AA in all six palettes and both schemes with room to spare, headings and landmarks and labels
 and the skip link all pass, and the audit found two real defects on the way — two buttons with
 no accessible name, and thirteen unsupplied strings behind them, now fixed.
 
-`accessibility-ready` is still NOT declared, for one measured reason: form field borders are
-1.16:1 against the page, where SC 1.4.11 asks 3:1. `--c-rule` is the blog engine's value and
-the engine draws its own comment fields the same way, so this belongs upstream rather than in
-`bridge.css`. Same shape of item as the OFL file above.
+`accessibility-ready` **is declared from 0.1.4**. Through 0.1.3 it was not, for one measured
+reason: form field borders were 1.26:1 against the page where SC 1.4.11 asks 3:1. A control's
+edge takes `--c-meta` now — the next token up, and the lightest that already clears the floor —
+which measures 5.05 to 5.34:1 across all six palettes and both schemes, invents no colour and
+leaves the card hairline alone ([ADR 0009](decisions/0009-a-control-may-take-a-louder-token.md)).
+
+**Declaring it changes which queue the submission joins**: the tag puts a theme in front of the
+accessibility reviewers rather than the general ones, and what they test is not what
+`check:contrast` measures. [`accessibility.md`](accessibility.md) ends with the two things that
+are disclosed rather than measured away, both of them about a page with scripting off, and both
+are the answer if a reviewer raises them.
 
 ## Worth doing, not required
 
 * ~~**The screenshot**~~ is built by [`dev/screenshot.sh`](../dev/screenshot.sh) from a
-  WordPress seeded for the purpose: three posts whose words were written for the picture, two
+  WordPress seeded for the purpose: five posts whose words were written for the picture, two
   categories, five tags, a menu and one sticky post, so the rail has a Featured block and the
-  headline has its bullet. It used to be a render of the owner's own blog — honest, and it
+  headline has its bullet. Five and not three since 0.1.4 — at three the bottom third of the
+  frame was the footer on white, which reads as an empty page at full size and as a blank card
+  at the 387px the directory's own grid shows. It used to be a render of the owner's own blog — honest, and it
   passed, but a theme strangers browse should not open on one person's diary, and `readme.txt`
   now says the words in it were written for it, which is a sentence that has to stay true.
 

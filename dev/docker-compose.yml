@@ -8,6 +8,11 @@
 # The version pins are deliberate. WordPress moves, and a screenshot compared against
 # "whatever :latest was that day" cannot be re-taken a month later; when the pin moves, the
 # comparison is re-run rather than assumed.
+#
+# 7.1 since 0.1.4, and the pin is what `Tested up to:` means. It said 6.8 while the header
+# said 7.1: the install that was measured had been updated in place, `dev/down.sh` threw that
+# volume away, and the next `up.sh` quietly put a 6.8 back. A header read off an install is
+# only honest while the install is the one the pin builds.
 
 name: quireink-wp
 
@@ -28,7 +33,7 @@ services:
       retries: 20
 
   wordpress:
-    image: wordpress:6.8-php8.3-apache
+    image: wordpress:7.1-php8.3-apache
     depends_on:
       db:
         condition: service_healthy

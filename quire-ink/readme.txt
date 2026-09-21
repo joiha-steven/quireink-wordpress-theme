@@ -3,22 +3,25 @@ Contributors: joihasteven
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.3
+Stable tag: 0.1.4
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Tags: accessibility-ready, blog, one-column, two-columns, left-sidebar, custom-colors, custom-logo, custom-menu, featured-images, sticky-post, threaded-comments, theme-options, translation-ready, rtl-language-support, block-patterns, block-styles, editor-style, wide-blocks
 
-A theme for people who write long things and want them read.
+A minimal theme for people who write long things: a serif reading column, a contents rail, six palettes, self-hosted type, no tracking.
 
 == Description ==
 
-A reader opens your post and gets a single column of about seventy characters a line, set in
-a book face, with the article's own contents standing in the gutter beside it. They can pick
-one of six palettes, in light or dark, and the site remembers it. If they would rather read
-it like a page, book mode sets the article in two columns.
+A minimal theme for long-form writing - an essay, a report, a piece somebody sat down to
+write. A reader opens your post and gets a single column of about seventy characters a line,
+set in a serif made for reading, with the article's own table of contents standing in the
+gutter beside it and its word count and reading time in the other. They can pick one of six
+palettes, in light or dark, and the site remembers it. If they would rather read it like a
+page, book mode sets the article in two columns with a drop cap.
 
-Nothing on the page comes from anywhere but your own domain. No Google Fonts, no CDN, no
-analytics, no avatars, no request off your server at all.
+Nothing on the page comes from anywhere but your own domain. The typography is self-hosted -
+six typefaces inside the theme - so there is no Google Fonts, no CDN, no analytics, no
+avatars, no tracking of any kind and no request off your server at all.
 
 The look is not hand-written. It is generated from the stylesheet of the Quire Ink blog
 engine, the same sheet that blog renders with, so this is that reading surface driven from
@@ -34,7 +37,8 @@ https://github.com/joiha-steven/quireink-wordpress-theme, where its own document
   Vietnamese.
 * Search as you type, from `[/find]` in the header or the `/` key anywhere on the page.
 * A table of contents in the gutter, built from the post's own headings, tracking the scroll.
-* Book mode: the article reset in two columns, like a page.
+* Book mode: the article reset in two columns with a drop cap, like a page. On by
+  default, and switchable off - which stops the 7.7 KB behind it being downloaded at all.
 * Book typography - indented paragraphs, justified lines, hyphenation - off by default,
   because it is a taste and not an improvement.
 * A timeline down the listing page: a spine in the gutter, a sticky year, a marker at each
@@ -53,7 +57,7 @@ Six panels under Appearance -> Customize, all of them named "Quire Ink -".
   as source code.
 * **pictures** - featured images in two shapes, off by default, and a frame around every
   figure on the site.
-* **reading** - book typography, and whether motion is used at all.
+* **reading** - book mode, book typography, and whether motion is used at all.
 * **footer** - the credit line, which you may turn off.
 
 The rail in the left gutter shows the site's own structure: its menu, its sticky posts under
@@ -76,10 +80,12 @@ Four styles on the image block: Framed, Thin frame, Thick frame, Ink frame.
 Measured on one long article, gzipped as served, no plugins, the post's own pictures not
 counted because those are your content and not the theme:
 
-* First visit: about 152 KB, of which 68 KB is type.
-* Every visit after that: about 18 KB. The rest is cached.
+* First visit: about 121 KB, of which 67 KB is type and 26 KB is the stylesheet.
+* Every visit after that: about 17 KB. The rest is cached.
+* WordPress's own emoji script and per-block styles are another 9 KB. Those are core's, not
+  the theme's, and are not counted above.
 
-Twenty-one font files ship and a browser fetches four of them, because each face declares the
+Twenty-two font files ship and a browser fetches four of them, because each face declares the
 range of characters it covers and the browser takes only what the page needs.
 
 = Accessibility =
@@ -219,6 +225,53 @@ words in it were written for the screenshot. It contains no third-party images a
 photographs.
 
 == Changelog ==
+
+= 0.1.4 =
+Four defects a browser's network panel found and no amount of reading had, plus the first
+re-generation from the blog engine in three weeks.
+
+What this release still does NOT do. The rail's drawer is kept out of a phone's tab order by
+JavaScript, so with scripting off its links are focusable and the menu button cannot open it;
+the breakpoint that decides which it is comes from the blog engine and cannot be named in a
+media query here. The rail renders a menu as a flat list. And the theme is still a classic
+theme: there is no Site Editor.
+
+* **No analytics, now including from the browser.** The reader bundle copied from the blog
+  engine carries that product's beacon, which is not gated on a setting and needs no
+  interaction: every page view POSTed the path, the referring host and the device's touch
+  support to /api/track, and every departure posted scroll depth, engaged time and bytes.
+  WordPress has no such route, so it was a 404 on every page view of every site running this
+  theme since 0.1.0, under a description whose first claim is that nothing is tracked. The
+  call is refused now.
+* **Book mode works again.** The blog engine moved it into a bundle of its own on 6 September
+  and this theme did not follow, so the buttons printed on every article and a click did
+  nothing. It ships as its own bundle with a switch of its own under Customize - Quire Ink -
+  reading: off removes the buttons and stops the 7.7 KB being downloaded.
+* **The theme's own script is no longer render-blocking.** It asks WordPress for `defer` and
+  was not getting it, because a handle with an inline script attached in the "after" position
+  is not eligible for a delayed strategy. Both of the theme's inline guards moved to "before".
+* **A default install no longer downloads a typeface it had switched off.** The furniture
+  face is JetBrains Mono here and the blog engine's own default moved to Inter, so
+  `--font-sans` was left at Inter on every install that had changed nothing. The page looked
+  right - the rules that matter name the face explicitly - and the key on a code block pulled
+  32.5 KB of Inter to set the word "Copy". Four font files reach a reader now, which is the
+  number the description has claimed all along.
+* **The stylesheet is 46 KB smaller over the wire**, and nothing was removed from it. The
+  theme had been shipping the blog engine's stylesheet SOURCE - 198 KB of it, two thirds
+  comments written for whoever next opens that file - where the blog itself serves the same
+  sheet minified at 69 KB. The extractor runs the engine's own minifier now, so what this
+  theme ships is what that blog ships. A first visit went from about 170 KB to about 121 KB.
+* **The two faces the first screenful needs are preloaded**, so the first paint is the real
+  type rather than a fallback that swaps.
+* **Starter content**, so a brand-new blog has a rail menu to show rather than an empty
+  gutter, and **five filters** for the decisions a theme has to guess at: what to read next,
+  what counts as related, how many terms the rail lists, how many sticky posts are featured,
+  and words a minute.
+* Re-generated from Quire Ink after three weeks: two scroll-driven fades stop painting their
+  own fill-mode over the page, two status messages stay in the accessibility tree instead of
+  being display:none, and five controls that answered a pointer and then took a click in
+  silence now press like the rest.
+* Tested on WordPress 7.1.1.
 
 = 0.1.3 =
 Two findings from the second pass of the WordPress.org theme review, ticket 288845.

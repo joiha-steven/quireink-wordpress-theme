@@ -41,6 +41,31 @@ a screen:
 - **`singleRailCss()`** — the generated desktop rail geometry, without which the rail is a
   slide-out drawer at every width.
 
+## The sheets are minified, because that is what the blog serves
+
+`PUBLIC_CSS` is the SOURCE of the blog engine's stylesheet. What a reader of that blog
+downloads is `minifyCss(PUBLIC_CSS)` — `src/web/assets.ts` binds it to `PUBLIC_CSS_SERVED` and
+does the same to the look sheets. Through 0.1.3 this extractor took the source and shipped it
+unchanged, on the reading that "copied verbatim" meant the constant rather than the file the
+blog puts on the wire.
+
+Measured on 2026-09-21, the same sheet both ways:
+
+| | Raw | Gzipped |
+|---|---:|---:|
+| What this theme shipped | 198,273 B | 59.8 KB |
+| What demo.quireink.com serves | 68,942 B | 15.0 KB |
+
+280 comment blocks, 65% of the file. They are the engine's notes to whoever next opens
+`src/web/public.css.ts`, and a reader of a WordPress site was paying about 45 KB a visit to
+download them. Nobody has ever read them there: [the file-size guard](../../tools/checks/file-size.ts)
+exempts the generated sheets on exactly that argument.
+
+The minifier is imported rather than written, so the bytes this ships are the bytes the blog
+ships and `check:generated` compares them the same way. `rtl.ts` and `editor-css.ts` still read
+the unminified strings — both walk rules and report a rule count as their evidence — and their
+own output is minified on the way out.
+
 ## Fonts are re-based, once
 
 Quire Ink serves faces from the site root; a theme is a folder under `wp-content`. The

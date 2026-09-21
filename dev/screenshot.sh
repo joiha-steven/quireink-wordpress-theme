@@ -79,6 +79,24 @@ wpc post create --post_type=post --post_status=publish \
   --tags_input="reading,navigation" --porcelain \
   --post_content='<!-- wp:paragraph --><p>The gutter beside an article is usually empty, and on a long piece it is the natural place for the shape of the article itself. The rail is built from the headings already in the post, so it needs no configuration and cannot fall out of step with the writing.</p><!-- /wp:paragraph -->' >/dev/null
 
+wpc post create --post_type=post --post_status=publish \
+  --post_title="Self-hosted type, and what it saves a reader" \
+  --post_date="2026-05-12 08:30:00" --post_category="$NOTES" \
+  --tags_input="typography,reading" --porcelain \
+  --post_content='<!-- wp:paragraph --><p>Six typefaces sit in the theme and nothing on the page reaches another host for them. What that buys is not privacy alone: a font host is one more name to resolve, one more connection to open and one more service that can be slow on the morning you are being read.</p><!-- /wp:paragraph -->' >/dev/null
+
+wpc post create --post_type=post --post_status=publish \
+  --post_title="A month marker is not a heading" \
+  --post_date="2026-04-02 14:20:00" --post_category="$NOTES" \
+  --tags_input="design,navigation" --porcelain \
+  --post_content='<!-- wp:paragraph --><p>The spine down the gutter of this list is positioned against cards that are already there. Nothing measures anything, which is why it cannot drift when a post is added, and why it simply disappears on a screen with no gutter to hang it in.</p><!-- /wp:paragraph -->' >/dev/null
+
+# FIVE POSTS, NOT THREE, and the two extra are there for the frame rather than for the words.
+# At three the render finished two thirds of the way down and the last third was the footer on
+# white - which reads as an empty page at full size and as a blank card at the 387px the
+# directory's grid actually shows. Five fills the viewport and gives the timeline five month
+# markers under one sticky year, which is the block the picture is there to show.
+
 # Sticky is what fills the rail's Featured block, and the bullet beside the headline.
 wpc eval "stick_post($LEAD);" >/dev/null
 
