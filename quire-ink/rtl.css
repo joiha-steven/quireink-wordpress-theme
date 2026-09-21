@@ -51,7 +51,6 @@ aside.series li[aria-current]::after{content:"";position:absolute;right:-2.75rem
 .lightbox-close{top:.75rem;left:.75rem;right:auto;width:2.5rem;height:2.5rem;font-size:1.5rem}
 .lightbox-prev{right:.5rem;left:auto}
 .lightbox-next{left:.5rem;right:auto}
-.book-loop{position:absolute;pointer-events:none;inset:.26rem -.36rem .26rem -.52rem;width:auto;height:auto;opacity:0;transition:opacity var(--dur-fast)}
 .book-fab{position:fixed;bottom:4.5rem;left:1.25rem;right:auto;z-index:40;display:none;width:2.5rem;height:2.5rem;align-items:center;justify-content:center;border:1px solid var(--c-rule);border-radius:999px;background:var(--c-bg);color:var(--c-meta);cursor:pointer;opacity:0;pointer-events:none;transition:opacity var(--dur-base),color var(--dur-base)}
 .book-topright{position:absolute;left:clamp(12px,4vw,44px);right:auto;top:0;height:100%;display:flex;align-items:center;gap:18px}
 .book-x{margin-right:8px;margin-left:0;background:none;border:0;cursor:pointer;color:var(--c-meta);font-size:1rem;line-height:1;width:34px;height:34px;padding:0;border-radius:999px;display:flex;align-items:center;justify-content:center;transition:background-color var(--dur-fast),color var(--dur-fast)}

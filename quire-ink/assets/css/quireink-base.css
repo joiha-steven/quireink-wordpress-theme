@@ -145,6 +145,9 @@ article > header .t-small{margin:0}
    the post it belongs to. A book serif headline with a terminal subtitle under it, and the
    one seam on the page where the two faces touch. Same class as the comment body, which
    lost its reading face in the port for the same reason. */
+/* The other languages this piece exists in (ADR 0056). Its OWN rule and not the mt-3 utility:
+   the .t-small rule above is (0,1,2) and wins, so a utility here computes to zero. */
+article > header .post-langs{margin-top:.75rem}
 .deck{margin:1rem 0 0;color:var(--c-meta);font-family:var(--font-reading);
   font-size:var(--fs-h4);line-height:var(--lh-h4);letter-spacing:var(--ls-h4)}
 #post-body{margin-top:2.5rem}
@@ -291,8 +294,16 @@ article + .subscribe-card,article + #comments{margin-top:2.5rem}
 .dark .prose a{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 16' preserveAspectRatio='none'%3E%3Cpath id='p0' d='M1.3,8.8 C4.5,8.7 7.8,9.7 11,9.6 C14.3,10.2 17.5,9.5 20.8,10.1 L20.8,12.8 C17.5,12.4 14.3,13 11,12.4 C7.8,12.7 4.5,11.9 1.3,12.2 Z' fill='%238f8a80' opacity='.73'/%3E%3Cpath id='p1' d='M35.1,7.7 C39.3,7.1 43.4,8 47.6,7.7 C51.8,8.2 56,7 60.2,7.7 L60.2,9.9 C56,9.8 51.8,10.6 47.6,10.5 C43.4,10.9 39.3,10.3 35.1,10.9 Z' fill='%238f8a80' opacity='.89'/%3E%3Cpath id='p2' d='M88.3,6.4 C91.8,5.9 95.3,6.8 98.9,6.2 C102.4,6.9 105.9,5.9 109.5,6.3 L109.5,8.8 C105.9,8.6 102.4,9.4 98.9,8.7 C95.3,9.1 91.8,8.6 88.3,8.9 Z' fill='%238f8a80' opacity='.89'/%3E%3Cpath id='p3' d='M121.8,6.8 C126.4,6.5 131,7.5 135.6,7.7 C140.2,8 144.8,7.7 149.4,8.3 L149.4,10.5 C144.8,10.1 140.2,10.6 135.6,10.2 C131,10.5 126.4,9.6 121.8,10 Z' fill='%238f8a80' opacity='.9'/%3E%3Cpath id='p4' d='M180.1,7.7 C183.3,7.5 186.5,8.5 189.7,8.6 C193,9.1 196.2,8.2 199.4,9 L199.4,11.3 C196.2,10.7 193,11 189.7,10.5 C186.5,10.6 183.3,9.7 180.1,9.7 Z' fill='%238f8a80' opacity='.93'/%3E%3Cpath id='p5' d='M215.6,6.3 C219.3,5.6 223,6.5 226.8,6 C230.5,5.9 234.3,5 238,5.5 L238,7.9 C234.3,7.7 230.5,8.5 226.8,8.3 C223,8.7 219.3,8.2 215.6,8.5 Z' fill='%238f8a80' opacity='.77'/%3E%3C/svg%3E")}
 .dark .prose a:hover,.dark .prose a:focus-visible{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 16' preserveAspectRatio='none'%3E%3Cpath id='p0' d='M0,7.3 C16,6.9 32,7.8 48,7.5 C64,8.1 80,7.1 96,7.6 C112,7.1 128,8.4 144,8 C160,8 176,7.2 192,7.6 C208,7.2 224,8.2 240,7.5 L240,10.2 C224,9.6 208,11 192,10.5 C176,10.8 160,10.2 144,10.6 C128,9.8 112,10.8 96,10.3 C80,10.7 64,9.6 48,10.1 C32,9.7 16,10.6 0,10 Z' fill='%238f8a80' opacity='.86'/%3E%3C/svg%3E")}
 /* A footnote marker and a heading anchor are not prose links and must not be underlined:
-   the first is a superscript numeral, the second is the heading itself. */
-.prose a.fn-ref,.prose sup a,.prose h1 a,.prose h2 a,.prose h3 a,.prose h4 a,.prose h5 a{
+   the first is a superscript numeral, the second is the heading itself.
+   
+   A LINK CARD IS THE THIRD (ADR 0058), and it was found by looking rather than by a test. The
+   card is one anchor around a whole bordered block, so the hand drew its dashes straight across
+   the card, through the title, and added .42em under the bottom edge -- and .prose a is (0,1,1)
+   against .link-card at (0,1,0), so the card's own rules lost without anything failing. The
+   underline is for a link in running prose: the thing it marks is a few words inside a
+   sentence, and a block that is already drawn as a link needs no second mark saying so. */
+.prose a.fn-ref,.prose sup a,.prose h1 a,.prose h2 a,.prose h3 a,.prose h4 a,.prose h5 a,
+.prose a.link-card,.prose a.file-card{
   background-image:none;padding-bottom:0}
 /* The list markers are the pen's (dots, dashes, numerals in a hand): pen/lists.css.ts. */
 /* The numerals: ten digits and a full stop of Kalam, self-hosted like every other face,
@@ -514,6 +525,69 @@ article + .subscribe-card,article + #comments{margin-top:2.5rem}
   line-height:var(--lh-code);letter-spacing:var(--ls-code);
   border-bottom:1px dotted var(--c-rule);opacity:.75}
 
+/* THE PLAYER. A 16:9 frame for video, a short fixed one for the audio services -- both plain
+   iframes, so the reading page still ships no third-party script. */
+.video-embed,.video-file{margin:calc(var(--sp) * 2) 0}
+.video-embed{position:relative;padding-top:56.25%}
+.video-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-file video{width:100%;display:block}
+.audio-embed iframe{width:100%;height:9.25rem;border:0}
+/* Both cards are one link, so the whole block is the target and nothing inside it is
+   underlined. The reset is on the anchor because a:hover elsewhere sets a colour. */
+.link-card,.file-card{display:flex;gap:1rem;align-items:stretch;
+  margin:1.6em 0;border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);
+  overflow:hidden;text-decoration:none;color:var(--c-text);
+  transition:border-color var(--dur-fast) var(--ease-out),background-color var(--dur-fast) var(--ease-out)}
+.link-card:hover,.file-card:hover{border-color:var(--c-meta);
+  background:color-mix(in srgb, var(--c-text) 3%, var(--c-bg));color:var(--c-text)}
+.link-card:focus-visible,.file-card:focus-visible{outline:2px solid var(--c-accent);outline-offset:2px}
+
+.link-card-text,.file-card-text{display:flex;flex-direction:column;gap:.3rem;
+  justify-content:center;min-width:0;flex:1;padding:.9rem 1rem}
+/* The SMALL role, all three numbers of it, on every line of both cards. A card is not special
+   enough to invent a leading for: the scale is the blog's, and check:type-roles is the guard
+   that stops one selector at a time drifting off it. The clamp works at any line-height. */
+.link-card-title,.file-card-name{font-family:var(--font-sans);font-weight:var(--fw-heading,600);
+  color:var(--c-heading);font-size:var(--fs-small);line-height:var(--lh-small);
+  letter-spacing:var(--ls-small);
+  overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+/* Two lines of description and no more. A card that grows with whatever a stranger wrote in
+   their meta tag is a card whose height this page does not control. */
+.link-card-desc{color:var(--c-text);font-size:var(--fs-small);line-height:var(--lh-small);
+  letter-spacing:var(--ls-small);opacity:.85;
+  overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.link-card-site,.file-card-meta{color:var(--c-meta);font-size:var(--fs-small);
+  font-family:var(--font-sans);line-height:var(--lh-small);letter-spacing:var(--ls-small)}
+
+/* The picture is a fixed column, not a percentage: a card holding a wide screenshot and one
+   holding a square avatar have to be the same height in a column of them. */
+.link-card-pic{width:8.5rem;flex:0 0 8.5rem;object-fit:cover;align-self:stretch;
+  background:color-mix(in srgb, var(--c-text) 6%, var(--c-bg))}
+
+/* The kind badge stands in the same column the picture would, so a run of mixed cards keeps
+   one left edge for its text. NOT text-transform:uppercase -- the string is already a file
+   extension, and the rule against ALL-CAPS is about setting words that way. */
+.file-card-kind{display:flex;align-items:center;justify-content:center;
+  width:4.5rem;flex:0 0 4.5rem;font-family:var(--font-sans);font-size:var(--fs-small);
+  line-height:var(--lh-small);letter-spacing:var(--ls-small);color:var(--c-meta);
+  background:color-mix(in srgb, var(--c-text) 5%, var(--c-bg));
+  border-inline-end:1px solid var(--c-rule)}
+
+/* Under 34rem the picture goes on top: an 8.5rem column beside two lines of text on a 320px
+   screen leaves the title four words wide. */
+@media (max-width:34rem){
+  .link-card{flex-direction:column-reverse}
+  .link-card-pic{width:100%;flex:0 0 auto;height:8rem}
+}
+
+/* ⚠️ THE PRINT RULES FOR THESE CARDS ARE IN print.css.ts, NOT HERE, and that is a rule rather
+   than a preference. There is ONE print block and it is last in the sheet: print.test.ts finds
+   it with indexOf and reads to the end, because a print rule is the one kind that fails in
+   silence -- nobody prints a page to check a refactor. A second @media print in a component
+   sheet does not merely sit in the wrong file; it makes that test read every screen rule after
+   it as a print rule, which is how this comment came to be written. */
+
+
 /* An archive heading is chrome, not the reader's words: it stays in --font-sans and it is
    BOLD, where a post title is 600. Both come from the frozen tree's own markup. */
 .listing-head{margin:0 0 2rem}
@@ -572,7 +646,6 @@ article + .subscribe-card,article + #comments{margin-top:2.5rem}
    dark in EVERY palette, so a token would LIGHT the inside of a field on the dark ones. */
 :root{--lift:0 16px 32px -12px rgba(0,0,0,.22),0 3px 8px -4px rgba(0,0,0,.12);
   --well:inset 0 1px 1.5px rgba(0,0,0,.07)}
-/* The pen's loop round a word is INK_LOOP_SVG in icons.ts, a real path, since 2026-09-06. */
 
 
 /* THE CLICK - the press every control shares - is in motion.css.ts with the rest of the engine. */
@@ -680,13 +753,6 @@ aside.series li[aria-current]::after{content:"";position:absolute;left:-2.75rem;
   width:2px;background:var(--c-accent)}
 p.tags{margin-top:1.5rem;font-size:var(--fs-small);line-height:var(--lh-small);
   letter-spacing:var(--ls-small);color:var(--c-meta)}
-
-
-.video-embed,.video-file{margin:calc(var(--sp) * 2) 0}
-.video-embed{position:relative;padding-top:56.25%}
-.video-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.video-file video{width:100%;display:block}
-.audio-embed iframe{width:100%;height:9.25rem;border:0}
 
 .callout{border-left:2px solid var(--c-accent);
   padding:calc(var(--sp) * .75) 0 calc(var(--sp) * .75) var(--sp);
@@ -937,6 +1003,12 @@ html[data-rail=open],html[data-rail=open] body{overflow:hidden}
   border:1px solid var(--c-rule);background:var(--c-bg);color:var(--c-meta);cursor:pointer;opacity:0;transition:opacity var(--dur-fast)}
 .prose pre{position:relative}
 .prose pre:hover .code-copy,.code-copy:focus-visible{opacity:1}
+/* AND A HOVER OF ITS OWN. The rule above is the REVEAL - it belongs to the block, and it
+   fires when the pointer is anywhere over the code. Once the key is showing, moving onto the
+   key itself did nothing: it has a border and a paper fill, it is the only bordered key on
+   the page that answered a pointer with silence, and its twin on a pull-quote dims. The
+   header's own fill, because this is a key on paper like the rest of them. */
+.code-copy:hover{color:var(--c-heading);background:var(--c-rule)}
 
 /* The reading-progress bar has NO script behind it: a scroll-driven animation reads the
    document's own scroll position. It therefore works with JavaScript off, and runs off the
@@ -948,7 +1020,7 @@ html[data-rail=open],html[data-rail=open] body{overflow:hidden}
 .progress-fill{height:100%;background:var(--c-heading);transform:scaleX(0);transform-origin:0 50%}
 @supports (animation-timeline:scroll()){
   .progress{display:block}
-  .progress-fill{animation:read-progress linear both;animation-timeline:scroll(root block)}
+  .progress-fill{animation:read-progress linear;animation-timeline:scroll(root block)}
 }
 @keyframes read-progress{to{transform:scaleX(1)}}
 
@@ -1086,9 +1158,27 @@ html[data-rail=open],html[data-rail=open] body{overflow:hidden}
    A fixed distance (entry 320px) was tried and is worse: inside an entry range a length is measured
    along a range that is only as long as the card, so on a short card the animation never
    reaches its end at all and the card stays permanently dimmed. */
+/* ⚠️ NO FILL ON EITHER SCROLL-DRIVEN FADE, and it is the difference between an effect that
+   fails to happen and a page that cannot be read. A scroll-driven animation's value is written
+   in the frame; when the frame is late — a long task on the main thread, or a range an engine
+   resolved once and never resolved again — the element goes on painting the animation's FILL.
+   Measured in headless Chrome on 2026-09-20 by reading style after a scroll with no frame in
+   between: with the both keyword, running text came back at opacity 0.35 and three cards at
+   opacity 0, which is a card with real height, real gaps around it and no words in it. Without
+   it, 1. That is the state reported three times and patched three times from the other end.
+
+   And the fill was buying nothing. Both ranges end where the element stops being visible:
+   outside cover 0%..100% the block has not touched the window or has already left it, and past
+   entry 100% the animation's own end — opacity 1, no transform — IS the base rule. So the fill
+   only ever described the page in a state nobody can see, and painted it over the page in the
+   one state everybody can. The bar above lost its fill in the same pass, where the keyword was
+   merely inert — its range is normal, so there is no before or after phase to fill, and its
+   from is its base rule; measured at five scroll positions, its scale is identical to six
+   places with the keyword and without it. It goes because check:motion-drift keeps this rule
+   with no exemption list, and an exemption list is how the first three fixes wore off. */
 @supports (animation-timeline:view()){
   @media (prefers-reduced-motion:no-preference){
-    html[data-scroll-fade=on][data-motion=on] .reveal{animation:reveal-in linear both;animation-timeline:view();
+    html[data-scroll-fade=on][data-motion=on] .reveal{animation:reveal-in linear;animation-timeline:view();
       animation-range:entry 0% entry 100%}
   }
 }
@@ -1146,7 +1236,7 @@ html[data-rail=open],html[data-rail=open] body{overflow:hidden}
     html[data-scroll-fade=on][data-motion=on] .book-reader .book-flow>ul,
     html[data-scroll-fade=on][data-motion=on] .book-reader .book-flow>ol,
     html[data-scroll-fade=on][data-motion=on] .book-reader .book-flow>blockquote{
-      animation:edge-fade linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+      animation:edge-fade linear;animation-timeline:view();animation-range:cover 0% cover 100%}
   }
 }
 /* Never to nothing: 0.35 keeps the line legible for anyone who reads at the edge of the
@@ -1191,56 +1281,38 @@ html[data-rail=open],html[data-rail=open] body{overflow:hidden}
    palette, and the same on a dark site as a light one. Carried over from the frozen tree.
    The columns come from column-width, so the BROWSER paginates and turning a page is one
    transform on the flow rather than a measurement loop fighting the layout engine. */
-/* Still WORDS, on a page made of words — a bordered box in the gutter of an article is
+/* Still WORDS, on a page made of words - a bordered box in the gutter of an article is
    furniture, and this panel is the quietest thing on the page. What it gains is a TARGET:
    the row is padded to a hand's height and pulled back out with a negative margin, so the
-   hit area is 36px tall while the layout is exactly where it was. The icon says it does
-   something; the ink says it is not another fact; the press comes from the shared click. */
+   hit area is 36px tall while the layout is exactly where it was. */
+/* THE HOVER IS THE HEADER'S HOVER, and it used to be a hand-drawn pen loop (2026-09-20).
+   The loop was the product's own mark and the argument for it was that a tinted rectangle
+   behind a line of type is interface furniture. What it actually drew, on a panel written as
+   source with a // opening the row, was a scribbled ellipse around two words that matched
+   nothing else on the page: the header's own [/tim] and [toi] fill quietly and this one
+   circled. One control answering the pointer in a vocabulary no other control speaks is not
+   a signature, it is an exception, so it now fills like .icon-btn and the loop is gone from
+   the tree along with INK_LOOP_SVG, which nothing else used.
+   .2rem OF SIDE PADDING, which is the header button's own under the IDE chrome, and it is
+   measured rather than picked: the // marker's glyphs end 7px left of where these words
+   start, and the .5rem this row once carried on all four sides put the fill 8px out - into
+   the marker's cell, with no air between the two. At .2rem the fill stops 3.8px clear of it.
+   The negative margin keeps the words exactly where they were. */
 .book-mode-toggle{position:relative;display:inline-flex;align-items:center;gap:.4rem;font:inherit;
   font-weight:500;color:var(--c-heading);background:none;border:0;cursor:pointer;
-  /* Vertical padding ONLY. It used to pad and negative-margin on all four sides, which put
-     the hover box 8px to the LEFT of where the words start: under the IDE chrome, where the
-     row opens with a // marker, the box ran straight into it with no air between the two.
-     Height is what a thumb needs; the width is the words, and they were already wide enough. */
-  padding:.5rem 0;margin:-.5rem 0}
-/* THE BOOK GLYPH, and not the pen loop beside it. The loop became a real <svg> in the
-   document on 2026-09-06 and walked straight into this descendant selector, which outranks
-   the loop's own opacity:0 by one element name. So the mark that is meant to arrive with the
-   pointer was inked at .75 on every article, on the meta line and in the panel alike. */
-.book-mode-toggle svg:not(.book-loop){flex-shrink:0;opacity:.75}
-.book-mode-toggle:hover svg:not(.book-loop){opacity:1}
-/* CIRCLED, not boxed. A grey rounded rectangle behind a line of type is interface furniture,
-   and this panel is the quietest thing on the page — it was also the only rectangle in a
-   column of writing. A pen goes round a word instead, so the mark is the one this whole
-   product is named after.
-   It is drawn as a MASK rather than as a background image, because a data URI cannot say
-   currentColor: the loop is cut out of a fill that already is the palette's heading ink, so
-   every palette circles in its own colour and nothing here names one. The path overshoots
-   its own start, the way a real one does. */
-/* A REAL SVG (INK_LOOP_SVG, icons.ts), placed over the words. It was a data-URI mask on a
-   pseudo-element until 2026-09-06, and Safari drew a faint dotted rectangle round the mask's
-   box on every hover - WebKit rasterises a scaled SVG mask and shows its edges; Chrome does
-   not, which is why it shipped. A path in the document has no edges to show. */
-.book-loop{position:absolute;pointer-events:none;
-  /* Asymmetric: the loop closes with a tail on the RIGHT, so that side needs the room,
-     and the left has a // marker sitting beside it under the IDE chrome. */
-  inset:.26rem -.52rem .26rem -.36rem;width:auto;height:auto;opacity:0;
-  transition:opacity var(--dur-fast)}
-.book-mode-toggle:hover .book-loop,.book-mode-toggle:focus-visible .book-loop{opacity:.85}
-/* AND THE PRESS IS THE SAME MARK, PRESSED HARDER. This control took the shared carved
-   shadow off the key vocabulary until 2026-09-01, and the two did not belong together: the
-   hover draws a round pen loop and the carve is a rectangle across the padded row, so one
-   control answered a pointer with a circle and a click with a square. The loop going to
-   full ink is the surface change the click convention asks for, in the vocabulary this
-   control already speaks. */
-.book-mode-toggle:active .book-loop{opacity:1;transition-duration:0s}
-/* The travel stays, because it is the shared click and it has no shape of its own: 1px down,
-   instantly, sprung back on the release. Outside the @supports block on purpose — an engine
-   that cannot mask gets no loop, and taking its press away as well would leave the click
-   with nothing at all. */
-.book-mode-toggle:active{transform:translateY(1px);transition-duration:0s}
-html[data-motion=off] .book-mode-toggle:active{transform:none}
-@media (prefers-reduced-motion:reduce){.book-mode-toggle:active{transform:none}}
+  border-radius:var(--radius,.5rem);
+  padding:.5rem .2rem;margin:-.5rem -.2rem}
+.book-mode-toggle:hover,.book-mode-toggle:focus-visible{background:var(--c-rule)}
+/* THE BOOK GLYPH. It was svg:not(.book-loop) while the loop shared this box - one element
+   name of specificity was enough to ink the loop at .75 on every article, which is the bug
+   that put it in the tour. With one svg left there is nothing to exclude. */
+.book-mode-toggle svg{flex-shrink:0;opacity:.75}
+.book-mode-toggle:hover svg{opacity:1}
+/* AND THE PRESS IS THE SHARED ONE NOW (motion.css.ts). This control was taken out of that
+   list on 2026-09-01 for a reason that has just stopped being true: the carve is a rectangle
+   across the padded row and the hover was a circle, so one control answered a pointer with a
+   circle and a click with a square. The hover is a rounded rectangle today and the two agree,
+   so the key vocabulary is one key vocabulary again. */
 @media (max-width:767px){.meta-book,.book-mode-toggle{display:none}}
 
 /* The phone's doorway into the reader. The desktop entries (the meta line, the info
@@ -1543,7 +1615,14 @@ body:has(.book-overlay[open]){overflow:hidden}
 .comment-form button{padding:.5rem 1rem;border:1px solid var(--c-rule);border-radius:var(--radius,.5rem);
   background:var(--c-bg);color:var(--c-heading);font:inherit;font-weight:500;cursor:pointer}
 .comment-form button:hover{background:var(--c-rule)}
-.comment-status:empty{display:none}
+/* ⚠️ A ZERO MARGIN, NOT display:none. This is a live region (role=status), and an element that
+   is display:none is not in the accessibility tree at all — so the text and the element's first
+   appearance land in the same frame and a screen reader has no region to have been watching.
+   The empty paragraph has no content and therefore no height; zeroing its margin is the whole
+   of what the old rule was buying, and it stays where a reader's software can see it. Found in
+   the 2026-09-19 audit; both public status lines had it.
+   NOTE: no backticks in this file. It is one template literal (check:css holds the rule). */
+.comment-status:empty{margin:0}
 .comment-status{color:var(--c-meta);margin:.75rem 0 0}
 /* The identity strip. The sign-in control is an anchor and the sign-out control a button,
    so both are given the surrounding type explicitly rather than a UA default. */
@@ -1752,7 +1831,14 @@ form.subscribe button{padding:.5rem 1rem;border:1px solid var(--c-rule);border-r
 form.subscribe button:hover{background:var(--c-rule)}
 form.subscribe button:disabled{opacity:.5}
 @media (max-width:639px){form.subscribe{flex-direction:column}}
-.subscribe-status:empty{display:none}
+/* ⚠️ A ZERO MARGIN, NOT display:none. This is a live region (role=status), and an element that
+   is display:none is not in the accessibility tree at all — so the text and the element's first
+   appearance land in the same frame and a screen reader has no region to have been watching.
+   The empty paragraph has no content and therefore no height; zeroing its margin is the whole
+   of what the old rule was buying, and it stays where a reader's software can see it. Found in
+   the 2026-09-19 audit; both public status lines had it.
+   NOTE: no backticks in this file. It is one template literal (check:css holds the rule). */
+.subscribe-status:empty{margin:0}
 .subscribe-status{color:var(--c-meta);margin:.5rem 0 0}
 /* The page is WIDER THAN THE READING COLUMN, and that is done by widening --shell-w for the
    whole document rather than by breaking this one element out of it.
@@ -1977,32 +2063,65 @@ form.subscribe button:disabled{opacity:.5}
    makes this selector specificity ZERO, so any rule a component states for itself wins
    outright - the to-top button keeps its opacity fade, the rail its slide. Only the
    properties a hover or a focus actually changes, never all: transitioning layout is how a
-   list starts sliding about when a row is added. */
+   list starts sliding about when a row is added.
+   ⚠️ var(--ease-out), NOT the keyword ease. The floor predates the token and kept the browser
+   default for a year after a curve had been chosen; the admin's own floor had drifted further
+   still, to cubic-bezier(0.4,0,0.2,1) - the framework default, which is a different curve
+   again. Three curves were doing one job (2026-09-20). One is the whole point of a token. */
 :where(a,button,summary,input,select,textarea,[role=button]){
   transition-property:color,background-color,border-color,text-decoration-color,outline-color,fill,stroke,opacity,box-shadow;
-  transition-duration:var(--dur-fast);transition-timing-function:ease}
+  transition-duration:var(--dur-fast);transition-timing-function:var(--ease-out)}
 
 /* THE CLICK, for everything a finger can press. Pressing lands at once - the 1px of travel
    and the carved-in shadow arrive with transition-duration:0 - and only the release is
    sprung, on whatever transition the control already carries (the floor, for most). A
    control that eases both ways feels like a screen; a key that drops now and springs back
-   is what a hand expects of a pressed thing. The shadow is the palette's own heading ink
-   diluted (an engine without color-mix loses the shading, never the button), so every
-   palette carves with its own ink. The book arrows keep their translateY centring (colour
-   only, no travel) and the resume pill composes its centring with the dip. With motion off
-   and under reduced motion the shadow stays and the travel goes: the state must still be
-   legible without the movement, so relief is never the only cue. */
+   is what a hand expects of a pressed thing. With motion off and under reduced motion the
+   shadow stays and the travel goes: the state must still be legible without the movement,
+   so relief is never the only cue.
+
+   THE LIST WAS HAND-KEPT AND HAD DRIFTED (2026-09-20). "Everything a finger can press" was
+   the rule in this comment and an enumeration underneath it, and five boxes had never been
+   added: the overlay's close key (a 2rem round key that fills with --c-rule, which is
+   .icon-btn's own shape and fill), the phone's book key, the quote's copy pill, the book
+   toolbar's size keys, and the pen bar's keys. Each one answered a pointer and then took a
+   click in silence.
+
+   ⚠️ A CARVE NEEDS A BOX. The controls left out below are not oversights: .pen-del,
+   .pen-send, .comment-reply and .comment-signout have padding:0 and no surface - they are
+   words, underlined or not, and a shadow across a word is a smudge. They answer with colour,
+   which is what a word can do. .pen-swatch is left out for the opposite reason: its
+   box-shadow IS its ring, and a second inset would fight the first. .book-arrow keeps its
+   centring (colour only) and .resume-pill composes its own. */
 .icon-btn:active,.code-copy:active,form.subscribe button:active,.theme-menu button:active,
-.lightbox button:active,.to-top:active,.book-x:active,.comment-form button:active{
+.to-top:active,.book-x:active,.comment-form button:not(.comment-signout):active,
+.book-mode-toggle:active,.overlay-close:active,.book-fab:active,
+.book-size:not([disabled]):active{
   transform:translateY(1px);transition-duration:0s;
   box-shadow:inset 0 1.5px 2.5px color-mix(in srgb,var(--c-heading) 22%,transparent)}
+/* THE SAME PRESS, CARVED IN THE PAPER INSTEAD. The shadow is the palette's own heading ink
+   diluted, which is right on a page and wrong on the two surfaces made OF that ink: the pen
+   bar and the quote's copy pill both set background:var(--c-heading) with color:var(--c-bg),
+   so the standard carve is ink on ink. Measured on a live page: --c-heading is #121212, so
+   the shared rule paints rgb(18,18,18) at 22% - on the pen bar, nothing at all. */
+.quote-copy:active,.pen-bar button:not(.pen-swatch):active{
+  transform:translateY(1px);transition-duration:0s;
+  box-shadow:inset 0 1.5px 2.5px color-mix(in srgb,var(--c-bg) 22%,transparent)}
+/* AND THE LIGHTBOX IS DARK WHATEVER THE PALETTE - rgba(0,0,0,.9), with its own white hover
+   for that reason - so neither token is right for it: --c-bg follows the theme and goes dark
+   with it. A literal white, like the hover two rules above it. It was in the list at the top
+   until today, carving 22% of #121212 onto a black scrim, which is a press nobody could see
+   in any palette. */
+.lightbox button:active{
+  transform:translateY(1px);transition-duration:0s;
+  box-shadow:inset 0 1.5px 2.5px rgba(255,255,255,.22)}
 .resume-pill:active{transform:translateX(-50%) translateY(1px);transition-duration:0s;
   box-shadow:inset 0 1.5px 2.5px color-mix(in srgb,var(--c-heading) 22%,transparent)}
 .book-arrow:active{color:var(--c-heading)}
-html[data-motion=off] :is(.icon-btn,.code-copy,form.subscribe button,.theme-menu button,.lightbox button,.to-top,.book-x,.comment-form button):active{transform:none}
+html[data-motion=off] :is(.icon-btn,.code-copy,form.subscribe button,.theme-menu button,.lightbox button,.to-top,.book-x,.comment-form button,.book-mode-toggle,.overlay-close,.book-fab,.book-size,.quote-copy,.pen-bar button):active{transform:none}
 html[data-motion=off] .resume-pill:active{transform:translateX(-50%)}
 @media (prefers-reduced-motion:reduce){
-  :is(.icon-btn,.code-copy,form.subscribe button,.theme-menu button,.lightbox button,.to-top,.book-x,.comment-form button):active{transform:none}
+  :is(.icon-btn,.code-copy,form.subscribe button,.theme-menu button,.lightbox button,.to-top,.book-x,.comment-form button,.book-mode-toggle,.overlay-close,.book-fab,.book-size,.quote-copy,.pen-bar button):active{transform:none}
   .resume-pill:active{transform:translateX(-50%)}
 }
 
@@ -2023,6 +2142,19 @@ dialog:not([open]),dialog:not([open])::backdrop{opacity:0}
 .theme-menu{transition:opacity var(--dur-fast) var(--ease-out),translate var(--dur-fast) var(--ease-out),display var(--dur-fast) allow-discrete}
 .theme-menu[hidden]{opacity:0;translate:0 -4px}
 @starting-style{.theme-menu:not([hidden]){opacity:0;translate:0 -4px}}
+/* THE PEN'S TWO FLOATING SURFACES, which were the last things on the reading site that simply
+   appeared (2026-09-20). Every other surface that hides itself arrives - the dialog, its
+   backdrop, the theme and palette menus, the quote's copy key - and the bar that opens over a
+   selection, the one surface a reader summons by hand, snapped into place.
+   IT RISES, where the menu descends: the bar is placed ABOVE the selection it belongs to
+   (below it only when there is no room), so it starts under its place and settles up into it.
+   The script sets left/top and nothing else, so translate is free.
+   ⚠️ .pen-ask AND .pen-keep ARE NOT HERE. They are blocks INSIDE .pen-pop that the panel
+   swaps between - a second entrance inside an entrance is two things moving where one thing
+   moved, and the surface carrying them is already arriving. */
+.pen-bar,.pen-pop{transition:opacity var(--dur-fast) var(--ease-out),translate var(--dur-fast) var(--ease-out),display var(--dur-fast) allow-discrete}
+.pen-bar[hidden],.pen-pop[hidden]{opacity:0;translate:0 4px}
+@starting-style{.pen-bar:not([hidden]),.pen-pop:not([hidden]){opacity:0;translate:0 4px}}
 
 @media (prefers-reduced-motion:reduce){*,::before,::after,::backdrop{animation:none!important;transition:none!important}}
 html[data-motion=off] *,html[data-motion=off] ::before,html[data-motion=off] ::after,html[data-motion=off] ::backdrop{animation:none!important;transition:none!important}
@@ -2236,6 +2368,13 @@ img{max-width:100%!important;height:auto}
 /* A code block scrolls on a screen and cannot on paper, so it wraps instead of losing the
    right-hand end of every long line. */
 pre{white-space:pre-wrap;word-wrap:break-word;border:.5pt solid var(--c-rule)}
+/* A LINK CARD ON PAPER is a link: it keeps its words and loses its frame, its picture and its
+   kind badge. The address itself is already printed by the rule for anchors in the prose, so a
+   reader holding the sheet can still reach what it pointed at (ADR 0058). */
+.link-card,.file-card{border:0;margin:1em 0}
+.link-card-pic,.file-card-kind{display:none!important}
+.link-card-text,.file-card-text{padding:0}
 table{width:100%;border-collapse:collapse}
 }
+
 
