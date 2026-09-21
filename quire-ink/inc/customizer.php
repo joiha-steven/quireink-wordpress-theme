@@ -128,6 +128,16 @@ function quireink_customize_register( $wp_customize ) {
 				'on'  => __( 'On', 'quire-ink' ),
 			),
 		),
+		'quireink_book_mode'      => array(
+			'label'       => __( 'Book mode', 'quire-ink' ),
+			'description' => __( 'The button that resets the article into two columns with a drop cap, sized from the window, keeping the reader\'s place. Off removes the button and stops the 7.7 KB behind it being downloaded at all.', 'quire-ink' ),
+			'section'     => 'quireink_reading',
+			'default'     => 'on',
+			'choices'     => array(
+				'on'  => __( 'On', 'quire-ink' ),
+				'off' => __( 'Off', 'quire-ink' ),
+			),
+		),
 		'quireink_ide_chrome'     => array(
 			'label'       => __( 'Furniture reads as source code', 'quire-ink' ),
 			'description' => __( 'The "//" before every small heading, the square brackets around dates and counts, the line numbers down the sidebar and the numbering in a table of contents. It is the whole treatment, not one detail: off removes every one of them. It never touches the article, the titles or the comments - those stay a book.', 'quire-ink' ),

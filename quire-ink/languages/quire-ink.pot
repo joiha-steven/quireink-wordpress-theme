@@ -2,14 +2,14 @@
 # This file is distributed under the GNU General Public License v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Quire Ink 0.1.1\n"
+"Project-Id-Version: Quire Ink 0.1.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/quire-ink\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-31T12:39:36+00:00\n"
+"POT-Creation-Date: 2026-09-21T06:15:01+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quire-ink\n"
@@ -114,26 +114,27 @@ msgstr ""
 msgid "Post comment"
 msgstr ""
 
-#: footer.php:30
+#: footer.php:36
 msgid "Footer"
 msgstr ""
 
 #. translators: 1: current year, 2: site name
-#: footer.php:42
+#: footer.php:53
 #, php-format
 msgid "© %1$s %2$s"
 msgstr ""
 
 #. translators: the theme credit in the footer. The site runs WordPress; this names the THEME, so avoid "powered by", which claims the blog engine.
-#: footer.php:53
+#: footer.php:64
 msgid "Quire Ink theme"
 msgstr ""
 
-#: functions.php:91
+#: functions.php:114
+#: functions.php:123
 msgid "Rail menu"
 msgstr ""
 
-#: functions.php:95
+#: functions.php:127
 msgid "Footer menu"
 msgstr ""
 
@@ -163,7 +164,8 @@ msgid "dark"
 msgstr ""
 
 #: header.php:57
-#: parts/rail-blocks.php:31
+#: inc/content.php:198
+#: inc/content.php:313
 msgid "Menu"
 msgstr ""
 
@@ -205,19 +207,19 @@ msgstr ""
 msgid "Reply"
 msgstr ""
 
-#: inc/content.php:133
-#: inc/content.php:135
+#: inc/content.php:275
+#: inc/content.php:276
 msgid "Table of contents"
 msgstr ""
 
-#: inc/content.php:156
+#: inc/content.php:297
 #: inc/template-tags.php:58
-#: parts/rail-blocks.php:112
-#: single.php:76
+#: parts/rail-blocks.php:139
+#: single.php:89
 msgid "Tags"
 msgstr ""
 
-#: inc/content.php:159
+#: inc/content.php:300
 msgid "Comments"
 msgstr ""
 
@@ -304,12 +306,14 @@ msgstr ""
 #: inc/customizer.php:84
 #: inc/customizer.php:128
 #: inc/customizer.php:137
+#: inc/customizer.php:147
 msgid "On"
 msgstr ""
 
 #: inc/customizer.php:85
 #: inc/customizer.php:127
 #: inc/customizer.php:138
+#: inc/customizer.php:148
 msgid "Off"
 msgstr ""
 
@@ -376,117 +380,128 @@ msgid "Indented paragraphs, justified lines and hyphenation, the way a printed p
 msgstr ""
 
 #: inc/customizer.php:132
-msgid "Furniture reads as source code"
+#: inc/i18n-data.php:104
+#: single.php:62
+#: single.php:93
+msgid "Book mode"
 msgstr ""
 
 #: inc/customizer.php:133
+msgid "The button that resets the article into two columns with a drop cap, sized from the window, keeping the reader's place. Off removes the button and stops the 7.7 KB behind it being downloaded at all."
+msgstr ""
+
+#: inc/customizer.php:142
+msgid "Furniture reads as source code"
+msgstr ""
+
+#: inc/customizer.php:143
 msgid "The \"//\" before every small heading, the square brackets around dates and counts, the line numbers down the sidebar and the numbering in a table of contents. It is the whole treatment, not one detail: off removes every one of them. It never touches the article, the titles or the comments - those stay a book."
 msgstr ""
 
-#: inc/customizer.php:146
+#: inc/customizer.php:156
 msgid "Quire Ink - colour"
 msgstr ""
 
-#: inc/customizer.php:148
+#: inc/customizer.php:158
 msgid "Six palettes, each with a light and a dark half. A reader who picks one is remembered; these decide what everyone else sees, and which ones they are offered."
 msgstr ""
 
-#: inc/customizer.php:162
+#: inc/customizer.php:172
 #: inc/i18n-data.php:80
 msgid "Palette"
 msgstr ""
 
 #. translators: %s: palette name
-#: inc/customizer.php:185
+#: inc/customizer.php:195
 #, php-format
 msgid "Offer %s to readers"
 msgstr ""
 
-#: inc/customizer.php:195
+#: inc/customizer.php:205
 msgid "Quire Ink - type"
 msgstr ""
 
-#: inc/customizer.php:197
+#: inc/customizer.php:207
 msgid "All self-hosted. Choosing a face also loads the reading setup measured for it - a serif runs smaller and wants tighter leading than a sans."
 msgstr ""
 
-#: inc/customizer.php:211
+#: inc/customizer.php:221
 msgid "Reading typeface"
 msgstr ""
 
-#: inc/customizer.php:212
+#: inc/customizer.php:222
 msgid "The words themselves: articles, comments, list headlines."
 msgstr ""
 
-#: inc/customizer.php:216
+#: inc/customizer.php:226
 msgid "Literata - serif, for reading"
 msgstr ""
 
-#: inc/customizer.php:217
+#: inc/customizer.php:227
 msgid "Source Serif 4 - serif"
 msgstr ""
 
-#: inc/customizer.php:218
+#: inc/customizer.php:228
 msgid "Inter - sans"
 msgstr ""
 
-#: inc/customizer.php:219
+#: inc/customizer.php:229
 msgid "Source Sans 3 - sans"
 msgstr ""
 
-#: inc/customizer.php:234
+#: inc/customizer.php:244
 msgid "Furniture typeface"
 msgstr ""
 
-#: inc/customizer.php:235
+#: inc/customizer.php:245
 msgid "Dates, counts, the rail, the buttons. Not the words."
 msgstr ""
 
-#: inc/customizer.php:239
+#: inc/customizer.php:249
 msgid "JetBrains Mono"
 msgstr ""
 
-#: inc/customizer.php:240
+#: inc/customizer.php:250
 msgid "IBM Plex Mono"
 msgstr ""
 
-#: inc/customizer.php:241
+#: inc/customizer.php:251
 msgid "Inter"
 msgstr ""
 
-#: inc/customizer.php:242
+#: inc/customizer.php:252
 msgid "Same as the reading face"
 msgstr ""
 
-#: inc/customizer.php:250
+#: inc/customizer.php:260
 msgid "Quire Ink - pictures"
 msgstr ""
 
-#: inc/customizer.php:252
+#: inc/customizer.php:262
 msgid "Both are off to begin with. A blog that upgrades into a theme must not move a pixel until its owner moves one."
 msgstr ""
 
-#: inc/customizer.php:259
+#: inc/customizer.php:269
 msgid "Quire Ink - reading"
 msgstr ""
 
-#: inc/customizer.php:267
+#: inc/customizer.php:277
 msgid "Quire Ink - footer"
 msgstr ""
 
-#: inc/customizer.php:288
+#: inc/customizer.php:298
 msgid "Draw the frame in ink"
 msgstr ""
 
-#: inc/customizer.php:289
+#: inc/customizer.php:299
 msgid "The mat and the line in the heading colour instead of the page colour. Nothing to see until a frame is chosen above."
 msgstr ""
 
-#: inc/customizer.php:305
+#: inc/customizer.php:315
 msgid "Credit the theme in the footer"
 msgstr ""
 
-#: inc/customizer.php:306
+#: inc/customizer.php:316
 msgid "A single \"Quire Ink theme\" link beside the copyright line. It names the theme, not the engine: the site is running WordPress."
 msgstr ""
 
@@ -596,12 +611,6 @@ msgstr ""
 msgid "Back to top"
 msgstr ""
 
-#: inc/i18n-data.php:104
-#: single.php:61
-#: single.php:79
-msgid "Book mode"
-msgstr ""
-
 #: inc/i18n-data.php:106
 msgid "Previous page"
 msgstr ""
@@ -635,6 +644,14 @@ msgstr ""
 msgid "Continue where you left off?"
 msgstr ""
 
+#: inc/post-nav.php:46
+msgid "Read next"
+msgstr ""
+
+#: inc/post-nav.php:92
+msgid "Related posts"
+msgstr ""
+
 #: inc/rail-widgets.php:34
 msgid "Rail"
 msgstr ""
@@ -644,34 +661,26 @@ msgid "The sidebar in the gutter. Leave it empty and the theme shows its own blo
 msgstr ""
 
 #: inc/template-tags.php:59
-#: parts/rail-blocks.php:79
-#: single.php:77
+#: parts/rail-blocks.php:84
+#: single.php:90
 msgid "Categories"
 msgstr ""
 
-#: inc/template-tags.php:80
-msgid "Read next"
-msgstr ""
-
-#: inc/template-tags.php:110
-msgid "Related posts"
-msgstr ""
-
-#: inc/template-tags.php:156
+#: inc/template-tags.php:108
 #: single.php:56
-#: single.php:73
+#: single.php:86
 msgid "min read"
 msgstr ""
 
-#: inc/template-tags.php:190
+#: inc/template-tags.php:142
 msgid "Newer"
 msgstr ""
 
-#: inc/template-tags.php:191
+#: inc/template-tags.php:143
 msgid "Older"
 msgstr ""
 
-#: inc/template-tags.php:195
+#: inc/template-tags.php:147
 msgid "Posts"
 msgstr ""
 
@@ -683,15 +692,15 @@ msgstr ""
 msgid "No posts here yet."
 msgstr ""
 
-#: parts/rail-blocks.php:67
+#: parts/rail-blocks.php:63
 msgid "Featured"
 msgstr ""
 
-#: parts/rail-blocks.php:97
+#: parts/rail-blocks.php:128
 msgid "Archive"
 msgstr ""
 
-#: parts/rail.php:32
+#: parts/rail.php:35
 msgid "Site"
 msgstr ""
 
@@ -851,7 +860,7 @@ msgid "Search posts"
 msgstr ""
 
 #: single.php:55
-#: single.php:72
+#: single.php:85
 msgid "words"
 msgstr ""
 

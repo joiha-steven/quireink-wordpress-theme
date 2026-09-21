@@ -4,8 +4,9 @@ The owner's map. Quire Ink keeps one of these and it is a promise to the person 
 site: if a control is here it exists, and if a thing is under "What cannot be changed" then
 custom CSS is the answer and not a support ticket.
 
-**Appearance → Customize.** Nine controls of the theme's own, in five sections, plus what
-WordPress provides.
+**Appearance → Customize.** Sixteen controls of the theme's own in six sections, plus a
+checkbox for each of the six palettes, plus what WordPress provides. (It said nine in five for
+several releases, which was true when it was typed.)
 
 ## Quire Ink — colour
 
@@ -55,6 +56,7 @@ Both off. A blog that upgrades into this theme must not move a pixel until its o
 |---|---|---|
 | A first-time visitor opens in | Their device's setting | Or force light, or force dark. Decides the FIRST paint only; a reader's own choice always wins. |
 | Book typography | Off | Indented paragraphs, justified lines, hyphenation — a printed page. Off is the web default: ragged right, a blank line between paragraphs. |
+| Book mode | On | The button that resets the article into two columns with a drop cap. Off removes the button **and** stops the 7.7 KB bundle behind it being downloaded, the same bargain the source-code look makes with its stylesheet. Not the same thing as Book typography: this one is a reading surface, that one is how the type is set. |
 | Motion | On | Off removes every transition. A reader whose system asks for reduced motion gets that regardless. |
 | Furniture reads as source code | On | The `//` before every small heading, the brackets around dates and counts, the line numbers down the sidebar, the numbering in a table of contents. One switch for all of it. It never reaches the article, the titles or the comments. |
 
@@ -109,6 +111,19 @@ Stable class names: `.wrap` `.with-rail` `.rail` `.rail-inner` `.rail-row` `.rai
 
 `--shell-w` is the reading column. It is 672px and it is a variable precisely so a site that
 wants a wider measure can say so in one line.
+
+## What a plugin or a child theme may change
+
+Five filters, for the places where a theme has to guess at an editorial decision. Each is a
+one-liner in a child theme's `functions.php`, and none of them needs a template copied.
+
+| Filter | Default | What it decides |
+|---|---|---|
+| `quireink_read_next_post` | the older neighbour | The post a finished article points at. Return your own `WP_Post`, or `null` for no link. Quire Ink itself prefers the next piece in a series; WordPress has no series, so this is the seam a series plugin plugs into. |
+| `quireink_related_args` | 3 posts sharing a category | The whole `WP_Query` behind "Related posts" — count, taxonomy, order. One filter rather than three, because a site changing any of them is changing the same query. |
+| `quireink_rail_term_limit` | 40 | How many categories or tags a rail block lists. Takes the taxonomy as its second argument. |
+| `quireink_featured_count` | 5 | The ceiling on sticky posts under Featured. A site with two sticky posts still shows two. |
+| `quireink_words_per_minute` | 200 | The reading estimate. A filter and not a control: it is a claim about a reader, not a choice about a site. 200 is the blog engine's figure and is why the two surfaces print the same number for the same article. |
 
 ## What cannot be changed here
 

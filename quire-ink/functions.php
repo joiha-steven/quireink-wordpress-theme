@@ -90,6 +90,34 @@ function quireink_setup() {
 	// editor.css is NOT in this list, and that is not an omission - see `quireink_editor_css()`.
 	add_editor_style( array( 'assets/css/quireink-base.css', 'assets/css/quireink-tokens.css', 'assets/css/bridge.css' ) );
 
+	/*
+	 * WHAT A BRAND-NEW BLOG IS MISSING, and only that.
+	 *
+	 * On a site with no menu and no sticky post the rail draws Categories and Archive with a
+	 * count of 1 beside each. Nothing is broken and nothing looks like the picture in the
+	 * directory, because the two blocks that make this theme what it is are fed by things
+	 * only an owner can supply. Starter content supplies exactly those and stops.
+	 *
+	 * It sets NO theme mod. A palette, a shape or a picture default chosen here would be a
+	 * preview of a different theme from the one that installs, and "must not move a pixel
+	 * until its owner moves one" is the rule the picture settings already keep.
+	 *
+	 * It runs only on a site with no content of its own, only inside the Customizer, and only
+	 * until the owner presses Publish or navigates away.
+	 */
+	add_theme_support(
+		'starter-content',
+		array(
+			'posts'     => array( 'about', 'contact' ),
+			'nav_menus' => array(
+				'primary' => array(
+					'name'  => __( 'Rail menu', 'quire-ink' ),
+					'items' => array( 'link_home', 'page_about', 'page_contact' ),
+				),
+			),
+		)
+	);
+
 	register_nav_menus(
 		array(
 			'primary' => __( 'Rail menu', 'quire-ink' ),
@@ -101,146 +129,6 @@ function quireink_setup() {
 	);
 }
 add_action( 'after_setup_theme', 'quireink_setup' );
-
-/**
- * The sheets and the two reader bundles.
- *
- * The bundles are Quire Ink's own, copied by tools/extract.ts: `core` is the chrome (palette
- * switch, rail, search overlay, back-to-top) and `post` is the article (table-of-contents
- * scrollspy, book mode, lightbox, quote copy, resume). They are ES modules and are loaded as
- * such; `wp_enqueue_script` learned the `strategy` argument in 6.3, and the theme's floor is
- * 6.5, so no filter on script_loader_tag is needed.
- */
-function quireink_assets() {
-	$dir = get_template_directory_uri();
-	$v   = QUIREINK_VERSION;
-
-	wp_enqueue_style( 'quireink-base', $dir . '/assets/css/quireink-base.css', array(), $v );
-
-	/*
-	 * The IDE chrome is the one part of the look an owner can switch off, so switching it off
-	 * stops it being DOWNLOADED rather than merely stopping it applying: 5,652 B of gzip that
-	 * a reader no longer pays for a treatment the site has decided against. Left on - which is
-	 * the default - it costs 839 B of gzip over the single sheet, because the same bytes
-	 * compress a little worse in two files, plus one request on an open connection.
-	 *
-	 * Where it lands among the sheets does not matter, and that is a property of the sheet
-	 * rather than luck: every selector in it carries `html[data-look=code]`, so it cannot
-	 * tie with anything else the theme loads. It is put here because this is where it sat
-	 * inside the base sheet, and a reader of this list should not have to wonder.
-	 */
-	if ( 'on' === get_theme_mod( 'quireink_ide_chrome', 'on' ) ) {
-		wp_enqueue_style( 'quireink-look-code', $dir . '/assets/css/quireink-look-code.css', array( 'quireink-base' ), $v );
-	}
-
-	wp_enqueue_style( 'quireink-tokens', $dir . '/assets/css/quireink-tokens.css', array( 'quireink-base' ), $v );
-	wp_enqueue_style( 'quireink-bridge', $dir . '/assets/css/bridge.css', array( 'quireink-tokens' ), $v );
-
-	// style.css carries the theme header and no rules; WordPress still expects the handle to
-	// exist, and a child theme's own style.css depends on it.
-	wp_enqueue_style( 'quireink-style', get_stylesheet_uri(), array( 'quireink-bridge' ), $v );
-
-	wp_enqueue_script( 'quireink-core', $dir . '/assets/js/core.js', array(), $v, array( 'strategy' => 'defer', 'in_footer' => false ) );
-	wp_add_inline_script( 'quireink-core', quireink_rail_inert_js(), 'after' );
-
-	if ( is_singular() ) {
-		wp_enqueue_script( 'quireink-post', $dir . '/assets/js/post.js', array( 'quireink-core' ), $v, array( 'strategy' => 'defer', 'in_footer' => false ) );
-	}
-
-	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
-		wp_enqueue_script( 'comment-reply' );
-	}
-}
-add_action( 'wp_enqueue_scripts', 'quireink_assets' );
-
-/**
- * The article's typography, inside the editor canvas.
- *
- * THE PROBLEM. Everything a reader sees inside a post is scoped to `.prose`: the reading face,
- * the measure, the heading scale, the list indents, the blockquote rule. The editor canvas is a
- * bare `.editor-styles-wrapper` and has no such class, so none of it applied - an author wrote
- * in the mono chrome face at one width and published in a book serif at another. Every static
- * check passed the whole time, because nothing about the PAGE was wrong.
- *
- * `tools/editor-css.ts` generates those same rules addressed at `body`, which inside the
- * iframed canvas is the wrapper itself.
- *
- * WHY NOT `add_editor_style()`. It was tried, it registers cleanly, `get_editor_stylesheets()`
- * lists it, the editor settings carry its text - and the canvas never receives it, while the
- * three sheets beside it in the same call all arrive. Rather than keep guessing at what the
- * editor does to a sheet on its way in, this enqueues the file. Since 6.3 the canvas is an
- * iframe and `enqueue_block_assets` runs inside it, so the file lands as a plain stylesheet
- * with nothing rewriting it.
- *
- * `is_admin()` because that hook fires on the front end too, where these rules would be a
- * second copy of the article's typography aimed at an element that is not there.
- */
-function quireink_editor_css() {
-	if ( ! is_admin() ) {
-		return;
-	}
-	/*
-	 * No dependency, because ordering cannot help: the editor injects its own `<style>` blocks
-	 * after every enqueued link, so a link is never last. The generated sheet wins its ties on
-	 * weight instead - see tools/editor-css.ts for why that is safe against the author's own
-	 * choices and only aimed at WordPress's defaults.
-	 */
-	wp_enqueue_style(
-		'quireink-editor',
-		get_template_directory_uri() . '/assets/css/editor.css',
-		array(),
-		QUIREINK_VERSION
-	);
-}
-add_action( 'enqueue_block_assets', 'quireink_editor_css' );
-
-/**
- * Keep the closed drawer out of the tab order.
- *
- * THE PROBLEM THIS ANSWERS. The rail is printed before `<main>` so that a keyboard reaches
- * the sidebar where a reader sees it - in the left gutter, beside the first line. Above the
- * rail breakpoint that is exactly right. Below it the same element is a drawer parked at
- * `translateX(-100%)`, off the left edge of the screen and opened from the header's menu
- * button - and a translated element is still focusable, so on a phone the first eight Tab
- * presses after the header went to links nobody could see, before the article was reached.
- *
- * `inert` is the whole fix: it takes the subtree out of the tab order AND out of the
- * accessibility tree, which is what an off-screen drawer should be, and gives it all back
- * the moment the drawer opens.
- *
- * WHY THIS IS NOT CSS. The honest test is `visibility:hidden` on the closed drawer, undone
- * above the breakpoint - and the breakpoint is COMPUTED from the reading column by the blog
- * engine, emitted into the generated sheet, and cannot be read by a media query written here.
- * Writing the number into `bridge.css` would be the one thing invariant 3 exists to prevent.
- * Reading `position` back off the element asks the sheet what it actually decided, at
- * whatever width, without this file knowing the number at all: `fixed` is the drawer,
- * `absolute` is the gutter.
- *
- * With JavaScript off the drawer is focusable, which is where it was before. That is the
- * shape of an enhancement rather than a fix that can fail closed.
- *
- * @return string
- */
-function quireink_rail_inert_js() {
-	return <<<'JS'
-(function(){var run=function(){var rails=document.querySelectorAll('.rail');if(!rails.length||!('inert' in rails[0]))return;var html=document.documentElement;var sync=function(){for(var i=0;i<rails.length;i++){rails[i].inert=getComputedStyle(rails[i]).position==='fixed'&&html.dataset.rail!=='open';}};sync();addEventListener('resize',sync,{passive:true});new MutationObserver(sync).observe(html,{attributes:true,attributeFilter:['data-rail']});};if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);}else{run();}})();
-JS;
-}
-
-/**
- * Load the reader bundles as ES modules.
- *
- * They are built by Bun with `format: esm` and use `import` at the top level, so a classic
- * <script defer> parses them as a script and throws on the first import. WordPress has no
- * `type=module` argument, hence the filter.
- */
-function quireink_module_type( $tag, $handle ) {
-	if ( 'quireink-core' === $handle || 'quireink-post' === $handle ) {
-		$tag = str_replace( ' src=', ' type="module" src=', $tag );
-	}
-	return $tag;
-}
-add_filter( 'script_loader_tag', 'quireink_module_type', 10, 2 );
 
 /**
  * The attributes Quire Ink's islands read off <html>.
@@ -267,8 +155,10 @@ function quireink_html_attrs( $output ) {
 }
 add_filter( 'language_attributes', 'quireink_html_attrs' );
 
+require get_template_directory() . '/inc/assets.php';
 require get_template_directory() . '/inc/content.php';
 require get_template_directory() . '/inc/template-tags.php';
+require get_template_directory() . '/inc/post-nav.php';
 require get_template_directory() . '/inc/comment-walker.php';
 require get_template_directory() . '/inc/blocks.php';
 require get_template_directory() . '/inc/forms.php';

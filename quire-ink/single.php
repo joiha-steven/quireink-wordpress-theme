@@ -58,7 +58,9 @@ endif;
 	<?php if ( '' !== get_the_author() ) : ?>
 	&middot; <span class="byline"><?php echo esc_html( get_the_author() ); ?></span>
 	<?php endif; ?>
+	<?php if ( quireink_book_mode() ) : ?>
 	<span class="meta-book"> &middot; <button type="button" class="book-mode-toggle" data-book-open><?php esc_html_e( 'Book mode', 'quire-ink' ); ?></button></span>
+	<?php endif; ?>
 </p>
 <h1 class="reading-font mt-2 fs-h1 font-semibold"><?php the_title(); ?></h1>
 </header>
@@ -87,7 +89,9 @@ quireink_toc();
 	quireink_term_line( 'post_tag', __( 'Tags', 'quire-ink' ), 'lower' );
 	quireink_term_line( 'category', __( 'Categories', 'quire-ink' ), '' );
 	?>
+	<?php if ( quireink_book_mode() ) : ?>
 	<p class="info-action"><button type="button" class="book-mode-toggle" data-book-open><?php esc_html_e( 'Book mode', 'quire-ink' ); ?></button></p>
+	<?php endif; ?>
 </aside>
 
 <div id="post-body" class="prose">

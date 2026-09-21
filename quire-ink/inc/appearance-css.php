@@ -31,22 +31,36 @@ function quireink_appearance_css() {
 
 	// Palette first: the type scale and the shape read nothing from it, but a reader looking
 	// at a half-applied sheet sees colour before anything else.
+	/*
+	 * A setting is printed only when it differs from what the generated sheet already says,
+	 * and what it already says is GENERATED too - `quireink_engine_defaults()`, read off the
+	 * blog engine at extract time.
+	 *
+	 * It used to be three typed strings, and one of them was the theme's own default rather
+	 * than the engine's. They agreed until the engine's furniture face moved to Inter on
+	 * 2026-09-13, after which a default install left `--font-sans` at Inter while the theme,
+	 * its Customizer and its documents all said JetBrains Mono. Everything the sheet names
+	 * explicitly stayed monospace, so the page looked correct; `.code-copy` reads the
+	 * variable and pulled 32.5 KB of Inter onto any page with a code block.
+	 */
+	$base = quireink_engine_defaults();
+
 	$palette = get_theme_mod( 'quireink_palette', 'mono' );
 	$scheme  = get_theme_mod( 'quireink_default_scheme', 'system' );
 	$map     = quireink_palette_css();
-	if ( ( 'mono' !== $palette || 'system' !== $scheme ) && isset( $map[ $palette ][ $scheme ] ) ) {
+	if ( ( $base['palette'] !== $palette || 'system' !== $scheme ) && isset( $map[ $palette ][ $scheme ] ) ) {
 		$out .= $map[ $palette ][ $scheme ];
 	}
 
 	$font  = get_theme_mod( 'quireink_font', 'literata' );
 	$fonts = quireink_font_css();
-	if ( 'literata' !== $font && isset( $fonts[ $font ] ) ) {
+	if ( $base['font'] !== $font && isset( $fonts[ $font ] ) ) {
 		$out .= $fonts[ $font ];
 	}
 
 	$chrome  = get_theme_mod( 'quireink_chrome_font', 'jetbrains-mono' );
 	$chromes = quireink_chrome_css();
-	if ( 'jetbrains-mono' !== $chrome && isset( $chromes[ $chrome ] ) ) {
+	if ( $base['chrome'] !== $chrome && isset( $chromes[ $chrome ] ) ) {
 		$out .= $chromes[ $chrome ];
 	}
 

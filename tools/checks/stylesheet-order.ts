@@ -15,7 +15,11 @@
 // call order), so the chain is what is checked, not the sequence of the calls.
 import { readFileSync } from 'node:fs'
 
-const SRC = 'quire-ink/functions.php'
+// BOTH FILES, read as one. The enqueues moved to `inc/assets.php` when `functions.php` hit
+// the ceiling, and `add_editor_style()` stayed behind in `quireink_setup()`. A guard pointed
+// at one file would have gone quiet about half the rule the moment the file was split, which
+// is the same blind spot that let the editor list tokens before base for three months.
+const SRC = ['quire-ink/functions.php', 'quire-ink/inc/assets.php']
 const ORDER = ['quireink-base', 'quireink-tokens', 'quireink-bridge', 'quireink-style']
 
 // Outside the chain, because it is enqueued only when the switch is on and a conditional
@@ -30,7 +34,7 @@ const OFF_CHAIN: Record<string, string> = { 'quireink-look-code': 'quireink-base
 // one that shipped; the rule is the rule on both sides.
 const EDITOR_ORDER = ['quireink-base.css', 'quireink-tokens.css', 'bridge.css']
 
-const php = readFileSync(SRC, 'utf8')
+const php = SRC.map((f) => readFileSync(f, 'utf8')).join('\n')
 
 // handle => the dependency array as written
 const enqueued = new Map<string, string[]>()

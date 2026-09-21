@@ -37,9 +37,24 @@ function quireink_reading( $post_id ) {
 
 	$text  = wp_strip_all_tags( get_post_field( 'post_content', $post_id ) );
 	$words = count( preg_split( '/\s+/u', trim( $text ), -1, PREG_SPLIT_NO_EMPTY ) );
+
+	/**
+	 * Words a minute, for the reading estimate.
+	 *
+	 * 200 is the blog engine's figure and the reason the two surfaces print the same number
+	 * for the same article. It is a filter and not a setting because it is a claim about a
+	 * reader rather than a choice about a site: a blog of dense technical prose in a language
+	 * that reads slower than English has a reason to lower it, and a Customizer control would
+	 * invite everybody else to guess at it.
+	 *
+	 * @param int $wpm     Words a minute.
+	 * @param int $post_id The post being measured.
+	 */
+	$wpm = max( 1, (int) apply_filters( 'quireink_words_per_minute', 200, $post_id ) );
+
 	return array(
 		'words'   => $words,
-		'minutes' => max( 1, (int) round( $words / 200 ) ),
+		'minutes' => max( 1, (int) round( $words / $wpm ) ),
 	);
 }
 

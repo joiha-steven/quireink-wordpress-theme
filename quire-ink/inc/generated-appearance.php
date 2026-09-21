@@ -28,6 +28,24 @@ function quireink_dropcap_css() {
 }
 
 /**
+ * What the generated sheet already carries, as the blog engine set it at extract time.
+ *
+ * `quireink_appearance_css()` prints a setting's declarations only when the setting differs
+ * from one of these. They are the ENGINE's defaults, not the theme's: the theme's furniture
+ * face is JetBrains Mono and the engine's is Inter, and comparing against the wrong one left
+ * `--font-sans` at the engine's value on every default install.
+ *
+ * @return array<string,string>
+ */
+function quireink_engine_defaults() {
+	return array(
+		'palette' => 'mono',
+		'font' => 'literata',
+		'chrome' => 'inter',
+	);
+}
+
+/**
  * Palette id => first-paint scheme => the :root and .dark declarations.
  *
  * @return array<string,array<string,string>>
@@ -92,6 +110,149 @@ function quireink_chrome_css() {
 	'reading' => ':root{--font-sans:var(--font-reading)}',
 	'plex-mono' => ':root{--font-sans:\'IBM Plex Mono\', ui-monospace, \'SFMono-Regular\', Menlo, Consolas, monospace}',
 	'jetbrains-mono' => ':root{--font-sans:\'JetBrains Mono\', ui-monospace, \'SFMono-Regular\', Menlo, Consolas, monospace}',
+	);
+}
+
+/**
+ * Reading face and furniture face => the woff2 files that earn a `<link rel="preload">`.
+ *
+ * Keyed `<reading>|<furniture>`, then by the site's language. `*` is what a language gets
+ * unless it is named; a named one is an exception the blog engine's own rule makes - a second
+ * subset where the faces carry the accents, nothing at all where they carry no glyph the page
+ * will paint in.
+ *
+ * @return array<string,array<string,array<int,string>>>
+ */
+function quireink_font_preload() {
+	return array(
+	'inter|inter' => array(
+		'*' => array('inter-latin.woff2'),
+		'ja' => array(),
+		'ko' => array(),
+		'ru' => array(),
+		'vi' => array('inter-latin.woff2', 'inter-vietnamese.woff2'),
+		'zh' => array(),
+	),
+	'inter|reading' => array(
+		'*' => array('inter-latin.woff2'),
+		'ja' => array(),
+		'ko' => array(),
+		'ru' => array(),
+		'vi' => array('inter-latin.woff2', 'inter-vietnamese.woff2'),
+		'zh' => array(),
+	),
+	'inter|plex-mono' => array(
+		'*' => array('inter-latin.woff2', 'plexmono-400-latin.woff2'),
+		'ja' => array(),
+		'ko' => array(),
+		'ru' => array(),
+		'vi' => array('inter-latin.woff2', 'inter-vietnamese.woff2', 'plexmono-400-latin.woff2', 'plexmono-400-vietnamese.woff2'),
+		'zh' => array(),
+	),
+	'inter|jetbrains-mono' => array(
+		'*' => array('inter-latin.woff2', 'jetbrainsmono-latin.woff2'),
+		'ja' => array(),
+		'ko' => array(),
+		'ru' => array(),
+		'vi' => array('inter-latin.woff2', 'inter-vietnamese.woff2', 'jetbrainsmono-latin.woff2', 'jetbrainsmono-vietnamese.woff2'),
+		'zh' => array(),
+	),
+	'source-sans|inter' => array(
+		'*' => array('sourcesans-latin.woff2'),
+		'ja' => array(),
+		'ko' => array(),
+		'ru' => array(),
+		'vi' => array('sourcesans-latin.woff2', 'sourcesans-vietnamese.woff2'),
+		'zh' => array(),
+	),
+	'source-sans|reading' => array(
+		'*' => array('sourcesans-latin.woff2'),
+		'ja' => array(),
+		'ko' => array(),
+		'ru' => array(),
+		'vi' => array('sourcesans-latin.woff2', 'sourcesans-vietnamese.woff2'),
+		'zh' => array(),
+	),
+	'source-sans|plex-mono' => array(
+		'*' => array('sourcesans-latin.woff2', 'plexmono-400-latin.woff2'),
+		'ja' => array(),
+		'ko' => array(),
+		'ru' => array(),
+		'vi' => array('sourcesans-latin.woff2', 'sourcesans-vietnamese.woff2', 'plexmono-400-latin.woff2', 'plexmono-400-vietnamese.woff2'),
+		'zh' => array(),
+	),
+	'source-sans|jetbrains-mono' => array(
+		'*' => array('sourcesans-latin.woff2', 'jetbrainsmono-latin.woff2'),
+		'ja' => array(),
+		'ko' => array(),
+		'ru' => array(),
+		'vi' => array('sourcesans-latin.woff2', 'sourcesans-vietnamese.woff2', 'jetbrainsmono-latin.woff2', 'jetbrainsmono-vietnamese.woff2'),
+		'zh' => array(),
+	),
+	'literata|inter' => array(
+		'*' => array('literata-latin.woff2'),
+		'ja' => array(),
+		'ko' => array(),
+		'ru' => array(),
+		'vi' => array('literata-latin.woff2', 'literata-vietnamese.woff2'),
+		'zh' => array(),
+	),
+	'literata|reading' => array(
+		'*' => array('literata-latin.woff2'),
+		'ja' => array(),
+		'ko' => array(),
+		'ru' => array(),
+		'vi' => array('literata-latin.woff2', 'literata-vietnamese.woff2'),
+		'zh' => array(),
+	),
+	'literata|plex-mono' => array(
+		'*' => array('literata-latin.woff2', 'plexmono-400-latin.woff2'),
+		'ja' => array(),
+		'ko' => array(),
+		'ru' => array(),
+		'vi' => array('literata-latin.woff2', 'literata-vietnamese.woff2', 'plexmono-400-latin.woff2', 'plexmono-400-vietnamese.woff2'),
+		'zh' => array(),
+	),
+	'literata|jetbrains-mono' => array(
+		'*' => array('literata-latin.woff2', 'jetbrainsmono-latin.woff2'),
+		'ja' => array(),
+		'ko' => array(),
+		'ru' => array(),
+		'vi' => array('literata-latin.woff2', 'literata-vietnamese.woff2', 'jetbrainsmono-latin.woff2', 'jetbrainsmono-vietnamese.woff2'),
+		'zh' => array(),
+	),
+	'source-serif|inter' => array(
+		'*' => array('sourceserif-latin.woff2'),
+		'ja' => array(),
+		'ko' => array(),
+		'ru' => array(),
+		'vi' => array('sourceserif-latin.woff2', 'sourceserif-vietnamese.woff2'),
+		'zh' => array(),
+	),
+	'source-serif|reading' => array(
+		'*' => array('sourceserif-latin.woff2'),
+		'ja' => array(),
+		'ko' => array(),
+		'ru' => array(),
+		'vi' => array('sourceserif-latin.woff2', 'sourceserif-vietnamese.woff2'),
+		'zh' => array(),
+	),
+	'source-serif|plex-mono' => array(
+		'*' => array('sourceserif-latin.woff2', 'plexmono-400-latin.woff2'),
+		'ja' => array(),
+		'ko' => array(),
+		'ru' => array(),
+		'vi' => array('sourceserif-latin.woff2', 'sourceserif-vietnamese.woff2', 'plexmono-400-latin.woff2', 'plexmono-400-vietnamese.woff2'),
+		'zh' => array(),
+	),
+	'source-serif|jetbrains-mono' => array(
+		'*' => array('sourceserif-latin.woff2', 'jetbrainsmono-latin.woff2'),
+		'ja' => array(),
+		'ko' => array(),
+		'ru' => array(),
+		'vi' => array('sourceserif-latin.woff2', 'sourceserif-vietnamese.woff2', 'jetbrainsmono-latin.woff2', 'jetbrainsmono-vietnamese.woff2'),
+		'zh' => array(),
+	),
 	);
 }
 

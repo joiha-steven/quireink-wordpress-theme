@@ -226,7 +226,12 @@ for (const f of faces) await copyFile(join(FONT_SRC, f), join(FONT_DST, f))
 const JS_SRC = join(QUIRE, 'src', 'assets', 'dist')
 const JS_DST = join(THEME, 'assets', 'js')
 await mkdir(JS_DST, { recursive: true })
-const bundles = ['core.js', 'post.js']
+// `book-mode.js` is the third because the engine SPLIT it out of post.js on 2026-09-06 and
+// this list did not move with it: 0.1.3 shipped a post.js that still carried the book, and the
+// first extract past that split took book mode out of the theme in silence - the buttons went
+// on printing and a click did nothing. The other two island bundles are not wanted:
+// comment-thread never mounts here (WordPress prints the thread) and the pen is ADR 0010.
+const bundles = ['core.js', 'post.js', 'book-mode.js']
 for (const b of bundles) await copyFile(join(JS_SRC, b), join(JS_DST, b))
 
 // ---------------------------------------------------------------- the owner's choices, as PHP

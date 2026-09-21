@@ -345,6 +345,64 @@ link; `.comment-form`'s top margin therefore opened below the title instead of a
 `#respond` takes that spacing now. And a signed-in reader gets a "Logged in as" line, which is
 passed through `logged_in_as` wearing Quire Ink's `.comment-identity`.
 
+## Four things a network panel found and no reading had
+
+All four shipped in 0.1.3, all four were invisible on the page, and all four came out of one
+sitting with the browser's network and console panels open on a local article. Three of them
+are the same mistake: something that is TRUE OF THE BLOG ENGINE was assumed to be true here.
+
+**The copied bundle was posting analytics on every page view.** `core.js` carries Quire Ink's
+beacon (`src/assets/js/track.ts`), which is not gated on a setting and needs no interaction:
+on load it POSTs the path, the referring host and whether the device has a touch screen to
+`/api/track`, and on the way out it posts scroll depth, engaged time and the bytes the visit
+pulled. WordPress has no such route, so every page view answered a 404 — twice, counting the
+leave beacon — on every site running this theme since 0.1.0.
+
+`tools/extract.ts` already carried a comment about the two features that talk to endpoints
+WordPress does not have, and said they "fail the way any fetch to a 404 fails, which is
+quietly". That is true of the newsletter form and the comment thread, which fire when a reader
+presses a button. It is not true of a beacon that fires by itself, on every page, on a theme
+whose description opens with "no analytics". `quireink_no_beacon_js()` wraps
+`navigator.sendBeacon` and drops exactly that one URL; every other call, from any plugin, is
+handed through. The real answer is a build flag or a `data-` switch upstream.
+
+**Book mode had not worked since the engine split it into its own bundle.** It was 7.8 KB of
+`post.js` until 2026-09-06, when the engine moved it to `book-mode.js` and started emitting
+that tag only for sites with the feature on. The extractor's bundle list did not move with it,
+and it did not have to: the extractor had stopped at 31 August, so 0.1.3 went out with a
+`post.js` that still had the book inside it. The first extract past that split took book mode
+out of the theme in silence — the buttons went on printing, twice, on every article, and a
+click did nothing.
+
+It ships as a third bundle now, with a Customizer switch, because that is what the engine does
+with it: off removes the buttons AND stops the 7.7 KB being downloaded. Opened and photographed
+after the change: two columns, a drop cap, the a/A keys and a page count, and the three chrome
+controls announce as "Smaller text", "Larger text" and "Close".
+
+**`core.js` was a blocking script in the head of every page.** It is enqueued with
+`'strategy' => 'defer'` and it was not deferred, because `WP_Scripts::filter_eligible_strategies()`
+says in one line that "Handles with inline scripts attached in the 'after' position cannot be
+delayed" — and the drawer's `inert` guard was attached 'after'. So 12 KB of JavaScript stood
+between the parser and the words, on a theme that publishes a table of what a page costs.
+Both inline scripts are attached 'before' now and neither needed to be 'after': the beacon
+guard has to run first anyway, and the drawer guard waits for `DOMContentLoaded` before it
+reads an element. Measured on the local stack: `script.defer` false before, true after.
+
+**A default install was fetching a typeface it had decided against.** `inc/appearance-css.php`
+prints a setting's CSS only when the setting differs from the default, on the argument that at
+the default the generated sheet already says it. The defaults it compared against were typed
+into the PHP, and they were the THEME's rather than the blog engine's. The two agreed until the
+engine's own furniture face moved to Inter on 2026-09-13; after that a default install left
+`--font-sans` at Inter while the theme, its Customizer and these documents all said JetBrains
+Mono.
+
+Nothing looked wrong, because the sheet names the elements that matter explicitly —
+`html[data-chrome-font=jetbrains-mono] body`, `.t-small`, `.t-body`, the rails — and those
+stayed monospace. What broke was everything that reads the variable: `.code-copy`, the key on a
+code block, pulled **32.5 KB of Inter to set the word "Copy"**. Five faces on an article where
+the cost table says four. `quireink_engine_defaults()` is generated from the engine now, so the
+comparison cannot drift again.
+
 ## Site configuration, not theme gaps
 
 - **The logo.** manhhung.me has a handwritten wordmark; a fresh install shows the site name as

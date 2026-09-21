@@ -10,7 +10,7 @@
 import { DEFAULT_SETTINGS } from '@/content/settings'
 import { themesToCss, fontPresetCss, chromeFontCss, THEME_PRESETS } from '@/content/themes'
 import { FONT_PRESETS, CHROME_FONTS, SCHEMES } from '@/content/themes'
-import { cjkLangCss } from '@/content/fonts'
+import { cjkLangCss, fontPreloadHrefs } from '@/content/fonts'
 import { typographyToCss } from '@/content/settings'
 import { pageStyles } from '@/web/layout'
 import { BOOK_CSS } from '@/web/book.css'
@@ -47,6 +47,75 @@ const fontEntries = FONT_PRESETS.map((f) =>
 
 const chromeEntries = CHROME_FONTS.map((c) =>
   `\t'${c.id}' => ${phpString(chromeFontCss(c.id))},`).join('\n')
+
+/*
+ * WHAT THE STATIC SHEET ALREADY SAYS, so that `inc/appearance-css.php` can stop guessing.
+ *
+ * That file emits a setting's CSS only when the setting differs from the default, because at
+ * the default the generated sheet already carries it. The defaults it compared against were
+ * TYPED - `'jetbrains-mono' !== $chrome` - and they were the THEME's defaults, not the blog
+ * engine's, which is a different thing and drifted on 2026-09-13 when the engine's own
+ * furniture face moved to Inter.
+ *
+ * What that cost, measured on a default install: `--font-sans` was Inter while the theme said
+ * JetBrains Mono. The enumerated `html[data-chrome-font=...]` rules kept the body, the meta
+ * line and the rails monospace, so the page looked right - and every element that reads
+ * `var(--font-sans)` directly did not. `.code-copy`, the key on a code block, fetched 32.5 KB
+ * of Inter to set the word "Copy".
+ *
+ * These are the engine's values at extract time, so the comparison cannot drift again: the
+ * day upstream moves a default, this moves with it and the theme emits the declaration that
+ * holds its own default in place.
+ */
+const defaultEntries = [
+  ['palette', THEME_PRESETS[0]!.id],
+  ['font', s.fontPreset],
+  ['chrome', s.chromeFont],
+].map(([k, v]) => `\t\t'${k}' => ${phpString(String(v))},`).join('\n')
+
+/*
+ * THE FONT PRELOAD, PROBED RATHER THAN READ.
+ *
+ * `fontPreloadHrefs()` in `src/content/fonts.ts` is the blog engine's whole rule for which
+ * faces earn a `<link rel=preload>`, and it is a rule with a price on it: the file says a
+ * default install once preloaded 33 KB of a chrome face it barely paints a glyph in, and that
+ * mistake cost 160ms of LCP. So it is CALLED here rather than reimplemented - this theme was
+ * shipping no preload at all, which is the other way to get the same answer wrong.
+ *
+ * It takes a language, and its answer depends on one: a Vietnamese site needs a second subset
+ * and a Japanese one needs nothing, because none of the bundled faces carries a Han glyph and
+ * a preload of latin is bandwidth taken from a page that will paint in a system face.
+ *
+ * WHICH LANGUAGES THOSE ARE IS NOT TYPED HERE. Every two-letter code is put through the
+ * function and the answers are grouped: whatever most codes get becomes `*`, and a code that
+ * gets something else is named. The list of exceptions is therefore a MEASUREMENT of the
+ * engine's rule rather than a copy of it, and the day upstream adds Thai or drops Russian,
+ * the next extract says so without anyone remembering to look.
+ */
+const TWO_LETTER = Array.from({ length: 26 }, (_, i) =>
+  String.fromCharCode(97 + i)).flatMap((a) =>
+  Array.from({ length: 26 }, (_, i) => a + String.fromCharCode(97 + i)))
+
+const preloadEntries = FONT_PRESETS.flatMap((f) => CHROME_FONTS.map((c) => {
+  // `false` is hasCustomFont: an uploaded face is a blog-engine setting with no counterpart
+  // in a theme. 'plain' is the look: the engine's newspaper look sets its headline in a third
+  // face, and this theme has no such look (`data-look` is `code` or `plain`).
+  const answer = (lang: string) => fontPreloadHrefs(f.id, lang, false, c.id, 'plain')
+    .map((href) => href.replace('/fonts/', ''))
+
+  const tally = new Map<string, number>()
+  for (const lang of TWO_LETTER) {
+    const key = JSON.stringify(answer(lang))
+    tally.set(key, (tally.get(key) ?? 0) + 1)
+  }
+  const common = [...tally].sort((a, b) => b[1] - a[1])[0][0]
+  const named = TWO_LETTER
+    .filter((lang) => JSON.stringify(answer(lang)) !== common)
+    .map((lang) => `\t\t'${lang}' => array(${answer(lang).map(phpString).join(', ')}),`)
+
+  const rows = [`\t\t'*' => array(${(JSON.parse(common) as string[]).map(phpString).join(', ')}),`, ...named]
+  return `\t'${f.id}|${c.id}' => array(\n${rows.join('\n')}\n\t),`
+})).join('\n')
 
 // The SITE-WIDE picture frame, taken out of the blog engine by DIFFERENCE.
 //
@@ -127,6 +196,22 @@ function quireink_dropcap_css() {
 }
 
 /**
+ * What the generated sheet already carries, as the blog engine set it at extract time.
+ *
+ * \`quireink_appearance_css()\` prints a setting's declarations only when the setting differs
+ * from one of these. They are the ENGINE's defaults, not the theme's: the theme's furniture
+ * face is JetBrains Mono and the engine's is Inter, and comparing against the wrong one left
+ * \`--font-sans\` at the engine's value on every default install.
+ *
+ * @return array<string,string>
+ */
+function quireink_engine_defaults() {
+	return array(
+${defaultEntries}
+	);
+}
+
+/**
  * Palette id => first-paint scheme => the :root and .dark declarations.
  *
  * @return array<string,array<string,string>>
@@ -156,6 +241,22 @@ ${fontEntries}
 function quireink_chrome_css() {
 	return array(
 ${chromeEntries}
+	);
+}
+
+/**
+ * Reading face and furniture face => the woff2 files that earn a \`<link rel="preload">\`.
+ *
+ * Keyed \`<reading>|<furniture>\`, then by the site's language. \`*\` is what a language gets
+ * unless it is named; a named one is an exception the blog engine's own rule makes - a second
+ * subset where the faces carry the accents, nothing at all where they carry no glyph the page
+ * will paint in.
+ *
+ * @return array<string,array<string,array<int,string>>>
+ */
+function quireink_font_preload() {
+	return array(
+${preloadEntries}
 	);
 }
 

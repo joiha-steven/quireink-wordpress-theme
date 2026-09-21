@@ -63,65 +63,17 @@ function quireink_post_terms() {
 }
 
 /**
- * "Read next" - the one link a finished article ends on.
+ * Is book mode on for this site?
  *
- * Quire Ink prefers the next post in the same series and falls back to the next older post.
- * WordPress has no series, so the fallback is the whole rule here; `get_previous_post` is
- * the older neighbour despite the name.
+ * Read in two places that have to agree: `inc/assets.php` decides whether to send the bundle
+ * and `single.php` decides whether to print the buttons that open it. A button with no bundle
+ * behind it is a control that answers a click with nothing, which is how book mode spent
+ * 0.1.3 - the bundle had been split out upstream and this theme went on printing the buttons.
+ *
+ * @return bool
  */
-function quireink_read_next() {
-	$next = get_previous_post();
-	if ( ! $next ) {
-		return;
-	}
-	?>
-	<hr>
-	<section class="read-next">
-		<p class="read-next-label"><?php esc_html_e( 'Read next', 'quire-ink' ); ?></p>
-		<p class="read-next-title reading-font"><a class="link-accent" href="<?php echo esc_url( get_permalink( $next ) ); ?>"><?php echo esc_html( get_the_title( $next ) ); ?></a></p>
-	</section>
-	<?php
-}
-
-/**
- * Up to three posts sharing a category, newest first.
- */
-function quireink_related() {
-	$cats = wp_get_post_categories( get_the_ID() );
-	if ( empty( $cats ) ) {
-		return;
-	}
-	$q = new WP_Query(
-		array(
-			'category__in'        => $cats,
-			'post__not_in'        => array( get_the_ID() ),
-			'posts_per_page'      => 3,
-			'ignore_sticky_posts' => true,
-			'no_found_rows'       => true,
-		)
-	);
-	if ( ! $q->have_posts() ) {
-		wp_reset_postdata();
-		return;
-	}
-	?>
-	<hr>
-	<section class="related">
-		<h2><?php esc_html_e( 'Related posts', 'quire-ink' ); ?></h2>
-		<ul>
-		<?php
-		while ( $q->have_posts() ) :
-			$q->the_post();
-			?>
-			<li>
-				<a class="link-accent" href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-				<p class="t-small text-meta"><?php echo esc_html( get_the_date() ); ?></p>
-			</li>
-		<?php endwhile; ?>
-		</ul>
-	</section>
-	<?php
-	wp_reset_postdata();
+function quireink_book_mode() {
+	return 'on' === get_theme_mod( 'quireink_book_mode', 'on' );
 }
 
 /**
@@ -290,13 +242,25 @@ add_filter( 'render_block', 'quireink_align_classes', 10, 2 );
  * @param string $extra    Extra class on the `.rail-tags` container (`lower` for tags).
  */
 function quireink_rail_terms( $taxonomy, $label, $counts, $extra = '' ) {
+	/**
+	 * How many terms a rail block lists.
+	 *
+	 * Forty, ordered by how many posts carry them, because the rail is a column and not a
+	 * page: a blog with three hundred tags would otherwise put all three hundred in the
+	 * gutter of every listing. A site whose tags are few and all worth showing raises it.
+	 *
+	 * @param int    $number   The ceiling.
+	 * @param string $taxonomy Which block is asking.
+	 */
+	$number = (int) apply_filters( 'quireink_rail_term_limit', 40, $taxonomy );
+
 	$terms = get_terms(
 		array(
 			'taxonomy'   => $taxonomy,
 			'hide_empty' => true,
 			'orderby'    => 'count',
 			'order'      => 'DESC',
-			'number'     => 40,
+			'number'     => $number,
 		)
 	);
 	if ( empty( $terms ) || is_wp_error( $terms ) ) {

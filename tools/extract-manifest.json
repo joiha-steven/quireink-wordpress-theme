@@ -1,8 +1,8 @@
 {
   "takenFrom": {
     "repo": "quireink",
-    "commit": "a1646a0bcdd4784f1539b8e3fd0be8d93603c49f",
-    "workingTreeDirty": true
+    "commit": "baa295ca500289195f027c29c2cbbcfea8885a8b",
+    "workingTreeDirty": false
   },
   "emitted": {
     "quire-ink/assets/css/quireink-base.css": 177292,
@@ -12,7 +12,8 @@
     "quire-ink/assets/fonts": 22,
     "quire-ink/assets/js": [
       "core.js",
-      "post.js"
+      "post.js",
+      "book-mode.js"
     ]
   },
   "palettes": [

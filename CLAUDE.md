@@ -113,10 +113,14 @@ picture, and puts your database back afterwards.
   that stack is worth keeping, and a half-migrated database is the one way it could lie.
 - **`localhost:8099`, never `127.0.0.1:8099`.** WordPress's `siteurl` is `localhost`, so the
   page writes its script and font URLs against that host. Fetch the same page on `127.0.0.1`
-  and CORS refuses every module script and every font: no JavaScript at all, and the type
-  quietly falls back. `getComputedStyle` answers `Literata` either way, because a computed
-  font-family is the request and not the result — `document.fonts` is the measurement, and it
-  said `Literata:loaded` against `Literata:error`. `tools/shot.sh` refuses the wrong host now.
+  and CORS refuses every font, so the type quietly falls back. It used to refuse the scripts
+  too — they carried `type="module"`, which is fetched in CORS mode whatever the origin, and
+  that is why no render in this project ran JavaScript for three months. They are plain
+  deferred scripts since 0.1.4 and survive the wrong origin; the fonts still do not, and a
+  render with the wrong type is still a render that lies. `getComputedStyle` answers `Literata`
+  either way, because a computed font-family is the request and not the result —
+  `document.fonts` is the measurement, and it said `Literata:loaded` against `Literata:error`.
+  `tools/shot.sh` refuses the wrong host now.
 - **Port 8099, not 8088.** The jellykey-local PHP server binds `[::1]:8088`; Docker publishes
   on `0.0.0.0`, so nothing collides at bind time and the browser just resolves `localhost` to
   `::1` and shows the other site.

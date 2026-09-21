@@ -38,10 +38,21 @@ quireink_rail_menu();
 // per post in the editor, and it is what a Featured block means. A second mechanism - a
 // Customizer field listing three post ids - would be the same idea with worse ergonomics.
 
+/**
+ * How many sticky posts the Featured block shows.
+ *
+ * Five, because the rail is a column beside an article and a sixth row starts pushing the
+ * categories below the fold on a laptop. A site that marks two posts sticky sees two; this is
+ * the ceiling, not the count.
+ *
+ * @param int $count The ceiling.
+ */
+$featured_count = (int) apply_filters( 'quireink_featured_count', 5 );
+
 $featured = get_posts(
 	array(
 		'post__in'            => get_option( 'sticky_posts' ) ? get_option( 'sticky_posts' ) : array( 0 ),
-		'posts_per_page'      => 5,
+		'posts_per_page'      => $featured_count,
 		'ignore_sticky_posts' => true,
 		'no_found_rows'       => true,
 	)

@@ -5,8 +5,12 @@ intentions — every line here came out of a script or the browser, and the two 
 were both invisible on screen.
 
 The point of the audit was to decide whether the theme may declare `accessibility-ready` in
-`style.css`. **It may not, yet.** One thing fails, it is named at the bottom, and it is not
-this repository's to fix.
+`style.css`. **It may, and from 0.1.4 it does.** The one criterion that failed was the hairline
+round a form field, answered on 2026-09-16 and measured again below; what is left is written up
+under "What is still not answered", because a tag is a claim and the claim has edges.
+
+*(This paragraph said "It may not, yet" through 0.1.3, for a release after the thing it named
+had been fixed. A document that states a verdict has to be re-read when the verdict moves.)*
 
 ## Colour, all six palettes, both schemes
 
@@ -132,3 +136,24 @@ two things of every change, and both were watched failing before they were trust
 2. **That a control still asks for it.** A tidy-up that dropped the `bridge.css` block would
    leave every ratio still true and the tag still declared, with the boundary back at 1.26:1 on
    the screen. The block is read for by name, selector by selector.
+
+## What is still not answered
+
+Two things, both disclosed rather than measured away.
+
+**The closed drawer is taken out of the tab order by JavaScript.** Below the rail breakpoint
+the rail is parked off the left edge and `inert` is what keeps its links off a phone's tab
+order — twelve lines inlined after `core.js`. With scripting off the attribute is never set,
+so those links are focusable and invisible, and the header's menu button cannot open the
+drawer either.
+
+It is not fixed here because fixing it would mean deciding something the blog engine has not.
+The breakpoint is COMPUTED from the reading column and emitted into the generated sheet, so no
+media query written in `bridge.css` can name it — which is exactly why the guard reads
+`position` off the element instead. The engine ships the same button with the same script
+behind it. A no-JS answer belongs upstream, in the sheet that owns the breakpoint.
+
+**The palette switcher and the search overlay are script too.** Search degrades: `[/find]` is
+an `<a href="/?s=">` that the overlay intercepts, so with scripting off it is the search page.
+The palette and light/dark controls are buttons and do nothing; the site renders in whatever
+the owner set as the default, which is a complete page rather than a broken one.
