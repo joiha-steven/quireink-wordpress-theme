@@ -55,8 +55,13 @@ for (const name of GENERATED) {
   }
 }
 
-const fonts = readdirSync(join(CSS, '..', 'fonts')).length
-const freshFonts = readdirSync(join(OUT, 'assets', 'fonts')).length
+// FACES ONLY. `assets/fonts/` also holds `OFL.txt`, which is not extracted from anything and
+// is the one file in there this repository owns - counting the directory made it read as a
+// face the engine no longer ships. That it is NOT generated is exactly why it went missing
+// for four releases: `tools/extract-assets.ts` is the guard for its presence, not this.
+const faces = (d: string) => readdirSync(d).filter((f) => f.endsWith('.woff2')).length
+const fonts = faces(join(CSS, '..', 'fonts'))
+const freshFonts = faces(join(OUT, 'assets', 'fonts'))
 if (fonts !== freshFonts) drift.push(`fonts: ${fonts} committed, ${freshFonts} upstream`)
 
 console.log(`  compared ${GENERATED.length + 1} sheet(s) and ${fonts} face(s) against ${QUIRE}`)

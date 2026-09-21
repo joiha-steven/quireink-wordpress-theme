@@ -25,11 +25,19 @@ the review handbook asks of a free theme. Both verbatim texts are fetched and in
 * **`LICENSE`** — the GNU GPL v2, from `https://www.gnu.org/licenses/gpl-2.0.txt`. Not
   required by the handbook; shipped because it is the convention everywhere else.
 * **`quire-ink/assets/fonts/OFL.txt`** — SIL Open Font License 1.1, from
-  `https://openfontlicense.org/documents/OFL.txt`, its copyright block naming all six holders
+  `https://openfontlicense.org/documents/OFL.txt`, its copyright block naming all seven holders
   and the rest untouched. This one IS required — by the font licence rather than by
   WordPress, which is why it would still be needed if the theme never went to the directory.
-  *(The Quire Ink blog engine ships the same six faces and carries neither file. Same
-  obligation, different repository — worth raising there.)*
+  *(The Quire Ink blog engine ships the same faces and carries neither file. Same obligation,
+  different repository — worth raising there.)*
+
+  **And for four releases it did not ship.** `tools/extract.ts` swept the fonts directory with
+  `rm(..., {recursive:true})` before copying the faces in, which took `OFL.txt` with it on every
+  run — silently, in a commit about picture frames. The released 0.1.3 zip on WordPress.org
+  contains seven OFL families and no copy of their licence. Nothing here could have caught it:
+  every guard in this repository checks a file that something generates, and this one was
+  nobody's output. The sweep drops `*.woff2` only now, and the extractor throws if the licence
+  is not beside the faces when it finishes.*
 
 ## The three fields only the owner could fill, and what each turned out to be
 

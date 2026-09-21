@@ -403,6 +403,33 @@ code block, pulled **32.5 KB of Inter to set the word "Copy"**. Five faces on an
 the cost table says four. `quireink_engine_defaults()` is generated from the engine now, so the
 comparison cannot drift again.
 
+## The fonts were shipping without their licence
+
+Found on the pre-release audit of the zip, which is the first time anybody listed what is
+inside one rather than what the tree contains.
+
+`assets/fonts/OFL.txt` is not in the released 0.1.3 zip, and it is not in the tree either. It
+was added in `e5defba` and removed in `94f21e9`, a commit about picture frames — because
+`tools/extract.ts` swept the fonts directory with `rm(FONT_DST, {recursive:true})` before
+copying the faces in, and every extract since has taken the licence with it.
+
+**No guard here could have caught it**, and that is the part worth keeping. Every check in this
+repository verifies a file that something in it generates: `check:generated` re-runs the
+extractor and compares bytes, `check:contrast` reads a generated table, `check:headers` reads
+three files against each other. `OFL.txt` was nobody's output — a file that only ever sat
+there — so its absence looked exactly like its presence to all ten of them. The sweep drops
+`*.woff2` only now, and `tools/extract-assets.ts` throws if the licence is not beside the faces
+when it finishes, which is the one place that can know.
+
+**And a seventh face was uncredited.** `kalam-digits.woff2` ships — ten digits and a full stop
+of Kalam, the handwritten numerals on an ordered list, 1.4 KB — while `readme.txt` said "six
+typefaces" and named six. Kalam is Indian Type Foundry's, OFL 1.1 like the rest.
+
+Every copyright line is now read out of the font file's own `name` table with fontTools rather
+than copied from a web page, which corrected three of the six that were already there:
+Literata is 2017 and not 2018, Source Sans 3 is 2023 and not 2010-2024, Source Serif 4 is
+2014-2021 and not 2014-2024.
+
 ## Site configuration, not theme gaps
 
 - **The logo.** manhhung.me has a handwritten wordmark; a fresh install shows the site name as

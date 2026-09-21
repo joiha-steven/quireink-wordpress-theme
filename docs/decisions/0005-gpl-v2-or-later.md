@@ -33,7 +33,7 @@ before the decision, and the decision was made with it on the table. It is not r
 |---|---|
 | A GPL-compatible licence | GPLv2-or-later |
 | `License:` and `License URI:` in `style.css` | both present, pointing at gnu.org |
-| Licence, copyright and **source** for every bundled resource | `readme.txt` → Copyright: six typefaces, the two script bundles, the screenshot |
+| Licence, copyright and **source** for every bundled resource | `readme.txt` → Copyright: seven typefaces, the three script bundles, the screenshot |
 | That list in **one** file | `readme.txt`, and only there |
 
 A separate `LICENSE` file is **not** required by the handbook. One is shipped anyway, because
@@ -41,11 +41,18 @@ it is the convention everywhere else and it costs 18 KB of text nobody has to re
 
 `quire-ink/assets/fonts/OFL.txt` is a different matter: that one is required by the **font
 licence**, not by WordPress. The OFL asks that its text travel with the font software, so
-shipping six OFL faces without it would be a licence violation whatever WordPress checked. Its
-copyright block names all six holders; everything from the licence header down is SIL's text,
+shipping seven OFL faces without it would be a licence violation whatever WordPress checked.
+Its copyright block names all seven holders, each line read out of that font file's own name
+table rather than off a web page; everything from the licence header down is SIL's text,
 untouched.
 
-*(The Quire Ink blog engine ships the same six faces and carries neither file. Same obligation,
+**0.1.0 to 0.1.3 shipped without it**, because `tools/extract.ts` swept the whole fonts
+directory before copying the faces in and took the licence with it. Nothing here could see
+that: every guard in this repository checks a file something generates, and `OFL.txt` was
+nobody's output. The sweep drops `*.woff2` only now, and the extractor throws if the licence
+is not beside the faces when it finishes.
+
+*(The Quire Ink blog engine ships the same faces and carries neither file. Same obligation,
 different repository — still worth raising there.)*
 
 ## What is left before it can go public

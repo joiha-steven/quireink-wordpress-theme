@@ -20,7 +20,7 @@ palettes, in light or dark, and the site remembers it. If they would rather read
 page, book mode sets the article in two columns with a drop cap.
 
 Nothing on the page comes from anywhere but your own domain. The typography is self-hosted -
-six typefaces inside the theme - so there is no Google Fonts, no CDN, no analytics, no
+seven typefaces inside the theme - so there is no Google Fonts, no CDN, no analytics, no
 avatars, no tracking of any kind and no request off your server at all.
 
 The look is not hand-written. It is generated from the stylesheet of the Quire Ink blog
@@ -33,7 +33,7 @@ https://github.com/joiha-steven/quireink-wordpress-theme, where its own document
 
 * Six palettes - Mono, Sepia, Forest, Ocean, Sci-fi, Amber - each in light and dark, chosen
   by the reader and remembered on their own device.
-* Six self-hosted typefaces, all SIL Open Font License, subset to Latin, Latin Extended and
+* Seven self-hosted typefaces, all SIL Open Font License, subset to Latin, Latin Extended and
   Vietnamese.
 * Search as you type, from `[/find]` in the header or the `/` key anywhere on the page.
 * A table of contents in the gutter, built from the post's own headings, tracking the scroll.
@@ -184,23 +184,24 @@ the GNU General Public License for more details.
 
 = Bundled typefaces =
 
-All six are subset to Latin, Latin Extended and Vietnamese, and all six are SIL Open Font
-License 1.1, which is GPL-compatible. The full licence text ships as
-assets/fonts/OFL.txt.
+All seven are SIL Open Font License 1.1, which is GPL-compatible, and the six text faces are
+subset to Latin, Latin Extended and Vietnamese. The full licence text, with every copyright
+notice below repeated in it, ships as assets/fonts/OFL.txt. Each line is read out of the font
+file's own name table rather than off a web page.
 
-* Inter - Copyright (c) 2016 The Inter Project Authors
+* Inter - Copyright 2016 The Inter Project Authors
   Source: https://github.com/rsms/inter
   License: SIL Open Font License 1.1, https://openfontlicense.org/
 
-* Literata - Copyright 2018 The Literata Project Authors
+* Literata - Copyright 2017 The Literata Project Authors
   Source: https://github.com/googlefonts/literata
   License: SIL Open Font License 1.1, https://openfontlicense.org/
 
-* Source Sans 3 - Copyright 2010-2024 Adobe (https://adobe.com/)
+* Source Sans 3 - Copyright 2023 Adobe (https://adobe.com/), with Reserved Font Name 'Source'
   Source: https://github.com/adobe-fonts/source-sans
   License: SIL Open Font License 1.1, https://openfontlicense.org/
 
-* Source Serif 4 - Copyright 2014-2024 Adobe (https://adobe.com/)
+* Source Serif 4 - Copyright 2014-2021 Adobe (https://adobe.com/), with Reserved Font Name 'Source'
   Source: https://github.com/adobe-fonts/source-serif
   License: SIL Open Font License 1.1, https://openfontlicense.org/
 
@@ -208,9 +209,14 @@ assets/fonts/OFL.txt.
   Source: https://github.com/JetBrains/JetBrainsMono
   License: SIL Open Font License 1.1, https://openfontlicense.org/
 
-* IBM Plex Mono - Copyright 2017 IBM Corp.
+* IBM Plex Mono - Copyright 2017 IBM Corp., with Reserved Font Name 'Plex'
   Source: https://github.com/IBM/plex
   License: SIL Open Font License 1.1, https://openfontlicense.org/
+
+* Kalam - Copyright (c) 2014 Indian Type Foundry (info@indiantypefoundry.com)
+  Source: https://github.com/itfoundry/kalam
+  License: SIL Open Font License 1.1, https://openfontlicense.org/
+  Ten digits and a full stop only, 1.4 KB: the handwritten numerals on an ordered list.
 
 = Bundled scripts =
 
@@ -236,6 +242,12 @@ the breakpoint that decides which it is comes from the blog engine and cannot be
 media query here. The rail renders a menu as a flat list. And the theme is still a classic
 theme: there is no Site Editor.
 
+* **The fonts' licence ships with the fonts again.** The SIL Open Font License asks that its
+  text travel with the font software; `assets/fonts/OFL.txt` has been missing since 0.1.0,
+  because the extractor swept the whole fonts directory before copying the faces in and took
+  the licence with it. Kalam - ten handwritten digits used on an ordered list - was also not
+  credited anywhere. Seven faces, seven copyright notices, each one read out of that font
+  file's own name table.
 * **No analytics, now including from the browser.** The reader bundle copied from the blog
   engine carries that product's beacon, which is not gated on a setting and needs no
   interaction: every page view POSTed the path, the referring host and the device's touch

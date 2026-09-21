@@ -38,7 +38,7 @@ A theme for a blog whose point is the writing.
 A reader opens a post and gets one column in a book face, the article's own contents standing
 in the gutter beside it, and its facts in the gutter on the other side. They can pick one of
 six palettes in light or dark and the site remembers it. Nothing on the page is fetched from
-anyone else: the six typefaces are in the theme, there is no analytics, no avatar service and
+anyone else: the seven typefaces are in the theme, there is no analytics, no avatar service and
 no font host, so a stranger on a weak signal is waiting for your words and nothing else.
 
 Everything visual is **generated** from the Quire Ink blog engine's own stylesheet, the same
@@ -55,7 +55,7 @@ shortcode. Switch away and every post is still a post.
 |:---|:---|
 | 📐&nbsp;**The&nbsp;page** | One column of about seventy characters, the contents of the post in one gutter and its facts in the other. Below the width that holds them, both fold away without a second layout to maintain |
 | 🎨&nbsp;**Colour** | Six palettes, each in light and dark, chosen by the reader and remembered on their device. Every one clears WCAG AA against its own background, and a static check re-measures all sixty colours on every run |
-| 🔤&nbsp;**Type** | Six typefaces in the theme, all OFL, cut to Latin, Latin Extended and Vietnamese. Twenty-two files ship and a browser fetches four, because each face declares the characters it covers |
+| 🔤&nbsp;**Type** | Seven typefaces in the theme, all OFL, cut to Latin, Latin Extended and Vietnamese. Twenty-two files ship and a browser fetches four, because each face declares the characters it covers |
 | 📖&nbsp;**Book&nbsp;mode** | The article reset in two columns with a drop cap, sized from the window, with the reader's place kept. Its own bundle and its own switch: off removes the button and stops the 7.7 KB being fetched |
 | ✒️&nbsp;**Book&nbsp;typography** | Indented paragraphs, justified lines, hyphenation at the break. Off by default, because it is a taste and not an improvement |
 | 🗓️&nbsp;**The&nbsp;listing** | A spine down the gutter with a sticky year and a marker at each new month, positioned against cards that are already there. Nothing measures anything |

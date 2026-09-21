@@ -36,6 +36,7 @@ import { singleRailCss, timelineCss, RAIL_W, RAIL_GAP } from '@/render/rail-css'
 
 import { APPEARANCE_PHP, APPEARANCE_COUNTS } from './appearance-php'
 import { editorCss } from './editor-css'
+import { copyAssets } from './extract-assets'
 import { FONT_PRESETS, CHROME_FONTS, SCHEMES } from '@/content/themes'
 
 const HERE = dirname(import.meta.dir)
@@ -212,35 +213,13 @@ await writeFile(join(THEME, 'assets', 'css', 'editor.css'),
 // Imported content still carries the attributes; `dev/seed/fetch.py` strips them on the way
 // in for the same reason.
 
-// ---------------------------------------------------------------- the faces
-
-const FONT_SRC = join(QUIRE, 'src', 'assets', 'static', 'fonts')
-const FONT_DST = join(THEME, 'assets', 'fonts')
-await rm(FONT_DST, { recursive: true, force: true })
-await mkdir(FONT_DST, { recursive: true })
-const faces = (await readdir(FONT_SRC)).filter((f) => f.endsWith('.woff2'))
-for (const f of faces) await copyFile(join(FONT_SRC, f), join(FONT_DST, f))
-
-// ---------------------------------------------------------------- the islands
-
-// Quire Ink's own reader bundles, built by its `build:assets`. `core` is the chrome (palette
-// switch, rail, search overlay, back-to-top, newsletter) and `post` is the article (table of
-// contents scrollspy, book mode, lightbox, quote copy, resume). They are copied rather than
-// rewritten, which is the whole point — a second implementation of book mode would be a
-// second thing to be wrong.
+// ---------------------------------------------------------------- the faces and the islands
 //
-// Two of core's features talk to endpoints WordPress does not have (the newsletter form and
-// the comment thread post to Quire Ink's API). They fail the way any fetch to a 404 fails,
-// which is quietly; wiring them to WordPress is a decision for later and is written up in
-// docs/gaps.md rather than patched in here.
-const JS_SRC = join(QUIRE, 'src', 'assets', 'dist')
-const JS_DST = join(THEME, 'assets', 'js')
-await mkdir(JS_DST, { recursive: true })
-// `book-mode.js` is the third because the engine split it out of post.js on 2026-09-06 and
-// this list did not follow (docs/gaps.md). The other two island bundles are not wanted:
-// comment-thread never mounts here, and the pen is ADR 0010.
-const bundles = ['core.js', 'post.js', 'book-mode.js']
-for (const b of bundles) await copyFile(join(JS_SRC, b), join(JS_DST, b))
+// Split into `tools/extract-assets.ts` when this file passed the 400-line ceiling, on the one
+// seam it has: everything else here DERIVES a file - runs an emitter, mirrors a sheet, builds
+// a table - and that half only moves bytes across from the sibling checkout.
+const { faces, bundles } = await copyAssets(QUIRE, THEME, !process.env.EXTRACT_OUT)
+
 
 // ---------------------------------------------------------------- the owner's choices, as PHP
 //
