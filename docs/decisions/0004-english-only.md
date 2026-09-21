@@ -4,8 +4,9 @@
 
 ## Decision
 
-The theme's own strings are English. The text domain (`quireink`) and the escaping calls make
-it translation-ready, and no translation is shipped.
+The theme's own strings are English. The text domain (`quire-ink`, which is the slug, as
+WordPress.org requires) and the escaping calls make it translation-ready, and no translation is
+shipped.
 
 ## Why
 
@@ -19,8 +20,15 @@ The article furniture reads `2,738 words` / `14 min read` / `Tags` where Quire I
 `2.799 chữ` / `14 phút đọc` / `Tag`. That is the theme's own furniture only — the writing, the
 titles, the terms and the dates all come from WordPress and follow the site's own locale.
 
-Anyone who wants it can drop a `quireink-vi.mo` into `wp-content/languages/themes/` without
-touching this repository. It is about forty strings.
+Anyone who wants it can drop a `quire-ink-vi.mo` into `wp-content/languages/themes/` without
+touching this repository. It is 215 strings — most of them the Customizer's own labels and
+descriptions, not the dozen words a reader sees.
+
+**The channel for a translation is translate.wordpress.org, not this repository.** A theme in
+the directory is translated there, by locale teams, and the result is delivered to every site
+in that locale by WordPress itself. Putting a `.po` here would be a second copy that nobody
+updates. *(This line said "about forty strings" from the day it was written, which was true of
+a theme with four Customizer controls.)*
 
 ## Not affected
 
