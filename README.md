@@ -55,7 +55,7 @@ shortcode. Switch away and every post is still a post.
 |:---|:---|
 | 📐&nbsp;**The&nbsp;page** | One column of about seventy characters, the contents of the post in one gutter and its facts in the other. Below the width that holds them, both fold away without a second layout to maintain |
 | 🎨&nbsp;**Colour** | Six palettes, each in light and dark, chosen by the reader and remembered on their device. Every one clears WCAG AA against its own background, and a static check re-measures all sixty colours on every run |
-| 🔤&nbsp;**Type** | Seven typefaces in the theme, all OFL, cut to Latin, Latin Extended and Vietnamese. Twenty-two files ship and a browser fetches four, because each face declares the characters it covers |
+| 🔤&nbsp;**Type** | Seven typefaces in the theme, all OFL. The six text faces are cut to Latin, Latin Extended and Vietnamese; the seventh is ten handwritten digits for an ordered list. Twenty-two files ship and a browser fetches four, because each face declares the characters it covers |
 | 📖&nbsp;**Book&nbsp;mode** | The article reset in two columns with a drop cap, sized from the window, with the reader's place kept. Its own bundle and its own switch: off removes the button and stops the 7.7 KB being fetched |
 | ✒️&nbsp;**Book&nbsp;typography** | Indented paragraphs, justified lines, hyphenation at the break. Off by default, because it is a taste and not an improvement |
 | 🗓️&nbsp;**The&nbsp;listing** | A spine down the gutter with a sticky year and a marker at each new month, positioned against cards that are already there. Nothing measures anything |
@@ -164,7 +164,7 @@ Quire Ink itself is **read only** from here.
 quire-ink/      the theme (slug and text domain: quire-ink)
   assets/css/   2 generated + bridge.css, the one written by hand
   assets/js/    Quire Ink's own reader bundles, copied
-  assets/fonts/ 22 self-hosted woff2, all OFL
+  assets/fonts/ 22 self-hosted woff2 and the OFL text they travel under
   inc/          customizer, template tags, the reader JS's strings
 tools/          extract.ts, shot.sh, and ten static guards under checks/
 dev/            local WordPress in Docker, and a seeder that pulls real articles
