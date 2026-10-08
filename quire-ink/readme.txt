@@ -38,7 +38,7 @@ https://github.com/joiha-steven/quireink-wordpress-theme, where its own document
 * Search as you type, from `[/find]` in the header or the `/` key anywhere on the page.
 * A table of contents in the gutter, built from the post's own headings, tracking the scroll.
 * Book mode: the article reset in two columns with a drop cap, like a page. On by
-  default, and switchable off - which stops the 7.7 KB behind it being downloaded at all.
+  default, and switchable off - which stops the 8.8 KB behind it being downloaded at all.
 * Book typography - indented paragraphs, justified lines, hyphenation - off by default,
   because it is a taste and not an improvement.
 * A timeline down the listing page: a spine in the gutter, a sticky year, a marker at each
@@ -80,8 +80,8 @@ Four styles on the image block: Framed, Thin frame, Thick frame, Ink frame.
 Measured on one long article, gzipped as served, no plugins, the post's own pictures not
 counted because those are your content and not the theme:
 
-* First visit: about 121 KB, of which 67 KB is type and 26 KB is the stylesheet.
-* Every visit after that: about 17 KB. The rest is cached.
+* First visit: about 127 KB, of which 67 KB is type and 28 KB is the stylesheet.
+* Every visit after that: about 20 KB. The rest is cached.
 * WordPress's own emoji script and per-block styles are another 9 KB. Those are core's, not
   the theme's, and are not counted above.
 
@@ -233,14 +233,16 @@ photographs.
 == Changelog ==
 
 = 0.1.4 =
-Four defects a browser's network panel found and no amount of reading had, plus the first
-re-generation from the blog engine in three weeks.
+Four defects a browser's network panel found and no amount of reading had, plus a
+re-generation from Quire Ink 2.2.18, the blog engine's reading redesign.
 
 What this release still does NOT do. The rail's drawer is kept out of a phone's tab order by
 JavaScript, so with scripting off its links are focusable and the menu button cannot open it;
 the breakpoint that decides which it is comes from the blog engine and cannot be named in a
-media query here. The rail renders a menu as a flat list. And the theme is still a classic
-theme: there is no Site Editor.
+media query here. The rail renders a menu as a flat list. Quire Ink 2.2.18's new reading
+furniture is not carried over: no year index, no second rail, no row of section chips on a
+tablet, no category line over each headline in a list, and an empty search does not suggest
+tags or recent posts. And the theme is still a classic theme: there is no Site Editor.
 
 * **The fonts' licence ships with the fonts again.** The SIL Open Font License asks that its
   text travel with the font software; `assets/fonts/OFL.txt` has been missing since 0.1.0,
@@ -258,7 +260,7 @@ theme: there is no Site Editor.
 * **Book mode works again.** The blog engine moved it into a bundle of its own on 6 September
   and this theme did not follow, so the buttons printed on every article and a click did
   nothing. It ships as its own bundle with a switch of its own under Customize - Quire Ink -
-  reading: off removes the buttons and stops the 7.7 KB being downloaded.
+  reading: off removes the buttons and stops the 8.8 KB being downloaded.
 * **The theme's own script is no longer render-blocking.** It asks WordPress for `defer` and
   was not getting it, because a handle with an inline script attached in the "after" position
   is not eligible for a delayed strategy. Both of the theme's inline guards moved to "before".
@@ -272,18 +274,32 @@ theme: there is no Site Editor.
   theme had been shipping the blog engine's stylesheet SOURCE - 198 KB of it, two thirds
   comments written for whoever next opens that file - where the blog itself serves the same
   sheet minified at 69 KB. The extractor runs the engine's own minifier now, so what this
-  theme ships is what that blog ships. A first visit went from about 170 KB to about 121 KB.
+  theme ships is what that blog ships. A first visit went from about 170 KB to about 121 KB,
+  before the re-generation below.
 * **The two faces the first screenful needs are preloaded**, so the first paint is the real
   type rather than a fallback that swaps.
 * **Starter content**, so a brand-new blog has a rail menu to show rather than an empty
   gutter, and **five filters** for the decisions a theme has to guess at: what to read next,
   what counts as related, how many terms the rail lists, how many sticky posts are featured,
   and words a minute.
-* Re-generated from Quire Ink after three weeks: two scroll-driven fades stop painting their
-  own fill-mode over the page, two status messages stay in the accessibility tree instead of
-  being display:none, and five controls that answered a pointer and then took a click in
-  silence now press like the rest.
-* Tested on WordPress 7.1.1.
+* **Re-generated from Quire Ink 2.2.18.** A row in a list of posts reads top down now: the
+  headline, the excerpt, then the date and reading time. With featured images set to the side
+  shape, the picture sits beside the headline - 64px on a phone, where the excerpt runs full
+  width under it, and 96px from 640px wide, where it stands beside the headline and the excerpt
+  both; the date and reading time always run full width. The theme's own rows were rewritten to match; left as
+  they were, the new sheet put every excerpt into the picture's 96px column.
+* A picture set above a row in the list no longer sits flush on the headline.
+* With the source-code look on, which is the default, headlines and article headings are set
+  in the monospaced face, bold, as on a Quire Ink blog.
+* Book mode opens on a title page: the headline, then the date and the author.
+* The search box (the `/` key, or `[/find]` in the header) answers Enter and the arrow keys,
+  and ends its list with "See all results", which opens the full results page.
+* A long word in a headline, or a long tag name, wraps instead of running off the edge. On a
+  touchscreen the copy button on a code block sits in a band above the code rather than over
+  its first line, and the header's icons take a 44px touch area.
+* The stylesheets are 2 KB larger over the wire and the scripts 1.3 KB; a first visit is
+  about 127 KB.
+* Tested on WordPress 7.1.3.
 
 = 0.1.3 =
 Two findings from the second pass of the WordPress.org theme review, ticket 288845.

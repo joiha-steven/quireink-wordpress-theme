@@ -1,11 +1,17 @@
 # Before this goes public
 
-**0.1.4 is built and not submitted.** Measured on the local stack at WordPress 7.1.1:
+**0.1.4 is built and not submitted.** Re-generated from Quire Ink 2.2.18 and measured on the
+local stack at WordPress 7.1.3, the newest release the `7.1` compose pin builds:
 `check:all` green on all ten guards, `dev/check-theme.sh` **0 REQUIRED, 0 WARNING,
 3 RECOMMENDED**, every template answering (index, single, page, category, month, search, 404,
-feed, a password-protected post, a paged post), `kbd-probe` at 1440 and 390 on the listing and
-an article — 22 stops, none off screen, no horizontal overflow, the skip link clear of the
-admin bar — and a clean browser tab making no request the reader did not ask for.
+feed, a password-protected post, a paged post, and pages 2 and 3 of the listing), `kbd-probe` at
+1440 and 390 on the listing and an article, signed in and out — the first 22 stops (the probe's
+ceiling) all on screen, no horizontal overflow, the skip link clear of the admin bar — and
+`do-giao-dien.js` on the listing, an article and the search page at 375, 768 and 1440, light and
+dark: no overflow at any width, and the items it does report are the engine's own measurements
+rather than the theme's (the menu key's box hangs 10px into the phone gutter so its icon lines up;
+headline links 31.5px tall, over WCAG 2.5.8's 24px and under the probe's 44px). A clean browser
+tab makes no request the reader did not ask for: four font files, nothing to `/api/track`.
 
 **It went public on 8 September 2026, at 0.1.3**, after two rounds of review on
 [ticket #288845](https://themes.trac.wordpress.org/ticket/288845): five findings on 0.1.1 and
@@ -127,7 +133,7 @@ are the answer if a reviewer raises them.
   ```
 
   It builds from `HEAD`, not from the working tree, so an uncommitted edit cannot ship by
-  accident. Measured on the last build: 732 KB, 64 files, exactly one top-level directory,
+  accident. Measured on the last build: 805 KB, 72 files, exactly one top-level directory,
   and `diff -rq` against the working tree reports no difference — nothing gitignored is
   missing from it and nothing untracked is in it. Build it into `.tmp/`, which is gitignored:
   a release artifact committed to the repository is a second source of truth for the same
@@ -148,6 +154,6 @@ are the answer if a reviewer raises them.
 | Featured images | two shapes, both off by default |
 | Core CSS classes | `align*`, `wp-caption*`, `gallery-caption`, `bypostauthor`, `sticky`, `screen-reader-text` |
 | Block patterns and styles | eight patterns under `quire-ink/patterns/`, in their own inserter category and a core one each, plus four image frames as block styles - all of them reaching rules the blog engine already carries |
-| Translation | `languages/quire-ink.pot`, 160 strings, no translations shipped ([ADR 0004](decisions/0004-english-only.md)). Rebuild it with `bun run pot` after touching any string |
+| Translation | `languages/quire-ink.pot`, 216 strings, no translations shipped ([ADR 0004](decisions/0004-english-only.md)). Rebuild it with `bun run pot` after touching any string |
 | Templates | index, single, page, archive, search, 404, comments, searchform |
 | Accessibility | skip link, focusable off-screen text, no avatars, no third-party requests |

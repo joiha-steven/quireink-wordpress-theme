@@ -56,7 +56,7 @@ shortcode. Switch away and every post is still a post.
 | 📐&nbsp;**The&nbsp;page** | One column of about seventy characters, the contents of the post in one gutter and its facts in the other. Below the width that holds them, both fold away without a second layout to maintain |
 | 🎨&nbsp;**Colour** | Six palettes, each in light and dark, chosen by the reader and remembered on their device. Every one clears WCAG AA against its own background, and a static check re-measures all sixty colours on every run |
 | 🔤&nbsp;**Type** | Seven typefaces in the theme, all OFL. The six text faces are cut to Latin, Latin Extended and Vietnamese; the seventh is ten handwritten digits for an ordered list. Twenty-two files ship and a browser fetches four, because each face declares the characters it covers |
-| 📖&nbsp;**Book&nbsp;mode** | The article reset in two columns with a drop cap, sized from the window, with the reader's place kept. Its own bundle and its own switch: off removes the button and stops the 7.7 KB being fetched |
+| 📖&nbsp;**Book&nbsp;mode** | The article reset in two columns with a drop cap, sized from the window, with the reader's place kept. Its own bundle and its own switch: off removes the button and stops the 8.8 KB being fetched |
 | ✒️&nbsp;**Book&nbsp;typography** | Indented paragraphs, justified lines, hyphenation at the break. Off by default, because it is a taste and not an improvement |
 | 🗓️&nbsp;**The&nbsp;listing** | A spine down the gutter with a sticky year and a marker at each new month, positioned against cards that are already there. Nothing measures anything |
 | 🧱&nbsp;**Writing** | The block editor shows the article: same face, same column width, same code styling. Eight patterns in their own category and four styles on the image block, each reaching something the sheet already draws |
@@ -92,12 +92,12 @@ are not counted, because those are your content and not the theme.
 
 | | Over the wire | |
 |:---|---:|:---|
-| **First visit** | **≈ 121 KB** | 118 KB with book mode off, 120 KB with the source-code furniture off |
-| **Every visit after** | **≈ 17 KB** | only the HTML is fetched again |
+| **First visit** | **≈ 127 KB** | 124 KB with book mode off, 126 KB with the source-code furniture off |
+| **Every visit after** | **≈ 20 KB** | only the HTML is fetched again |
 | Fonts | 66.6 KB | **4 of the 22 faces that ship**; a browser takes only the character ranges the page uses, and the two the first screen needs are preloaded |
-| CSS | 25.7 KB | 13.5 of it the generated sheet, +1.2 only when the source-code furniture is on |
-| JavaScript | 12.0 KB | the engine's own three reader bundles, plus WordPress's 1.3 KB reply script |
-| HTML | 17.2 KB | 62.9 KB before gzip |
+| CSS | 27.7 KB | 15.1 of it the generated sheet, +1.5 only when the source-code furniture is on |
+| JavaScript | 13.3 KB | the engine's own three reader bundles, plus WordPress's 1.3 KB reply script |
+| HTML | 19.6 KB | 74.1 KB before gzip |
 | **Third-party requests** | **0** | no CDN, no font host, no tracker, no avatar service |
 
 WordPress's own emoji script and per-block styles are another 8.7 KB. They are core's, not the

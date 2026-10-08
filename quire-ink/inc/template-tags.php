@@ -79,10 +79,21 @@ function quireink_book_mode() {
 /**
  * One row in a list of posts.
  *
- * Class for class what the blog engine's listing emits, read off the live page rather than
- * guessed at: the date and the reading time are `.meta-part` spans in one `.t-small` line,
- * the title is an h2 in the READING font at h2 size, and the excerpt is body text rather
- * than meta - a list of headlines is reading, not furniture.
+ * Class for class and in the same order as the blog engine's listing card (`card()` in its
+ * `src/web/listing.ts`), read off that source rather than guessed at: the headline, then the
+ * excerpt as `.card-exc`, then the facts as `.card-meta` - the date and the reading time as
+ * `.meta-part` runs whose separator belongs to the run BEFORE it, so a wrapped line can break
+ * after a dot and never start with one. The title is an h2 in the READING font at h2 size, and
+ * the excerpt is body text rather than meta - a list of headlines is reading, not furniture.
+ *
+ * THE ORDER AND THE TWO CLASSES ARE LOAD-BEARING since Quire Ink 2.2.18. A side picture is no
+ * longer a float: the sheet lays the row out as a grid of named areas and places each child by
+ * its class. The row as it was printed through 0.1.3 (facts first, paragraphs with no class)
+ * put the excerpt into the 96px picture column, 1,158px tall at a 1024px window. Measured, then fixed
+ * here rather than in the sheet, which is the blog engine's.
+ *
+ * The engine's category kicker (`.card-kick`) is not printed: nothing in this theme asked for
+ * a category line over every headline, and adding one is a design decision, not a re-extract.
  *
  * The first version of this used `link-plain` on the title, which is not a class the sheet
  * defines, so every headline on the listing page carried a link underline. Visible in one
@@ -94,20 +105,32 @@ function quireink_list_row() {
 	// belongs INSIDE the article: the sheet positions it against the card, not the page.
 	$mark = quireink_timeline_step();
 
-	// `data-thumb` is what the sheet keys the two shapes off: `side` floats a 96px square and
-	// lets the words close up underneath it, `top` puts a 3:2 above them. The attribute is
-	// only set when there is a picture to put there, so a row with no featured image keeps
-	// exactly the layout it has today.
+	// `data-thumb` is what the sheet keys the two shapes off: `side` sets a square beside the
+	// headline (64px on a phone, 96px from 40rem), `top` puts a 3:2 above the row. The attribute
+	// is only set when there is a picture to put there, so a row with no featured image keeps
+	// exactly the layout it has today. Where the picture sits in the MARKUP is the engine's
+	// too: `top` leads the row, `side` follows the headline, so a reader with no CSS meets the
+	// words before the picture.
+	//
+	// `.card-thumb` is a <div> round the link, as the engine's is, and not the link itself: the
+	// sheet's margin under a `top` picture is a vertical margin, which an inline <a> does not
+	// take, so through 0.1.3 the picture sat flush on the headline with 0px between them.
 	$thumb = get_theme_mod( 'quireink_thumb', 'none' );
 	$thumb = ( 'none' !== $thumb && has_post_thumbnail() ) ? $thumb : '';
+	$excerpt = get_the_excerpt();
 	?>
 	<article <?php post_class( 'reveal' ); ?><?php echo $thumb ? ' data-thumb="' . esc_attr( $thumb ) . '"' : ''; ?>><?php echo $mark; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built escaped in quireink_timeline_step(). ?>
-		<?php if ( $thumb ) : ?>
-			<a class="card-thumb" href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1"><?php the_post_thumbnail( 'side' === $thumb ? 'thumbnail' : 'medium_large' ); ?></a>
+		<?php if ( 'top' === $thumb ) : ?>
+			<div class="card-thumb"><a href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1"><?php the_post_thumbnail( 'medium_large' ); ?></a></div>
 		<?php endif; ?>
-		<p class="t-small text-meta"><time class="meta-part" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time><?php if ( $reading['minutes'] > 0 ) : ?> &middot; <span class="meta-part"><span class="num"><?php echo esc_html( number_format_i18n( $reading['minutes'] ) ); ?></span> <?php esc_html_e( 'min read', 'quire-ink' ); ?></span><?php endif; ?></p>
-		<h2 class="reading-font mt-2 fs-h2 font-semibold"><a class="link-accent" href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
-		<p class="reading-font mt-3 t-body text-text"><?php echo esc_html( get_the_excerpt() ); ?></p>
+		<h2 class="reading-font fs-h2 font-semibold"><a class="link-accent" href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+		<?php if ( 'side' === $thumb ) : ?>
+			<div class="card-thumb"><a href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1"><?php the_post_thumbnail( 'thumbnail' ); ?></a></div>
+		<?php endif; ?>
+		<?php if ( '' !== $excerpt ) : ?>
+		<p class="reading-font card-exc t-body text-text"><?php echo esc_html( $excerpt ); ?></p>
+		<?php endif; ?>
+		<p class="card-meta t-small text-meta"><?php if ( $reading['minutes'] > 0 ) : ?><span class="meta-part"><?php endif; ?><time class="meta-part" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time><?php if ( $reading['minutes'] > 0 ) : ?><span aria-hidden="true"> &middot;</span></span> <span class="meta-part"><span class="num"><?php echo esc_html( number_format_i18n( $reading['minutes'] ) ); ?></span> <?php esc_html_e( 'min read', 'quire-ink' ); ?></span><?php endif; ?></p>
 	</article>
 	<?php
 }

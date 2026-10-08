@@ -202,6 +202,15 @@ shape read off the bundle rather than guessed. `slug` carries the whole path und
 root rather than the post's slug, because the bundle prefixes one slash and a real slug would
 404 on any site whose permalinks are not `/%postname%/`.
 
+**Quire Ink 2.2.18 gave the overlay a way out, and it led nowhere here.** Enter, and a last row
+named "See all results", go to the header control's own `href` with `?q=` and the query
+appended — `/search?q=word` on the blog engine, `/?s=?q=word` on WordPress, which searched for
+the literal text `?q=word` and found nothing. The row's name is a `data-` string on `<body>`
+like every other, so until it was supplied the row was a link with no text. Neither the bundle
+nor the `href` may move (the `href` is the search page for a reader without scripts, under any
+permalink structure), so `inc/search-api.php` takes the `?q=` prefix off a search on the
+`request` filter, before the query runs: the results, the heading and the field all say `word`.
+
 **Two things in the comment thread that a click found and no reading would have.**
 
 * **The reply form was landing outside the comment**, as a `<div>` that is a direct child of
@@ -455,17 +464,19 @@ than chased.
 One article on the local stack, gzip as served, theme assets only - the post's own pictures
 are content and are not counted, and no plugin is installed.
 
-Re-measured on 2026-09-21, against WordPress 7.1.1, after the re-extract.
+Re-measured on 2026-10-08, against WordPress 7.1.3, after the re-extract from Quire Ink 2.2.18.
+The HTML line is the seeded article, which `dev/seed.sh` fetches from the live blog on every
+run, so it moves with that article as much as with the theme.
 
 | | Over the wire |
 |---|---|
-| HTML | 17.2 KB (62.9 KB before gzip) |
-| `quireink-base.css` · `quireink-look-code.css` | 13.5 + 1.2 KB (the second only when the switch is on) |
-| `quireink-tokens.css` · `bridge.css` · `style.css` | 3.5 + 6.3 + 1.2 KB |
-| `post.js` · `core.js` · `book-mode.js` · WordPress's `comment-reply.js` | 3.1 + 4.4 + 3.2 + 1.3 KB |
+| HTML | 19.6 KB (74.1 KB before gzip) |
+| `quireink-base.css` · `quireink-look-code.css` | 15.1 + 1.5 KB (the second only when the switch is on) |
+| `quireink-tokens.css` · `bridge.css` · `style.css` | 3.6 + 6.3 + 1.2 KB |
+| `post.js` · `core.js` · `book-mode.js` · WordPress's `comment-reply.js` | 3.5 + 5.0 + 3.5 + 1.3 KB |
 | Fonts | 66.6 KB - **4 faces of the 22 that ship.** Literata and JetBrains Mono, latin and vietnamese; the browser fetches a face only if a `unicode-range` it needs is in it, and the two the first screen needs are preloaded |
-| **First visit** | **≈ 121 KB**, or 118 KB with book mode off and 120 KB with the source-code look off |
-| **Every visit after** | **≈ 17 KB** - everything else is cached |
+| **First visit** | **≈ 127 KB**, or 124 KB with book mode off and 126 KB with the source-code look off |
+| **Every visit after** | **≈ 20 KB** - everything else is cached |
 
 Not counted, and worth saying so: WordPress's own emoji script and its per-block stylesheets
 are another 8.7 KB on this page. They are core's, not the theme's.

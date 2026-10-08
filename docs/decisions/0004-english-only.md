@@ -21,7 +21,7 @@ The article furniture reads `2,738 words` / `14 min read` / `Tags` where Quire I
 titles, the terms and the dates all come from WordPress and follow the site's own locale.
 
 Anyone who wants it can drop a `quire-ink-vi.mo` into `wp-content/languages/themes/` without
-touching this repository. It is 215 strings — most of them the Customizer's own labels and
+touching this repository. It is 216 strings — most of them the Customizer's own labels and
 descriptions, not the dozen words a reader sees.
 
 **The channel for a translation is translate.wordpress.org, not this repository.** A theme in

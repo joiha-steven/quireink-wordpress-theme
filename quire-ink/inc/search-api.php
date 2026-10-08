@@ -74,3 +74,33 @@ function quireink_search_endpoint() {
 	wp_send_json( $results );
 }
 add_action( 'parse_request', 'quireink_search_endpoint' );
+
+/**
+ * `/?s=?q=…` — the overlay's way to the full results, read as the search it means.
+ *
+ * Quire Ink 2.2.18's overlay gained two ways out of the dropdown: Enter, and a last row,
+ * "See all results". Both go to the header control's own `href` with `?q=` and the query
+ * APPENDED - `/search` + `?q=word` on the blog engine. The control here is a real link to
+ * `/?s=`, which is what a reader without JavaScript follows, so the bundle builds
+ * `/?s=?q=word`, and WordPress searched for the literal text `?q=word` and found nothing.
+ *
+ * Neither half may move. The bundle is copied byte for byte, and the `href` is the search page
+ * for a reader without scripts under any permalink structure, which `/?q=` or `/search` is
+ * not. So the one request that pairing produces is read here as what it means: a search
+ * whose text starts with `?q=` has that prefix taken off, before the query runs, so the
+ * results, the heading and the field on the page all say `word`.
+ *
+ * @param array $vars The parsed query variables.
+ * @return array
+ */
+function quireink_search_from_overlay( $vars ) {
+	// The overlay is on the reading side only; an admin list search is left as typed.
+	if ( is_admin() ) {
+		return $vars;
+	}
+	if ( isset( $vars['s'] ) && is_string( $vars['s'] ) && 0 === strpos( $vars['s'], '?q=' ) ) {
+		$vars['s'] = substr( $vars['s'], 3 );
+	}
+	return $vars;
+}
+add_filter( 'request', 'quireink_search_from_overlay' );

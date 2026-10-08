@@ -67,6 +67,9 @@ function quireink_body_data() {
 		'search'         => __( 'Search', 'quire-ink' ),
 		'search-hint'    => __( 'Type to search posts.', 'quire-ink' ),
 		'search-empty'   => __( 'No posts matched.', 'quire-ink' ),
+		// The overlay's last row, a link to the full results page. Its whole name: unsupplied, it is
+		// a link with no text, which a screen reader announces as the bare address.
+		'search-see-all' => __( 'See all results', 'quire-ink' ),
 		'lightbox-close' => __( 'Close', 'quire-ink' ),
 		'lightbox-prev'  => __( 'Previous image', 'quire-ink' ),
 		'lightbox-next'  => __( 'Next image', 'quire-ink' ),

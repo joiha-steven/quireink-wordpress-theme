@@ -46,7 +46,7 @@ Both off. A blog that upgrades into this theme must not move a pixel until its o
 | Control | Default | What it does |
 |---|---|---|
 | Featured image on an article | None | Above the title, always 3:2. Above, because a picture under the headline pushes the first sentence off a phone. |
-| Featured image in a list | None | A floated 96px square beside the words, or a 3:2 plate above them. **The shape is not a further choice**: a list of pictures has to look like a list, and three real files measured at ratios 0.70, 2.10 and 0.72 read as a tall block, a thin strip and a tall block. |
+| Featured image in a list | None | A square beside the headline - 64px on a phone, with the excerpt and the facts running full width under it; 96px from 40rem, beside the headline and the excerpt both, with the facts full width under them - or a 3:2 plate above the row. **The shape is not a further choice**: a list of pictures has to look like a list, and three real files measured at ratios 0.70, 2.10 and 0.72 read as a tall block, a thin strip and a tall block. |
 | Frame on every picture | None | A mat and a hairline around each picture in an article, the way a print is mounted — thin, medium or thick. This is the site-wide DEFAULT; a single picture overrides it from the block editor's Styles panel, including back to no frame at all. |
 | Draw the frame in ink | Off | A modifier on whichever weight is chosen, not a fourth weight: the mat and the line in the heading colour instead of the page colour. Nothing to see until a frame is chosen. |
 
@@ -56,7 +56,7 @@ Both off. A blog that upgrades into this theme must not move a pixel until its o
 |---|---|---|
 | A first-time visitor opens in | Their device's setting | Or force light, or force dark. Decides the FIRST paint only; a reader's own choice always wins. |
 | Book typography | Off | Indented paragraphs, justified lines, hyphenation — a printed page. Off is the web default: ragged right, a blank line between paragraphs. |
-| Book mode | On | The button that resets the article into two columns with a drop cap. Off removes the button **and** stops the 7.7 KB bundle behind it being downloaded, the same bargain the source-code look makes with its stylesheet. Not the same thing as Book typography: this one is a reading surface, that one is how the type is set. |
+| Book mode | On | The button that resets the article into two columns with a drop cap. Off removes the button **and** stops the 8.8 KB bundle behind it being downloaded, the same bargain the source-code look makes with its stylesheet. Not the same thing as Book typography: this one is a reading surface, that one is how the type is set. |
 | Motion | On | Off removes every transition. A reader whose system asks for reduced motion gets that regardless. |
 | Furniture reads as source code | On | The `//` before every small heading, the brackets around dates and counts, the line numbers down the sidebar, the numbering in a table of contents. One switch for all of it. It never reaches the article, the titles or the comments. |
 
