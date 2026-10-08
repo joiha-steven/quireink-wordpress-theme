@@ -156,7 +156,9 @@ const figureEntries = FRAMES.flatMap((frame) => [false, true].map((ink) => {
 // and are re-addressed at the class Gutenberg puts on the paragraph. Not copied: if the
 // engine restyles its drop cap, the next extract moves this with it, and `check:generated`
 // goes red until it does.
-const dropCapRule = /\.book-flow\.prose > p:first-child::first-letter\{([^}]*)\}/.exec(BOOK_CSS)
+// The engine's selector became a list in 2.2.18 (book mode's title page adds `.book-tp + p`), so
+// the rule is found by its first selector and whatever else shares its declarations.
+const dropCapRule = /\.book-flow\.prose > p:first-child::first-letter(?:,[^{]*)?\{([^}]*)\}/.exec(BOOK_CSS)
 if (!dropCapRule) {
   throw new Error(
     'No `.book-flow.prose > p:first-child::first-letter` rule in BOOK_CSS.\n'
