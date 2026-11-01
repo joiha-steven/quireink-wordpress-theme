@@ -10,42 +10,17 @@ copy of the look is GPL, the blog engine is not.
 ## Verify
 
 ```
-bun run check:all
-```
-
-Ten static guards — `filesize` · `order` · `bridge` · `contrast` · `classes` · `escape` · `generated` · `headers` · `pair` · `docs`. Seconds.
-`check:generated` skips with a warning when there is no Quire Ink checkout beside this one.
-
-`check:all` proves the seams hold. It cannot tell you the rail is empty, a figure is at the
-wrong width, or every headline on the listing page has picked up a link underline. All three
-happened here, all three passed every check, and all three were obvious in a screenshot.
-
-```
-dev/up.sh        # WordPress on http://localhost:8099, admin / admin
-dev/seed.sh      # real articles from the live blog, converted to Gutenberg blocks
+bun run check:all   # ten static guards, seconds; check:generated skips with a warning without a Quire Ink checkout beside this one
+dev/up.sh           # WordPress on http://localhost:8099, admin / admin
+dev/seed.sh         # real articles from the live blog, converted to Gutenberg blocks
 tools/shot.sh <url> .tmp/shots/<name>.png
-tools/kbd-probe.ts <url> [--width=] [--open-rail]   # what the KEYBOARD reaches
+tools/kbd-probe.ts <url> [--width=] [--open-rail]   # tab order, region, on-screen or not, horizontal overflow, skip link vs admin bar
+dev/screenshot.sh   # rebuilds quire-ink/screenshot.png from a WordPress seeded for it, then restores your database
 ```
 
-`kbd-probe.ts` answers the questions a picture cannot: the tab order with each stop's region
-and whether it is on screen, the document's horizontal overflow, and the skip link's box
-against the admin bar. An off-screen drawer is invisible and still focusable, and a control
-under the admin bar looks exactly like one that is not there; both shipped. Its `--width` is
-honest below 500px, unlike `shot.sh`, because it emulates the device rather than sizing a
-window.
-
-`shot.sh` refuses two things, each because it once produced a picture that lied. It will not
-render below 500px: Chrome's headless window has an OS minimum, so a 390px request came back
-as a 500px page cropped to 390, which reads as a theme that overflows. And it will not render
-a page whose scripts and stylesheets point at another origin: WordPress writes its asset URLs
-against `localhost`, so the same page asked for on `127.0.0.1` loses every module script and
-every font to CORS, and the type falls back to something close enough that nobody looks twice.
-Phone widths are photographed inside iframes, where the viewport is the iframe's own size.
-
-`dev/screenshot.sh` rebuilds `quire-ink/screenshot.png` from a WordPress seeded for the
-picture, and puts your database back afterwards.
-
-**Open the page.**
+`check:all` cannot see an empty rail, a figure at the wrong width or a link underline on every headline. **Open the page.**
+`shot.sh` refuses to render below 500px (Chrome's headless minimum; use `kbd-probe.ts --width` there, phone widths are
+photographed inside iframes) and refuses a page whose assets point at another origin: use `localhost`, never `127.0.0.1`.
 
 ## Read first
 
@@ -61,21 +36,6 @@ picture, and puts your database back afterwards.
 | Going against a past decision | [`docs/decisions/`](./docs/decisions/README.md) — the in-force index first |
 | Wondering what does not survive the trip | [`docs/gaps.md`](./docs/gaps.md) |
 | Touching a control, a colour or a heading | [`docs/accessibility.md`](./docs/accessibility.md) — the measurements, and the one criterion that fails |
-
-## Debug router — a symptom, and the files to open first
-
-| Symptom / area | Read these first |
-|---|---|
-| A colour, size or breakpoint is wrong | `tools/extract.ts`, then the blog engine's `src/web/*.css.ts` — never edit the generated CSS |
-| A Gutenberg block looks wrong | `quire-ink/assets/css/bridge.css`, `quire-ink/inc/template-tags.php` (`quireink_align_classes`) |
-| The rail, the table of contents, the desktop three-column layout | `quire-ink/functions.php` (`quireink_anchor_headings`, `quireink_toc`), `quire-ink/single.php` |
-| An article's furniture — byline, word count, terms | `quire-ink/single.php`, `quire-ink/inc/template-tags.php` |
-| The listing page | `quire-ink/index.php`, `quireink_list_row()` |
-| A block looks unstyled although its class is spelled right | `bun run check:classes` first — the sheet usually has the block under the blog engine's own name (`.listing-head`, `.pager`, `.empty`) |
-| A knob in the Customizer | `quire-ink/inc/customizer.php` |
-| Strings the reader JS puts on screen | `quire-ink/inc/i18n-data.php` — they are `data-` attributes on `<body>`, read at run time |
-| The local WordPress | `dev/docker-compose.yml`, `dev/up.sh` |
-| An imported article looks wrong | `dev/seed/fetch.py` |
 
 ## Hard rules — each one is a bug that already shipped
 
@@ -104,24 +64,14 @@ picture, and puts your database back afterwards.
 
 ## Danger zones
 
-- **`quire-ink/assets/css/quireink-{base,tokens}.css`, `assets/fonts/`, `assets/js/` are
-  GENERATED.** Editing them is not wrong so much as pointless: the next extract overwrites
-  them and `check:generated` is red until it does.
-- **The blog engine moves.** A red `check:generated` is the seam reporting, not a failure.
-  Re-run the extractor and READ the diff before committing it.
-- **`dev/` throws its database away.** `dev/down.sh` is `docker compose down -v`. Nothing in
-  that stack is worth keeping, and a half-migrated database is the one way it could lie.
-- **`localhost:8099`, never `127.0.0.1:8099`.** WordPress's `siteurl` is `localhost`, so the
-  page writes its script and font URLs against that host. Fetch the same page on `127.0.0.1`
-  and CORS refuses every font, so the type quietly falls back. It used to refuse the scripts
-  too — they carried `type="module"`, which is fetched in CORS mode whatever the origin, and
-  that is why no render in this project ran JavaScript for three months. They are plain
-  deferred scripts since 0.1.4 and survive the wrong origin; the fonts still do not, and a
-  render with the wrong type is still a render that lies. `getComputedStyle` answers `Literata`
-  either way, because a computed font-family is the request and not the result —
-  `document.fonts` is the measurement, and it said `Literata:loaded` against `Literata:error`.
-  `tools/shot.sh` refuses the wrong host now.
-- **Port 8099, not 8088.** The jellykey-local PHP server binds `[::1]:8088`; Docker publishes
-  on `0.0.0.0`, so nothing collides at bind time and the browser just resolves `localhost` to
-  `::1` and shows the other site.
+- **`quire-ink/assets/css/quireink-{base,tokens}.css`, `assets/fonts/`, `assets/js/` are GENERATED.** Editing them is
+  pointless: the next extract overwrites them and `check:generated` is red until it does.
+- **The blog engine moves.** A red `check:generated` is the seam reporting, not a failure. Re-run the extractor and READ
+  the diff before committing it.
+- **`dev/` throws its database away.** `dev/down.sh` is `docker compose down -v`.
+- **`localhost:8099`, never `127.0.0.1:8099`.** Under the wrong host CORS refuses every font and the type quietly falls
+  back; `getComputedStyle` still answers `Literata`, so measure with `document.fonts`, not computed style.
+- **Port 8099, not 8088.** jellykey-local binds `[::1]:8088`; the browser resolves `localhost` to `::1` and shows the other site.
 - **All scratch goes under `.tmp/`** — one gitignored root, never a new one.
+
+Find a file or a symptom: [`MAP.md`](./MAP.md). Why a rule exists: [`HISTORY.md`](./HISTORY.md).
